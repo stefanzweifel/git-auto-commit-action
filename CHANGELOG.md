@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v1.0.0...HEAD)
 
+## v1.0.0 - 2019-06-10
+
 ### Added
 
 - Add Core Logic for Action
+
