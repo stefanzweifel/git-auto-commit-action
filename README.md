@@ -15,7 +15,7 @@ The most common use case for this, is when you're running a Linter or Code-Style
 
 In this example I'm running `php-cs-fixer` in a PHP project.
 
-```
+```terraform
 workflow "php-cs-fixer" {
   on = "push"
   resolves = [
