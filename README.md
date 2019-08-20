@@ -15,6 +15,7 @@ The most common use case for this, is when you're running a Linter or Code-Style
 
 In this example I'm running `php-cs-fixer` in a PHP project.
 
+
 ```terraform
 workflow "php-cs-fixer" {
   on = "push"
@@ -39,17 +40,33 @@ action "auto-commit-php-cs-fixer" {
 }
 ```
 
+
+----
+
+New GitHub Actions syntax:
+
+```yaml
+- uses: stefanzweifel/git-auto-commit-action@dev
+  with:
+    commit_author_email: john.doe@example.com
+    commit_author_name: John Doe
+    commit_message: Apply automatic changes
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+
 ## Secrets
 
 The `GITHUB_TOKEN` secret is required. Add the secret in the Workflow Editor on github.com.
 
-## Environment variables
+## Inputs
 
-The following environment variables are required:
+The following inputs are required
 
-- `COMMIT_MESSAGE`: The commit message used when changes are available
-- `COMMIT_AUTHOR_EMAIL`: The Commit Authors Email Address
-- `COMMIT_AUTHOR_NAME`: The Commit Authors Name
+- `commit_author_email`: The commit message used when changes are available
+- `commit_author_name`: The Commit Authors Email Address
+- `commit_message`: The Commit Authors Name
 
 
 ## Versioning
