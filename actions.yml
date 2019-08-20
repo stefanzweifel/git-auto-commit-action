@@ -1,0 +1,22 @@
+name: Git Auto Commit
+description: 'Automatically commits files which have been changed.'
+
+inputs:
+  commit_message:
+    description: 'Commit message'
+    required: true
+  commit_author_name:
+    description: 'Name of the commit author'
+    required: true
+  commit_author_email:
+    description: 'Email address of the commit author'
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  entrypoint: 'entrypoint.sh'
+
+branding:
+  icon: 'git-commit'
+  color: orange
