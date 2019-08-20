@@ -1,6 +1,8 @@
 name: Git Auto Commit
 description: 'Automatically commits files which have been changed.'
 
+author: Stefan Zweifel <hello@stefanzweifel.io>
+
 inputs:
   commit_message:
     description: 'Commit message'
