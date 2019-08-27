@@ -1,6 +1,12 @@
 #!/bin/sh
 set -eu
 
+# Switch to branch from current Workflow run
+git switch "${GITHUB_REF:11}"
+
+# Set origin URL
+git remote set-url origin https://$TOKEN:x-oauth-basic@github.com/$GITHUB_REPOSITORY
+
 git config --global user.email "actions@github.com"
 git config --global user.name "GitHub Actions"
 

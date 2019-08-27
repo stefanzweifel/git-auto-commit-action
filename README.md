@@ -52,6 +52,7 @@ New GitHub Actions syntax:
     commit_author_name: John Doe
     commit_message: Apply automatic changes
   env:
+    TOKEN: ${{ secrets.TOKEN }} # Personal Access Token
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
