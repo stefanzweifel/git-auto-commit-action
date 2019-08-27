@@ -2,7 +2,7 @@
 set -eu
 
 # Switch to branch from current Workflow run
-git switch "${GITHUB_REF:11}"
+git checkout "${GITHUB_REF:11}"
 
 # Set origin URL
 git remote set-url origin https://$TOKEN:x-oauth-basic@github.com/$GITHUB_REPOSITORY
