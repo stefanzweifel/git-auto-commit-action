@@ -1,49 +1,16 @@
 # git-auto-commit-action
 
 This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the Commit back to GitHub.
-The Committer is "GitHub Actions <actions@github.com>" and the Author of the Commit can be configured with environment variables.
+The Committer is "GitHub Actions <actions@github.com>" and the Author of the Commit can be configured with input variables.
 
 If no changes are available, the Actions does nothing.
 
 This Action has been inspired and adapted from the [auto-commit](https://github.com/cds-snc/github-actions/tree/master/auto-commit
-)-Action of the Canadian Digital Service.
+)-Action of the Canadian Digital Service and the [commit](https://github.com/elstudio/actions-js-build/blob/41d604d6e73d632e22eac40df8cc69b5added04b/commit/entrypoint.sh)-Action by Eric Johnson.
 
 ## Usage
 
-You have to have an Action in your Workflow, which changes some of your project files. 
-The most common use case for this, is when you're running a Linter or Code-Style fixer on GitHub Actions.
-
-In this example I'm running `php-cs-fixer` in a PHP project.
-
-
-```terraform
-workflow "php-cs-fixer" {
-  on = "push"
-  resolves = [
-    "auto-commit-php-cs-fixer"
-  ]
-}
-
-action "php-cs-fixer" {
-  uses = "docker://oskarstark/php-cs-fixer-ga"
-}
-
-action "auto-commit-php-cs-fixer" {
-  needs = ["php-cs-fixer"]
-  uses = "stefanzweifel/git-auto-commit-action@v1.0.0"
-  secrets = ["GITHUB_TOKEN"]
-  env = {
-    COMMIT_MESSAGE = "Apply php-cs-fixer changes"
-    COMMIT_AUTHOR_EMAIL  = "john.doe@example.com"
-    COMMIT_AUTHOR_NAME = "John Doe"
-  }
-}
-```
-
-
-----
-
-New GitHub Actions syntax:
+Add the following step at the end of your job.
 
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@dev
@@ -52,16 +19,13 @@ New GitHub Actions syntax:
     commit_author_name: John Doe
     commit_message: Apply automatic changes
   env:
-    TOKEN: ${{ secrets.TOKEN }} # Personal Access Token
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!
 
-## Secrets
 
-The `GITHUB_TOKEN` secret is required. Add the secret in the Workflow Editor on github.com.
-
-## Inputs
+### Inputs
 
 The following inputs are required
 
@@ -69,6 +33,43 @@ The following inputs are required
 - `commit_author_name`: The Commit Authors Email Address
 - `commit_message`: The Commit Authors Name
 
+### Environment Variables
+
+The `GITHUB_TOKEN` secret is required. It is automatically available in your repository. You have to add it to the configuration though.
+
+## Example Usage
+
+This Action will only work, if the job in your workflow changes project files.
+The most common use case for this, is when you're running a Linter or Code-Style fixer on GitHub Actions.
+
+In this example I'm running `php-cs-fixer` in a PHP project.
+
+
+```yaml
+on: push
+name: php-cs-fixer
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+
+    - name: Run php-cs-fixer
+      uses: docker://oskarstark/php-cs-fixer-ga
+
+    - name: Commit changed files
+      uses: stefanzweifel/git-auto-commit-action@v2.0.0
+      with:
+        commit_author_email: hello@stefanzweifel.io
+        commit_author_name: Stefan Zweifel
+        commit_message: Apply php-cs-fixer changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+```
 
 ## Versioning
 
