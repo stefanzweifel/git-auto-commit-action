@@ -1,10 +1,38 @@
 #!/bin/sh
 set -eu
 
-git config --global user.email "actions@github.com"
-git config --global user.name "GitHub Actions"
+# Set up .netrc file with GitHub credentials
+git_setup ( ) {
+  cat <<- EOF > $HOME/.netrc
+        machine github.com
+        login $GITHUB_ACTOR
+        password $GITHUB_TOKEN
 
-git add -A
-git status
-git commit -m "$COMMIT_MESSAGE" --author="$COMMIT_AUTHOR_NAME <$COMMIT_AUTHOR_EMAIL>" || echo "No changes found. Nothing to commit."
-git push -u origin HEAD
+        machine api.github.com
+        login $GITHUB_ACTOR
+        password $GITHUB_TOKEN
+EOF
+    chmod 600 $HOME/.netrc
+
+    git config --global user.email "actions@github.com"
+    git config --global user.name "GitHub Actions"
+}
+
+
+# This section only runs if there have been file changes
+echo "Checking for uncommitted changes in the git working tree."
+if ! git diff --quiet
+then
+    git_setup
+
+    # Switch to branch from current Workflow run
+    git checkout "${GITHUB_REF:11}"
+
+    git add .
+
+    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR_NAME <$INPUT_COMMIT_AUTHOR_EMAIL>"
+
+    git push --set-upstream origin "${GITHUB_REF:11}"
+else
+    echo "Working tree clean. Nothing to commit."
+fi
