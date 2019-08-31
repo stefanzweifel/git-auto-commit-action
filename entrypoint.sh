@@ -7,8 +7,8 @@ set -eu
 # Set origin URL
 # git remote set-url origin https://$TOKEN:x-oauth-basic@github.com/$GITHUB_REPOSITORY
 
-# git config --global user.email "actions@github.com"
-# git config --global user.name "GitHub Actions"
+git config --global user.email "actions@github.com"
+git config --global user.name "GitHub Actions"
 
 # git add -A
 # git status
@@ -31,8 +31,8 @@ EOF
   chmod 600 $HOME/.netrc
 
   # Git requires our "name" and email address -- use GitHub handle
-  git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-  git config user.name "$GITHUB_ACTOR"
+  # git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+  # git config user.name "$GITHUB_ACTOR"
 
   # Push to the current branch if PUSH_BRANCH hasn't been overriden
   # : ${PUSH_BRANCH:=`echo "$GITHUB_REF" | awk -F / '{ print $3 }' `}
