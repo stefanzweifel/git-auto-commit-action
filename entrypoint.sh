@@ -35,7 +35,7 @@ EOF
   git config user.name "$GITHUB_ACTOR"
 
   # Push to the current branch if PUSH_BRANCH hasn't been overriden
-  : ${PUSH_BRANCH:=`echo "$GITHUB_REF" | awk -F / '{ print $3 }' `}
+  # : ${PUSH_BRANCH:=`echo "$GITHUB_REF" | awk -F / '{ print $3 }' `}
 }
 
 
@@ -45,10 +45,12 @@ if ! git diff --quiet
 then
     git_setup
 
-    git checkout $PUSH_BRANCH
+    git checkout "${GITHUB_REF:11}"
+    # git checkout $PUSH_BRANCH
     git add .
     git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR_NAME <$INPUT_COMMIT_AUTHOR_EMAIL>" || echo "No changes found. Nothing to commit."
-    git push --set-upstream origin $PUSH_BRANCH
+    git push --set-upstream origin "${GITHUB_REF:11}"
+    # git push --set-upstream origin $PUSH_BRANCH
 else
     echo "Working tree clean. Nothing to commit."
 fi
