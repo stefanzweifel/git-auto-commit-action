@@ -29,9 +29,9 @@ The Action will only commit files back, if changes are available. The resulting 
 
 The following inputs are required
 
-- `commit_author_email`: The commit message used when changes are available
-- `commit_author_name`: The Commit Authors Email Address
-- `commit_message`: The Commit Authors Name
+- `commit_author_email`: The Commit Authors Email Address
+- `commit_author_name`: The Commit Authors Name
+- `commit_message`: The commit message used when changes are available
 
 ### Environment Variables
 
