@@ -13,7 +13,7 @@ This Action has been inspired and adapted from the [auto-commit](https://github.
 Add the following step at the end of your job.
 
 ```yaml
-- uses: stefanzweifel/git-auto-commit-action@dev
+- uses: stefanzweifel/git-auto-commit-action@v2.0.0
   with:
     commit_author_email: john.doe@example.com
     commit_author_name: John Doe
