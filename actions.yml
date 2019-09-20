@@ -13,7 +13,7 @@ inputs:
   commit_author_email:
     description: Email address of the commit author
     required: true
-  ref:
+  branch:
     description: Branch where changes should be pushed too
     required: true
 

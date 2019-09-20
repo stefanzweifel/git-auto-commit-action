@@ -18,7 +18,7 @@ Add the following step at the end of your job.
     commit_author_email: john.doe@example.com
     commit_author_name: John Doe
     commit_message: Apply automatic changes
-    ref: ${{ github.head_ref }}
+    branch: ${{ github.head_ref }}
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -33,7 +33,7 @@ The following inputs are required
 - `commit_author_email`: The Commit Authors Email Address
 - `commit_author_name`: The Commit Authors Name
 - `commit_message`: The commit message used when changes are available
-- `ref`: Branch where changes should be pushed too
+- `branch`: Branch name where changes should be pushed to
 
 ### Environment Variables
 
@@ -68,6 +68,7 @@ jobs:
         commit_author_email: hello@stefanzweifel.io
         commit_author_name: Stefan Zweifel
         commit_message: Apply php-cs-fixer changes
+        branch: ${{ github.head_ref }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
