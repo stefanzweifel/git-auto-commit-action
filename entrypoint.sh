@@ -27,10 +27,8 @@ then
 
     : ${PUSH_BRANCH:=`echo "$GITHUB_HEAD_REF" | awk -F / '{ print $3 }' `}
 
-    git switch -c $PUSH_BRANCH
-
     # Switch to branch from current Workflow run
-    git checkout $PUSH_BRANCH
+    git checkout -b $PUSH_BRANCH
 
     git add .
 
