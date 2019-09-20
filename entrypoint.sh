@@ -30,7 +30,7 @@ then
     echo "Push Branch Value: $PUSH_BRANCH";
 
     # Switch to branch from current Workflow run
-    git checkout -b $INPUT_REF
+    git checkout $INPUT_REF
 
     git add .
 
