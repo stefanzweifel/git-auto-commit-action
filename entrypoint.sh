@@ -29,6 +29,8 @@ then
 
     echo "Push Branch Value: $PUSH_BRANCH";
 
+    echo "Input Ref: $INPUT_REF";
+
     # Switch to branch from current Workflow run
     git checkout $INPUT_REF
 
