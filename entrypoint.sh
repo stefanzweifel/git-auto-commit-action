@@ -27,6 +27,8 @@ then
 
     : ${PUSH_BRANCH:=`echo "$GITHUB_HEAD_REF" | awk -F / '{ print $3 }' `}
 
+    git switch -c $PUSH_BRANCH
+
     # Switch to branch from current Workflow run
     git checkout $PUSH_BRANCH
 
@@ -34,7 +36,7 @@ then
 
     git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR_NAME <$INPUT_COMMIT_AUTHOR_EMAIL>"
 
-    git push --set-upstream origin "HEAD:$PUSH_BRANCH"
+    git push --set-upstream origin $PUSH_BRANCH
 else
     echo "Working tree clean. Nothing to commit."
 fi
