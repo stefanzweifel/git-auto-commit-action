@@ -27,6 +27,8 @@ then
 
     : ${PUSH_BRANCH:=`echo "$GITHUB_HEAD_REF" | awk -F / '{ print $3 }' `}
 
+    echo "Push Branch Value: $PUSH_BRANCH";
+
     # Switch to branch from current Workflow run
     git checkout -b $PUSH_BRANCH
 
