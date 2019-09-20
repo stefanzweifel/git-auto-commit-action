@@ -25,14 +25,16 @@ if ! git diff --quiet
 then
     git_setup
 
+    echo "INPUT_REF value: $INPUT_REF";
+
     # Switch to branch from current Workflow run
-    git checkout "${GITHUB_REF:11}"
+    git checkout $INPUT_REF
 
     git add .
 
     git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR_NAME <$INPUT_COMMIT_AUTHOR_EMAIL>"
 
-    git push --set-upstream origin "${GITHUB_REF:11}"
+    git push --set-upstream origin "HEAD:$INPUT_REF"
 else
     echo "Working tree clean. Nothing to commit."
 fi

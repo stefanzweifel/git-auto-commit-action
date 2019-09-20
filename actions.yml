@@ -5,13 +5,16 @@ author: Stefan Zweifel <hello@stefanzweifel.io>
 
 inputs:
   commit_message:
-    description: 'Commit message'
+    description: Commit message
     required: true
   commit_author_name:
-    description: 'Name of the commit author'
+    description: Name of the commit author
     required: true
   commit_author_email:
-    description: 'Email address of the commit author'
+    description: Email address of the commit author
+    required: true
+  ref:
+    description: Branch where changes should be pushed too
     required: true
 
 runs:
