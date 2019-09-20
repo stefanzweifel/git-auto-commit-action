@@ -36,7 +36,7 @@ then
 
     git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR_NAME <$INPUT_COMMIT_AUTHOR_EMAIL>"
 
-    git push --set-upstream origin $INPUT_REF
+    git push --set-upstream origin "HEAD:$INPUT_REF"
 else
     echo "Working tree clean. Nothing to commit."
 fi
