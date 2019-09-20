@@ -25,11 +25,7 @@ if ! git diff --quiet
 then
     git_setup
 
-    : ${PUSH_BRANCH:=`echo "$GITHUB_HEAD_REF" | awk -F / '{ print $3 }' `}
-
-    echo "Push Branch Value: $PUSH_BRANCH";
-
-    echo "Input Ref: $INPUT_REF";
+    echo "INPUT_REF value: $INPUT_REF";
 
     # Switch to branch from current Workflow run
     git checkout $INPUT_REF
