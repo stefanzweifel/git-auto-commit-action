@@ -26,7 +26,7 @@ then
     git_setup
 
     # Switch to branch from current Workflow run
-    git checkout "${GITHUB_REF:11}"
+    git checkout "$GITHUB_REF" | awk -F / '{ print $3 }'
 
     git add .
 
