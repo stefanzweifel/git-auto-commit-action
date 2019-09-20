@@ -15,8 +15,6 @@ Add the following step at the end of your job.
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v2.0.0
   with:
-    commit_author_email: john.doe@example.com
-    commit_author_name: John Doe
     commit_message: Apply automatic changes
     branch: ${{ github.head_ref }}
   env:
@@ -30,8 +28,6 @@ The Action will only commit files back, if changes are available. The resulting 
 
 The following inputs are required
 
-- `commit_author_email`: The Commit Authors Email Address
-- `commit_author_name`: The Commit Authors Name
 - `commit_message`: The commit message used when changes are available
 - `branch`: Branch name where changes should be pushed to
 
@@ -65,8 +61,6 @@ jobs:
     - name: Commit changed files
       uses: stefanzweifel/git-auto-commit-action@v2.0.0
       with:
-        commit_author_email: hello@stefanzweifel.io
-        commit_author_name: Stefan Zweifel
         commit_message: Apply php-cs-fixer changes
         branch: ${{ github.head_ref }}
       env:
