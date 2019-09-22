@@ -51,7 +51,7 @@ name: php-cs-fixer
 on:
   pull_request:
     paths:
-    - '*.php'
+    - '**.php'
 
 jobs:
   php-cs-fixer:
