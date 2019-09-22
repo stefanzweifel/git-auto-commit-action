@@ -1,7 +1,7 @@
 # git-auto-commit-action
 
 This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the Commit back to GitHub.
-The Committer is "GitHub Actions <actions@github.com>" and the Author of the Commit can be configured with input variables.
+The Committer is "GitHub Actions <actions@github.com>" and the Author of the Commit is "Your GitHub Username <github_username@users.noreply.github.com>.
 
 If no changes are available, the Actions does nothing.
 
@@ -22,6 +22,8 @@ Add the following step at the end of your job.
 ```
 
 The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!
+
+It is recommended to use this Action in Workflows which listen to the `pull_request` event. If want to use the Action on other events, you have to hardcode the value for `branch` as `github.head_ref` is only available in Pull Requests.
 
 
 ### Inputs
@@ -44,8 +46,13 @@ In this example I'm running `php-cs-fixer` in a PHP project.
 
 
 ```yaml
-on: push
 name: php-cs-fixer
+
+on:
+  pull_request:
+    paths:
+    - '*.php'
+
 jobs:
   php-cs-fixer:
     runs-on: ubuntu-latest
