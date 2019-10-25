@@ -17,6 +17,9 @@ Add the following step at the end of your job.
   with:
     commit_message: Apply automatic changes
     branch: ${{ github.head_ref }}
+
+    # Optional glob pattern of files which should be added to the commit
+    file_pattern: src/\*.js
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -26,18 +29,6 @@ You **do not** have to create a new secret called `GITHUB_TOKEN` in your reposit
 The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!
 
 It is recommended to use this Action in Workflows which listen to the `pull_request` event. If you want to use the Action on other events, you have to hardcode the value for `branch` as `github.head_ref` is only available in Pull Requests.
-
-
-### Inputs
-
-The following inputs are required
-
-- `commit_message`: The commit message used when changes are available
-- `branch`: Branch name where changes should be pushed to
-
-### Environment Variables
-
-The `GITHUB_TOKEN` secret is required. It is automatically available in your repository. You have to add it to the configuration though.
 
 ## Example Usage
 
@@ -72,10 +63,15 @@ jobs:
       with:
         commit_message: Apply php-cs-fixer changes
         branch: ${{ github.head_ref }}
+        file_pattern: src/\*.php
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 ```
+
+### Inputs
+
+Checkout [`actions.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/actions.yml) for a full list of supported inputs.
 
 ## Versioning
 
