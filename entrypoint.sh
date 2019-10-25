@@ -30,7 +30,12 @@ then
     # Switch to branch from current Workflow run
     git checkout $INPUT_BRANCH
 
-    git add $INPUT_FILE_PATTERN
+    if [ -z ${INPUT_FILE_PATTERN+x} ];
+    then
+        git add .
+    else
+        git add $INPUT_FILE_PATTERN
+    fi
 
     git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>"
 
