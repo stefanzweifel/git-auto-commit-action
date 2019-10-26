@@ -12,6 +12,7 @@ inputs:
     required: true
   file_pattern:
     description: File pattern used for "git add"
+    required: false
     default: '.'
 
 runs:
