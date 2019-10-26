@@ -1,5 +1,5 @@
 name: Git Auto Commit
-description: 'Automatically commits files which have been changed.'
+description: 'Automatically commits files which have been changed during the workflow run and push changes back to remote repository.'
 
 author: Stefan Zweifel <hello@stefanzweifel.io>
 

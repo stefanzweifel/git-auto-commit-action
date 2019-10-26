@@ -1,7 +1,7 @@
 FROM alpine/git:1.0.7
 
 LABEL "com.github.actions.name"="Auto Commit changed files"
-LABEL "com.github.actions.description"="Automatically commit changed files and push changes back to remote repository."
+LABEL "com.github.actions.description"="Automatically commits files which have been changed during the workflow run and push changes back to remote repository."
 LABEL "com.github.actions.icon"="git-commit"
 LABEL "com.github.actions.color"="orange"
 
