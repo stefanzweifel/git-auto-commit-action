@@ -10,6 +10,10 @@ inputs:
   branch:
     description: Branch where changes should be pushed too
     required: true
+  file_pattern:
+    description: File pattern used for "git add"
+    required: false
+    default: '.'
 
 runs:
   using: 'docker'
