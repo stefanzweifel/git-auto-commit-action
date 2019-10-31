@@ -22,15 +22,6 @@ is_defined() {
     [ ! -z "${1}" ]
 }
 
-get_value() {
-    if is_defined "${1}"; then
-        return "${1}"
-    fi
-
-    return "${2}"
-}
-
-
 # This section only runs if there have been file changes
 echo "Checking for uncommitted changes in the git working tree."
 if ! git diff --quiet
@@ -42,9 +33,21 @@ then
     # Switch to branch from current Workflow run
     git checkout $INPUT_BRANCH
 
-    git add get_value "${INPUT_FILE_PATTERN}" '.'
+    if is_defined "${INPUT_FILE_PATTERN}"; then
+        echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}"
 
-    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" get_value "${INPUT_COMMIT_OPTIONS}" ''
+        git add get_value "${INPUT_FILE_PATTERN}"
+    else
+        git add .
+    fi
+
+    if is_defined "${INPUT_COMMIT_OPTIONS}"; then
+        echo "INPUT_FILE_PATTERN: ${INPUT_COMMIT_OPTIONS}"
+
+        git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" "${INPUT_COMMIT_OPTIONS}"
+    else
+        git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>"
+    fi
 
     git push --set-upstream origin "HEAD:$INPUT_BRANCH"
 else
