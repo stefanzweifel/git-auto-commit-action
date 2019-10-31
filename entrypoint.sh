@@ -36,7 +36,7 @@ then
     if is_defined "${INPUT_FILE_PATTERN}"; then
         echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}"
 
-        git add get_value "${INPUT_FILE_PATTERN}"
+        git add "${INPUT_FILE_PATTERN}"
     else
         git add .
     fi
