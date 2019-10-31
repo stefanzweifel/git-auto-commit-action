@@ -46,7 +46,6 @@ then
 
     git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" get_value "${INPUT_COMMIT_OPTIONS}" ''
 
-
     git push --set-upstream origin "HEAD:$INPUT_BRANCH"
 else
     echo "Working tree clean. Nothing to commit."
