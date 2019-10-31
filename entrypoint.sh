@@ -38,7 +38,7 @@ then
         git add $INPUT_FILE_PATTERN
     fi
 
-    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>"
+    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" $INPUT_COMMIT_OPTIONS
 
     git push --set-upstream origin "HEAD:$INPUT_BRANCH"
 else

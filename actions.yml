@@ -7,6 +7,9 @@ inputs:
   commit_message:
     description: Commit message
     required: true
+  commit_options:
+    description: Commit options
+    required: false
   branch:
     description: Branch where changes should be pushed too
     required: true
