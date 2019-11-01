@@ -1,4 +1,10 @@
 #!/bin/sh
+
+echo "${INPUT_COMMIT_MESSAGE}"
+echo "${INPUT_COMMIT_OPTIONS}"
+echo "${INPUT_BRANCH}"
+echo "${INPUT_FILE_PATTERN}"
+
 set -eu
 
 # Set up .netrc file with GitHub credentials
