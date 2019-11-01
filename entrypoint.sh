@@ -24,6 +24,10 @@ EOF
     git config --global user.name "GitHub Actions"
 }
 
+is_defined() {
+    [ ! -z "${1}" ]
+}
+
 # This section only runs if there have been file changes
 echo "Checking for uncommitted changes in the git working tree."
 if ! git diff --quiet
@@ -41,7 +45,7 @@ then
 
     echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}"
 
-    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" "${INPUT_COMMIT_OPTIONS}"
+    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" is_defined "${INPUT_COMMIT_OPTIONS}" && "${INPUT_COMMIT_OPTIONS}"
 
     git push --set-upstream origin "HEAD:$INPUT_BRANCH"
 else
