@@ -42,7 +42,7 @@ then
     fi
 
     if is_defined "${INPUT_COMMIT_OPTIONS}"; then
-        echo "INPUT_FILE_PATTERN: ${INPUT_COMMIT_OPTIONS}"
+        echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}"
 
         git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" "${INPUT_COMMIT_OPTIONS}"
     else
