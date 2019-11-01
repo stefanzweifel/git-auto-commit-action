@@ -24,10 +24,6 @@ EOF
     git config --global user.name "GitHub Actions"
 }
 
-is_defined() {
-    [ ! -z "${1}" ]
-}
-
 # This section only runs if there have been file changes
 echo "Checking for uncommitted changes in the git working tree."
 if ! git diff --quiet
@@ -39,21 +35,13 @@ then
     # Switch to branch from current Workflow run
     git checkout $INPUT_BRANCH
 
-    if is_defined "${INPUT_FILE_PATTERN}"; then
-        echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}"
+    echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}"
 
-        git add "${INPUT_FILE_PATTERN}"
-    else
-        git add .
-    fi
+    git add "${INPUT_FILE_PATTERN}"
 
-    if is_defined "${INPUT_COMMIT_OPTIONS}"; then
-        echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}"
+    echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}"
 
-        git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" "${INPUT_COMMIT_OPTIONS}"
-    else
-        git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>"
-    fi
+    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" "${INPUT_COMMIT_OPTIONS}"
 
     git push --set-upstream origin "HEAD:$INPUT_BRANCH"
 else
