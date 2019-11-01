@@ -20,6 +20,11 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+    - ${{ inputs.commit_message }}
+    - ${{ inputs.commit_options }}
+    - ${{ inputs.branch }}
+    - ${{ inputs.file_pattern }}
 
 branding:
   icon: 'git-commit'
