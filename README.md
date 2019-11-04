@@ -74,7 +74,7 @@ jobs:
 
 ### Inputs
 
-Checkout [`actions.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/actions.yml) for a full list of supported inputs.
+Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/action.yml) for a full list of supported inputs.
 
 ## Versioning
 
