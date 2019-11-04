@@ -18,6 +18,9 @@ Add the following step at the end of your job.
     commit_message: Apply automatic changes
     branch: ${{ github.head_ref }}
 
+    # Optional git params
+    commit_options: '--no-verify --signoff'
+
     # Optional glob pattern of files which should be added to the commit
     file_pattern: src/\*.js
   env:

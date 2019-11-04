@@ -7,6 +7,9 @@ inputs:
   commit_message:
     description: Commit message
     required: true
+  commit_options:
+    description: Commit options
+    required: false
   branch:
     description: Branch where changes should be pushed too
     required: true
@@ -18,6 +21,11 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+    - ${{ inputs.commit_message }}
+    - ${{ inputs.commit_options }}
+    - ${{ inputs.branch }}
+    - ${{ inputs.file_pattern }}
 
 branding:
   icon: 'git-commit'
