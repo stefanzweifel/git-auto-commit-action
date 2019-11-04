@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.2.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.3.0...HEAD)
+
+## [v2.3.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.2.0...v2.3.0) - 2019-11-04
+
+- Add a new `commit_option`-argument. Allows users to define additional commit options for the `git-commit` command. [#14](https://github.com/stefanzweifel/git-auto-commit-action/pull/15)
 
 ## [v2.2.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.1.0...v2.2.0) - 2019-10-26
 
