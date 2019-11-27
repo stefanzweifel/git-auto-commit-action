@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.3.0...HEAD)
 
+### Added
+- Commit untracked files [#19](https://github.com/stefanzweifel/git-auto-commit-action/pull/19) (fixes [#16](https://github.com/stefanzweifel/git-auto-commit-action/issues/16))
+
 ## [v2.3.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.2.0...v2.3.0) - 2019-11-04
 
+### Added
 - Add a new `commit_option`-argument. Allows users to define additional commit options for the `git-commit` command. [#14](https://github.com/stefanzweifel/git-auto-commit-action/pull/15)
 
 ## [v2.2.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.1.0...v2.2.0) - 2019-10-26
