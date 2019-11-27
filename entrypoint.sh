@@ -21,7 +21,7 @@ EOF
 
 # This section only runs if there have been file changes
 echo "Checking for uncommitted changes in the git working tree."
-if ! git diff --quiet
+if [[ -n "$(git status -s)" ]]
 then
     git_setup
 
