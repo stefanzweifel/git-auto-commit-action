@@ -9,6 +9,8 @@ LABEL "repository"="http://github.com/stefanzweifel/git-auto-commit-action"
 LABEL "homepage"="http://github.com/stefanzweifel/git-auto-commit-action"
 LABEL "maintainer"="Stefan Zweifel <hello@stefanzweifel.io>"
 
+RUN apk add git-lfs
+
 COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["sh", "/entrypoint.sh"]
