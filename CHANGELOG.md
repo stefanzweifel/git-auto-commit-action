@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Commit untracked files [#19](https://github.com/stefanzweifel/git-auto-commit-action/pull/19) (fixes [#16](https://github.com/stefanzweifel/git-auto-commit-action/issues/16))
+- Add support for Git-LFS [#21](https://github.com/stefanzweifel/git-auto-commit-action/pull/21) (fixes [#20](https://github.com/stefanzweifel/git-auto-commit-action/issues/20))
 
 ## [v2.3.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.2.0...v2.3.0) - 2019-11-04
 
