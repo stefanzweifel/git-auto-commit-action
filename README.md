@@ -23,6 +23,10 @@ Add the following step at the end of your job.
 
     # Optional glob pattern of files which should be added to the commit
     file_pattern: src/\*.js
+
+    # Optional repository path
+    repository: .
+
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
