@@ -14,9 +14,6 @@ git_setup ( ) {
         password $GITHUB_TOKEN
 EOF
     chmod 600 $HOME/.netrc
-
-    git config --global user.email "actions@github.com"
-    git config --global user.name "GitHub Actions"
 }
 
 # This section only runs if there have been file changes
