@@ -17,6 +17,10 @@ inputs:
     description: File pattern used for "git add"
     required: false
     default: '.'
+  repository:
+    description: Path to repository
+    required: false
+    default: '.'
 
 runs:
   using: 'docker'
@@ -26,6 +30,7 @@ runs:
     - ${{ inputs.commit_options }}
     - ${{ inputs.branch }}
     - ${{ inputs.file_pattern }}
+    - ${{ inputs.repository }}
 
 branding:
   icon: 'git-commit'

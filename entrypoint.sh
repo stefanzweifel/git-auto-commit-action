@@ -19,6 +19,10 @@ EOF
     git config --global user.name "GitHub Actions"
 }
 
+echo "INPUT_REPOSITORY value: $INPUT_REPOSITORY";
+
+cd $INPUT_REPOSITORY
+
 # This section only runs if there have been file changes
 echo "Checking for uncommitted changes in the git working tree."
 if [[ -n "$(git status -s)" ]]
