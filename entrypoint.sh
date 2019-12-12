@@ -2,7 +2,7 @@
 
 set -eu
 
-source lib.sh
+source ./lib.sh
 
 _switch_to_repository
 
