@@ -8,8 +8,5 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Install shellcheck
-      run: apt-get install shellcheck
-
-    - name: Run shellcheck
-      run: shellcheck *.sh
+    - name: shellcheck
+      uses: ludeeus/action-shellcheck@0.1.0
