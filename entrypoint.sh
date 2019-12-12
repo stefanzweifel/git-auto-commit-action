@@ -1,48 +1,22 @@
-#!/bin/sh
+#!/bin/bash
 
 set -eu
 
-# Set up .netrc file with GitHub credentials
-git_setup ( ) {
-  cat <<- EOF > $HOME/.netrc
-        machine github.com
-        login $GITHUB_ACTOR
-        password $GITHUB_TOKEN
+source /lib.sh
 
-        machine api.github.com
-        login $GITHUB_ACTOR
-        password $GITHUB_TOKEN
-EOF
-    chmod 600 $HOME/.netrc
+_switch_to_repository
 
-    git config --global user.email "actions@github.com"
-    git config --global user.name "GitHub Actions"
-}
+if _git_is_dirty; then
 
-echo "INPUT_REPOSITORY value: $INPUT_REPOSITORY";
+    _setup_git
 
-cd $INPUT_REPOSITORY
+    _switch_to_branch
 
-# This section only runs if there have been file changes
-echo "Checking for uncommitted changes in the git working tree."
-if [[ -n "$(git status -s)" ]]
-then
-    git_setup
+    _add_files
 
-    echo "INPUT_BRANCH value: $INPUT_BRANCH";
+    _local_commit
 
-    # Switch to branch from current Workflow run
-    git checkout $INPUT_BRANCH
-
-    echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}"
-
-    git add "${INPUT_FILE_PATTERN}"
-
-    echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}"
-
-    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
-
-    git push --set-upstream origin "HEAD:$INPUT_BRANCH"
+    _push_to_github
 else
     echo "Working tree clean. Nothing to commit."
 fi
