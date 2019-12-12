@@ -2,7 +2,7 @@
 
 _switch_to_repository() {
     echo "INPUT_REPOSITORY value: $INPUT_REPOSITORY";
-    'cd $INPUT_REPOSITORY'
+    cd $INPUT_REPOSITORY
 }
 
 _git_is_dirty() {
