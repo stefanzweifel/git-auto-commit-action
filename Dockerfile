@@ -11,6 +11,7 @@ LABEL "maintainer"="Stefan Zweifel <hello@stefanzweifel.io>"
 
 RUN apk add git-lfs
 
+COPY lib.sh /lib.sh
 COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["sh", "/entrypoint.sh"]
