@@ -8,17 +8,17 @@ inputs:
     description: Commit message
     required: true
   commit_options:
-    description: Commit options
+    description: Commit options (eg. --no-verify)
     required: false
   branch:
-    description: Branch where changes should be pushed too
+    description: Branch name where changes should be pushed too
     required: true
   file_pattern:
     description: File pattern used for "git add"
     required: false
     default: '.'
   repository:
-    description: Path to repository
+    description: Path to git repository
     required: false
     default: '.'
 
