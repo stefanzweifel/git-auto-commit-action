@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.4.0...HEAD)
 
+### Added
+- Add new `repository`-argument [#22](https://github.com/stefanzweifel/git-auto-commit-action/pull/22)
+
+### Changed
+- Extract logic of the Action into methods and into a separate file [#24](https://github.com/stefanzweifel/git-auto-commit-action/pull/24)
+
 ## [v2.4.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.3.0...v2.4.0) - 2019-11-30
 
 ### Added
