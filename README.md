@@ -8,6 +8,8 @@ If no changes are available, the Actions does nothing.
 This Action has been inspired and adapted from the [auto-commit](https://github.com/cds-snc/github-actions/tree/master/auto-commit
 )-Action of the Canadian Digital Service and the [commit](https://github.com/elstudio/actions-js-build/blob/41d604d6e73d632e22eac40df8cc69b5added04b/commit/entrypoint.sh)-Action by Eric Johnson.
 
+*This action currently can't be used in conjunction with pull requests of forks. See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.*
+
 ## Usage
 
 Add the following step at the end of your job.
