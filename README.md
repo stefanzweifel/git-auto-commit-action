@@ -1,7 +1,7 @@
 # git-auto-commit-action
 
 This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the Commit back to GitHub.
-The Committer is "GitHub Actions <actions@github.com>" and the Author of the Commit is "Your GitHub Username <github_username@users.noreply.github.com>.
+Default committer and author is "GitHub Actions <actions@github.com>".
 
 If no changes are available, the Actions does nothing.
 
@@ -19,6 +19,11 @@ Add the following step at the end of your job.
   with:
     commit_message: Apply automatic changes
     branch: ${{ github.head_ref }}
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    # Optional committer info
+    commit_author_name: "My Bot"
+    commit_author_email: "bot@example.com"
 
     # Optional git params
     commit_options: '--no-verify --signoff'
@@ -28,9 +33,6 @@ Add the following step at the end of your job.
 
     # Optional repository path
     repository: .
-
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 You **do not** have to create a new secret called `GITHUB_TOKEN` in your repository. `GITHUB_TOKEN` is a special token GitHub creates automatically during an Action run. (See [the documentation](https://help.github.com/en/articles/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables) for details)

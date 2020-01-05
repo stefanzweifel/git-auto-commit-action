@@ -14,16 +14,16 @@ _setup_git ( ) {
   cat <<- EOF > $HOME/.netrc
         machine github.com
         login $GITHUB_ACTOR
-        password $GITHUB_TOKEN
+        password $INPUT_GITHUB_TOKEN
 
         machine api.github.com
         login $GITHUB_ACTOR
-        password $GITHUB_TOKEN
+        password $INPUT_GITHUB_TOKEN
 EOF
     chmod 600 $HOME/.netrc
 
-    git config --global user.email "actions@github.com"
-    git config --global user.name "GitHub Actions"
+    git config --global user.email "$INPUT_COMMIT_AUTHOR_EMAIL"
+    git config --global user.name "$INPUT_COMMIT_AUTHOR_NAME"
 }
 
 _switch_to_branch() {
@@ -40,7 +40,7 @@ _add_files() {
 
 _local_commit() {
     echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}"
-    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
+    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR_NAME <$INPUT_COMMIT_AUTHOR_EMAIL>" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
 }
 
 _push_to_github() {
