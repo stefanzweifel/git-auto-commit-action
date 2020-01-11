@@ -47,13 +47,41 @@ The most common use case for this, is when you're running a Linter or Code-Style
 In this example I'm running `php-cs-fixer` in a PHP project.
 
 
+### Example with `actions/checkout@v2`
+
+```yaml
+name: php-cs-fixer
+
+on: pull_request
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: Run php-cs-fixer
+      uses: docker://oskarstark/php-cs-fixer-ga
+
+    - uses: stefanzweifel/git-auto-commit-action@v2.5.0
+      with:
+        commit_message: Apply php-cs-fixer changes
+        branch: ${{ github.head_ref }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+```
+
+### Example with `actions/checkout@v1`
+
 ```yaml
 name: php-cs-fixer
 
 on:
   pull_request:
-    paths:
-    - '**.php'
 
 jobs:
   php-cs-fixer:
