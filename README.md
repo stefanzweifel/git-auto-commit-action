@@ -6,7 +6,7 @@ The Committer is "GitHub Actions <actions@github.com>" and the Author of the Com
 If no changes are available, the Actions does nothing.
 
 This Action has been inspired and adapted from the [auto-commit](https://github.com/cds-snc/github-actions/tree/master/auto-commit
-)-Action of the Canadian Digital Service and the [commit](https://github.com/elstudio/actions-js-build/blob/41d604d6e73d632e22eac40df8cc69b5added04b/commit/entrypoint.sh)-Action by Eric Johnson.
+)-Action of the Canadian Digital Service and this [commit](https://github.com/elstudio/actions-js-build/blob/41d604d6e73d632e22eac40df8cc69b5added04b/commit/entrypoint.sh)-Action by Eric Johnson.
 
 *This action currently can't be used in conjunction with pull requests of forks. See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.*
 
@@ -33,7 +33,7 @@ Add the following step at the end of your job.
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-You **do not** have to create a new secret called `GITHUB_TOKEN` in your repository. `GITHUB_TOKEN` is a special token GitHub creates automatically during an Action run. (See [the documentation](https://help.github.com/en/articles/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables) for details)
+You **do not** have to create a new secret called `GITHUB_TOKEN` in your repository. `GITHUB_TOKEN` is a special token GitHub creates automatically during a Workflow run. (See [the documentation](https://help.github.com/en/articles/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables) for details)
 
 The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!
 
@@ -41,7 +41,7 @@ It is recommended to use this Action in Workflows which listen to the `pull_requ
 
 ## Example Usage
 
-This Action will only work, if the job in your workflow changes project files.
+This Action will only work, if the job in your Workflow changes project files.
 The most common use case for this, is when you're running a Linter or Code-Style fixer on GitHub Actions.
 
 In this example I'm running `php-cs-fixer` in a PHP project.
@@ -109,6 +109,10 @@ jobs:
 ### Inputs
 
 Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/action.yml) for a full list of supported inputs.
+
+## Known Issues
+
+- GitHub currently prohibits Actions like this to push changes from a fork to the upstream repository. See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.
 
 ## Versioning
 
