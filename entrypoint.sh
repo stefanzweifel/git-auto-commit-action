@@ -36,11 +36,11 @@ _setup_git ( ) {
   cat <<- EOF > $HOME/.netrc
         machine github.com
         login $GITHUB_ACTOR
-        password $GITHUB_TOKEN
+        password $INPUT_GITHUB_TOKEN
 
         machine api.github.com
         login $GITHUB_ACTOR
-        password $GITHUB_TOKEN
+        password $INPUT_GITHUB_TOKEN
 EOF
     chmod 600 $HOME/.netrc
 
