@@ -22,7 +22,7 @@ inputs:
     required: false
     default: '.'
   github_token:
-     description: Github Token. Usually this is the value from ${{ secrets.GITHUB_TOKEN }}. Pass a PAT if you need a more powerful token.
+     description: Github Token. Usually this is the value from secrets.GITHUB_TOKEN. Pass a PAT if you need a more powerful token.
      required: true
 
 
