@@ -33,7 +33,7 @@ Add the following step at the end of your job.
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-You **do not** have to create a new secret called `GITHUB_TOKEN` in your repository. `GITHUB_TOKEN` is a special token GitHub creates automatically during a Workflow run. (See [the documentation](https://help.github.com/en/articles/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables) for details)
+You **do not** have to create a new secret called `GITHUB_TOKEN` in your repository. `GITHUB_TOKEN` is a special token GitHub creates automatically during a Workflow run. (See [the documentation](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token) for details)
 
 The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!
 
