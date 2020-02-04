@@ -32,6 +32,7 @@ Add the following step at the end of your job.
     # Optional commit user settings
     commit_user_name: My GitHub Actions Bot
     commit_user_email: my-github-actions-bot@example.org
+    commit_author: Author <actions@gitub.com>
 
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
