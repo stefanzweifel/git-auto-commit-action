@@ -21,6 +21,14 @@ inputs:
     description: Path to git repository
     required: false
     default: '.'
+  commit_user_name:
+    description: Name used for the commit user
+    required: false
+    default: GitHub Actions
+  commit_user_email:
+    description: Email address used for the commit user
+    required: false
+    default: actions@github.com
 
 runs:
   using: 'docker'

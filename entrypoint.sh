@@ -44,8 +44,8 @@ _setup_git ( ) {
 EOF
     chmod 600 $HOME/.netrc
 
-    git config --global user.email "actions@github.com"
-    git config --global user.name "GitHub Actions"
+    git config --global user.name "$INPUT_COMMIT_USER_NAME"
+    git config --global user.email "$INPUT_COMMIT_USER_EMAIL"
 }
 
 _switch_to_branch() {
