@@ -31,7 +31,7 @@ _git_is_dirty() {
     [[ -n "$(git status -s)" ]]
 }
 
-# Set up .netrc file with GitHub credentials
+# Set up git user configuration
 _setup_git ( ) {
     git config --global user.email "actions@github.com"
     git config --global user.name "GitHub Actions"
