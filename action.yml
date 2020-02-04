@@ -29,6 +29,10 @@ inputs:
     description: Email address used for the commit user
     required: false
     default: actions@github.com
+  commit_author:
+    description: Value used for the commit author
+    required: false
+    default: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
 
 runs:
   using: 'docker'
