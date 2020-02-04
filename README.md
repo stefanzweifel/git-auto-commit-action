@@ -12,7 +12,7 @@ This Action has been inspired and adapted from the [auto-commit](https://github.
 
 ## Usage
 
-**Note:** This Action requires that you use `action/checkout@v2` or above to checkout your repository. (Since `v2` the `checkout`-Action persits the auth token in the local git config. Therefore this Action no longer requires that you pass a `GITHUB_TOKEN` to the Action.)
+**Note:** This Action requires that you use `action/checkout@v2` or above to checkout your repository.
 
 Add the following step at the end of your job.
 
