@@ -31,19 +31,8 @@ _git_is_dirty() {
     [[ -n "$(git status -s)" ]]
 }
 
-# Set up .netrc file with GitHub credentials
+# Set up git user configuration
 _setup_git ( ) {
-  cat <<- EOF > $HOME/.netrc
-        machine github.com
-        login $GITHUB_ACTOR
-        password $GITHUB_TOKEN
-
-        machine api.github.com
-        login $GITHUB_ACTOR
-        password $GITHUB_TOKEN
-EOF
-    chmod 600 $HOME/.netrc
-
     git config --global user.name "$INPUT_COMMIT_USER_NAME"
     git config --global user.email "$INPUT_COMMIT_USER_EMAIL"
 }
