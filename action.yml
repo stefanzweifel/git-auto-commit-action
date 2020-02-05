@@ -7,20 +7,32 @@ inputs:
   commit_message:
     description: Commit message
     required: true
+  branch:
+    description: Git branch name, where changes should be pushed too.
+    required: true
   commit_options:
     description: Commit options (eg. --no-verify)
     required: false
-  branch:
-    description: Branch name where changes should be pushed too
-    required: true
   file_pattern:
-    description: File pattern used for "git add"
+    description: File pattern used for `git add`. For example `src/\*.js`
     required: false
     default: '.'
   repository:
-    description: Path to git repository
+    description: Local file path to the git repository. Defaults to the current directory (`.`)
     required: false
     default: '.'
+  commit_user_name:
+    description: Name used for the commit user
+    required: false
+    default: GitHub Actions
+  commit_user_email:
+    description: Email address used for the commit user
+    required: false
+    default: actions@github.com
+  commit_author:
+    description: Value used for the commit author. Defaults to the username of whoever triggered this workflow run.
+    required: false
+    default: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
 
 runs:
   using: 'docker'

@@ -1,7 +1,7 @@
 # git-auto-commit-action
 
-This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the Commit back to GitHub.
-The Committer is "GitHub Actions <actions@github.com>" and the Author of the Commit is "Your GitHub Username <github_username@users.noreply.github.com>.
+This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the commit back to GitHub.
+The default committer is "GitHub Actions <actions@github.com>" and the default author of the commit is "Your GitHub Username <github_username@users.noreply.github.com>".
 
 If no changes are detected, the Action does nothing.
 
@@ -28,8 +28,13 @@ Add the following step at the end of your job.
     # Optional glob pattern of files which should be added to the commit
     file_pattern: src/\*.js
 
-    # Optional repository path
+    # Optional local file path to the repository
     repository: .
+
+    # Optional commit user and author settings
+    commit_user_name: My GitHub Actions Bot
+    commit_user_email: my-github-actions-bot@example.org
+    commit_author: Author <actions@gitub.com>
 ```
 
 The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!

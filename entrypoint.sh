@@ -33,8 +33,8 @@ _git_is_dirty() {
 
 # Set up git user configuration
 _setup_git ( ) {
-    git config --global user.email "actions@github.com"
-    git config --global user.name "GitHub Actions"
+    git config --global user.name "$INPUT_COMMIT_USER_NAME"
+    git config --global user.email "$INPUT_COMMIT_USER_EMAIL"
 }
 
 _switch_to_branch() {
@@ -51,7 +51,7 @@ _add_files() {
 
 _local_commit() {
     echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}"
-    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
+    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
 }
 
 _push_to_github() {
