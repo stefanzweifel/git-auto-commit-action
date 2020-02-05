@@ -3,14 +3,16 @@
 This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the Commit back to GitHub.
 The Committer is "GitHub Actions <actions@github.com>" and the Author of the Commit is "Your GitHub Username <github_username@users.noreply.github.com>.
 
-If no changes are available, the Actions does nothing.
+If no changes are detected, the Action does nothing.
 
 This Action has been inspired and adapted from the [auto-commit](https://github.com/cds-snc/github-actions/tree/master/auto-commit
 )-Action of the Canadian Digital Service and this [commit](https://github.com/elstudio/actions-js-build/blob/41d604d6e73d632e22eac40df8cc69b5added04b/commit/entrypoint.sh)-Action by Eric Johnson.
 
-*This action currently can't be used in conjunction with pull requests of forks. See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.*
+*This Action currently can't be used in conjunction with pull requests of forks. See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.*
 
 ## Usage
+
+**Note:** This Action requires that you use `action/checkout@v2` or above to checkout your repository.
 
 Add the following step at the end of your job.
 
@@ -28,12 +30,7 @@ Add the following step at the end of your job.
 
     # Optional repository path
     repository: .
-
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
-
-You **do not** have to create a new secret called `GITHUB_TOKEN` in your repository. `GITHUB_TOKEN` is a special token GitHub creates automatically during a Workflow run. (See [the documentation](https://help.github.com/en/articles/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables) for details)
 
 The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!
 
@@ -45,9 +42,6 @@ This Action will only work, if the job in your Workflow changes project files.
 The most common use case for this, is when you're running a Linter or Code-Style fixer on GitHub Actions.
 
 In this example I'm running `php-cs-fixer` in a PHP project.
-
-
-### Example with `actions/checkout@v2`
 
 ```yaml
 name: php-cs-fixer
@@ -70,45 +64,15 @@ jobs:
       with:
         commit_message: Apply php-cs-fixer changes
         branch: ${{ github.head_ref }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-```
-
-### Example with `actions/checkout@v1`
-
-```yaml
-name: php-cs-fixer
-
-on:
-  pull_request:
-
-jobs:
-  php-cs-fixer:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v1
-      with:
-        fetch-depth: 1
-
-    - name: Run php-cs-fixer
-      uses: docker://oskarstark/php-cs-fixer-ga
-
-    - name: Commit changed files
-      uses: stefanzweifel/git-auto-commit-action@v2.5.0
-      with:
-        commit_message: Apply php-cs-fixer changes
-        branch: ${{ github.head_ref }}
-        file_pattern: src/\*.php
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 ```
 
 ### Inputs
 
 Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/action.yml) for a full list of supported inputs.
+
+## Troubleshooting
+
+- If your Workflow can't push the commit to the repository because of authentication issues, please update your Workflow configuration and usage of [`ations/checkout`](https://github.com/actions/checkout#usage). (Updating the `token` value with a Personal Access Token should fix your issues)
 
 ## Known Issues
 
