@@ -10,7 +10,7 @@ inputs:
   branch:
     description: Git branch name, where changes should be pushed too.
     required: false
-    default: null
+    default: ''
   commit_options:
     description: Commit options (eg. --no-verify)
     required: false

@@ -55,14 +55,12 @@ _local_commit() {
 }
 
 _push_to_github() {
-    git push origin
-
-    # if [ -z "$INPUT_BRANCH" ]
-    # then
-    #     git push --set-upstream origin "HEAD:$INPUT_BRANCH"
-    # else
-    #     git push origin
-    # fi
+    if [ -n "$INPUT_BRANCH" ]
+    then
+        git push origin
+    else
+        git push --set-upstream origin "HEAD:$INPUT_BRANCH"
+    fi
 }
 
 _main
