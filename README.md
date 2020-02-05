@@ -1,7 +1,7 @@
 # git-auto-commit-action
 
-This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the Commit back to GitHub.
-The Committer is "GitHub Actions <actions@github.com>" and the Author of the Commit is "Your GitHub Username <github_username@users.noreply.github.com>.
+This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the commit back to GitHub.
+The default committer is "GitHub Actions <actions@github.com>" and the default author of the commit is "Your GitHub Username <github_username@users.noreply.github.com>".
 
 If no changes are detected, the Action does nothing.
 
