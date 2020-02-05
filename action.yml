@@ -9,7 +9,8 @@ inputs:
     required: true
   branch:
     description: Git branch name, where changes should be pushed too.
-    required: true
+    required: false
+    default: ${GITHUB_REF:11}
   commit_options:
     description: Commit options (eg. --no-verify)
     required: false
