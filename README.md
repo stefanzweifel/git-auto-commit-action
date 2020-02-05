@@ -28,10 +28,10 @@ Add the following step at the end of your job.
     # Optional glob pattern of files which should be added to the commit
     file_pattern: src/\*.js
 
-    # Optional repository path
+    # Optional local file path to the repository
     repository: .
 
-    # Optional commit user settings
+    # Optional commit user and author settings
     commit_user_name: My GitHub Actions Bot
     commit_user_email: my-github-actions-bot@example.org
     commit_author: Author <actions@gitub.com>
