@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Add `commit_user_name`, `commit_user_email` and `commit_author` input options for full customzation on how the commit is being created [#39](https://github.com/stefanzweifel/git-auto-commit-action/pull/39)
 
+### Changed
+- Make the `branch` input option optional [#41](https://github.com/stefanzweifel/git-auto-commit-action/pull/41)
+
 ### Removed
 - Remove the need of a GITHUB_TOKEN. Users now have to use `actions/checkout@v2` or higher [#36](https://github.com/stefanzweifel/git-auto-commit-action/pull/36)
 
