@@ -31,21 +31,10 @@ _git_is_dirty() {
     [[ -n "$(git status -s)" ]]
 }
 
-# Set up .netrc file with GitHub credentials
+# Set up git user configuration
 _setup_git ( ) {
-  cat <<- EOF > $HOME/.netrc
-        machine github.com
-        login $GITHUB_ACTOR
-        password $GITHUB_TOKEN
-
-        machine api.github.com
-        login $GITHUB_ACTOR
-        password $GITHUB_TOKEN
-EOF
-    chmod 600 $HOME/.netrc
-
-    git config --global user.email "actions@github.com"
-    git config --global user.name "GitHub Actions"
+    git config --global user.name "$INPUT_COMMIT_USER_NAME"
+    git config --global user.email "$INPUT_COMMIT_USER_EMAIL"
 }
 
 _switch_to_branch() {
@@ -62,11 +51,16 @@ _add_files() {
 
 _local_commit() {
     echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}"
-    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
+    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
 }
 
 _push_to_github() {
-    git push --set-upstream origin "HEAD:$INPUT_BRANCH"
+    if [ -z "$INPUT_BRANCH" ]
+    then
+        git push origin
+    else
+        git push --set-upstream origin "HEAD:$INPUT_BRANCH"
+    fi
 }
 
 _main
