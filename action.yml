@@ -8,7 +8,7 @@ inputs:
     description: Commit message
     required: true
   branch:
-    description: Git branch name, where changes should be pushed too.
+    description: Git branch name, where changes should be pushed too. Required if Action is used on the `pull_request` event
     required: false
     default: ''
   commit_options:
