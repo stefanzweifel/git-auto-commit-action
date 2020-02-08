@@ -100,7 +100,7 @@ Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/
 
 ## Troubleshooting
 
-- If your Workflow can't push the commit to the repository because of authentication issues, please update your Workflow configuration and usage of [`ations/checkout`](https://github.com/actions/checkout#usage). (Updating the `token` value with a Personal Access Token should fix your issues)
+- If your Workflow can't push the commit to the repository because of authentication issues, please update your Workflow configuration and usage of [`actions/checkout`](https://github.com/actions/checkout#usage). (Updating the `token` value with a Personal Access Token should fix your issues)
 
 ## Known Issues
 
