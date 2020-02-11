@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/stefanzweifel/git-auto-commit-action#readme",
   "dependencies": {
-    "@actions/core": "^1.1.1"
+    "@actions/core": "^1.1.1",
+    "@actions/exec": "^1.0.3"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.20.5",
