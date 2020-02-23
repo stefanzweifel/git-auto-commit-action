@@ -118,6 +118,29 @@ This is due to limitations set up by GitHub:
 
 You can change this by creating a new [Pesonal Access Token (PAT)](https://github.com/settings/tokens/new), storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action.
 
+#### Example Workflow
+
+```yaml
+name: php-cs-fixer
+
+on: push
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      token: ${{ secrets.PAT_TOKEN }}
+
+    - name: Run php-cs-fixer
+      uses: docker://oskarstark/php-cs-fixer-ga
+
+    - uses: stefanzweifel/git-auto-commit-action@v3.0.0
+      with:
+        commit_message: Apply php-cs-fixer changes
+```
+
 ## Known Issues
 
 - GitHub currently prohibits Actions like this to push changes from a fork to the upstream repository. See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.
