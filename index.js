@@ -1,3 +1,11 @@
+/**
+ * Most of this code has been copied from the following GitHub Action
+ * to make it simpler or not necessary to install a lot of
+ * JavaScript packages to execute a shell script.
+ *
+ * https://github.com/ad-m/github-push-action/blob/fe38f0a751bf9149f0270cc1fe20bf9156854365/start.js
+ */
+
 const spawn = require('child_process').spawn;
 const path = require("path");
 
