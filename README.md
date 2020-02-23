@@ -42,14 +42,17 @@ Add the following step at the end of your job.
 
 The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!
 
-It is recommended to use this Action in Workflows which listen to the `pull_request` event. If you want to use the Action on other events, you have to hardcode the value for `branch` as `github.head_ref` is only available in Pull Requests.
+We recommend to use this Action in Workflows, which listen to the `pull_request` event. You can then use the option `branch: ${{ github.head_ref }}` to set up the branch name correctly.
+If you don't pass a branch name, the Action will try to push the commit to a branch with the same name, as with wich the repo has been checked out.
 
 ## Example Usage
 
-This Action will only work, if the job in your Workflow changes project files.
+This Action will only work, if the job in your Workflow changes files.
 The most common use case for this, is when you're running a Linter or Code-Style fixer on GitHub Actions.
 
 In this example I'm running `php-cs-fixer` in a PHP project.
+
+### Example on `pull_request` event
 
 ```yaml
 name: php-cs-fixer
@@ -73,6 +76,8 @@ jobs:
         commit_message: Apply php-cs-fixer changes
         branch: ${{ github.head_ref }}
 ```
+
+### Example on `push` event
 
 ```yaml
 name: php-cs-fixer
@@ -100,7 +105,18 @@ Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/
 
 ## Troubleshooting
 
-- If your Workflow can't push the commit to the repository because of authentication issues, please update your Workflow configuration and usage of [`actions/checkout`](https://github.com/actions/checkout#usage). (Updating the `token` value with a Personal Access Token should fix your issues)
+### Can't push commit to repository
+If your Workflow can't push the commit to the repository because of authentication issues, please update your Workflow configuration and usage of [`actions/checkout`](https://github.com/actions/checkout#usage). (Updating the `token` value with a Personal Access Token should fix your issues)
+
+### Commit of this Action does not trigger a new Workflow run
+As mentioned in the [Usage](#Usage) section, the commit created by this Action **will not trigger** a new Workflow run automatically. 
+
+This is due to limitations set up by GitHub:
+
+> An action in a workflow run can't trigger a new workflow run. For example, if an action pushes code using the repository's GITHUB_TOKEN, a new workflow will not run even when the repository contains a workflow configured to run when push events occur.
+[Source](https://help.github.com/en/actions/reference/events-that-trigger-workflows)
+
+You can change this by creating a new [Pesonal Access Token (PAT)](https://github.com/settings/tokens/new), storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action.
 
 ## Known Issues
 
