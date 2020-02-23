@@ -28,7 +28,7 @@ _switch_to_repository() {
 }
 
 _git_is_dirty() {
-    [[ -n "$(git status -s)" ]]
+    [ -n "$(git status -s)" ]
 }
 
 # Set up git user configuration
