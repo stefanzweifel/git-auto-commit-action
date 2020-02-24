@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v4.0.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v3.0.0...v4.0.0) - 2020-02-24
 
 ### Changed
-- Switch Action to use `node12`-environment instead of `docker`. 
+- Switch Action to use `node12`-environment instead of `docker`. [#45](https://github.com/stefanzweifel/git-auto-commit-action/pull/45)
 
 ## [v3.0.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v2.5.0...v3.0.0) - 2020-02-06
 
