@@ -1,0 +1,29 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+name: "Continuous Deployment"
+
+on:
+  push:
+    tags:
+      - "**"
+
+jobs:
+  release:
+    name: "Release"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Determine tag"
+        id: "determine-tag"
+        run: "echo \"::set-output name=tag::${GITHUB_REF#refs/tags/}\""
+
+      - name: "Create release"
+        uses: "actions/create-release@v1.0.0"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          draft: false
+          prerelease: false
+          release_name: "${{ steps.determine-tag.outputs.tag }}"
+          tag_name: "${{ steps.determine-tag.outputs.tag }}"
