@@ -36,8 +36,8 @@ inputs:
     default: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'node12'
+  main: 'index.js'
 
 branding:
   icon: 'git-commit'
