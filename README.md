@@ -43,7 +43,7 @@ Add the following step at the end of your job.
 The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!
 
 We recommend to use this Action in Workflows, which listen to the `pull_request` event. You can then use the option `branch: ${{ github.head_ref }}` to set up the branch name correctly.
-If you don't pass a branch name, the Action will try to push the commit to a branch with the same name, as with wich the repo has been checked out.
+If you don't pass a branch name, the Action will try to push the commit to a branch with the same name, as with which the repo has been checked out.
 
 ## Example Usage
 
