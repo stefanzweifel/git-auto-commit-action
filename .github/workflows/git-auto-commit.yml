@@ -3,9 +3,11 @@ name: git-auto-commit
 on: push
 
 jobs:
-  shellcheck:
+  git-auto-commit:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v2
+
     - name: Use git-auto-commit-action
       uses: ./
