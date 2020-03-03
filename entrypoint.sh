@@ -7,6 +7,8 @@ _main() {
 
     if _git_is_dirty; then
 
+        echo \"::set-output name=changes_detected::true\"
+
         _setup_git
 
         _switch_to_branch
@@ -17,6 +19,9 @@ _main() {
 
         _push_to_github
     else
+
+        echo \"::set-output name=changes_detected::false\"
+
         echo "Working tree clean. Nothing to commit."
     fi
 }
