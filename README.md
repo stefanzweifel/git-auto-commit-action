@@ -131,7 +131,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      token: ${{ secrets.PAT_TOKEN }}
+      with:
+        token: ${{ secrets.PAT_TOKEN }}
 
     - name: Run php-cs-fixer
       uses: docker://oskarstark/php-cs-fixer-ga
