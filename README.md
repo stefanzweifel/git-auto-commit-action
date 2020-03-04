@@ -103,6 +103,11 @@ jobs:
 
 Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/action.yml) for a full list of supported inputs.
 
+## Outputs
+You can use these outputs to trigger other Actions in your Workflow run based on the result of `git-auto-commit-action`.
+
+- `changes_detected`: Returns either "true" or "false" if the repository was dirty and files have changed.
+
 ## Troubleshooting
 
 ### Can't push commit to repository
