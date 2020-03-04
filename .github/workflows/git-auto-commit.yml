@@ -1,0 +1,22 @@
+name: git-auto-commit
+
+on: push
+
+jobs:
+  git-auto-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use git-auto-commit-action
+      id: "auto-commit-action"
+      uses: ./
+
+    - name: "no changes detected"
+      if: steps.auto-commit-action.outputs.changes_detected == false
+      run: "echo \"No changes detected\""
+
+    - name: "changes detected"
+      if: steps.auto-commit-action.outputs.changes_detected == true
+      run: "echo \"Changes detected\""

@@ -35,6 +35,10 @@ inputs:
     required: false
     default: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
 
+outputs:
+  changes_detected:
+    description: Value is "true", if the repository was dirty and file changes have been detected. Value is "false", if no changes have been detected.
+
 runs:
   using: 'node12'
   main: 'index.js'

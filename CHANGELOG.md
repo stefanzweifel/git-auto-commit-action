@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.0.0...HEAD)
 
-> TBD
+### Added
+- Add `changes_detected` output [#49](https://github.com/stefanzweifel/git-auto-commit-action/pull/49)
 
 ## [v4.0.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v3.0.0...v4.0.0) - 2020-02-24
 
