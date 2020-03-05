@@ -62,10 +62,8 @@ _local_commit() {
 }
 
 _tag_commit() {
-    if [ -z "$INPUT_TAGGING_MESSAGE" ]
+    if [ -n "$INPUT_TAGGING_MESSAGE" ]
     then
-        # No tag name given. Do nothing.
-    else
         git tag -a "$INPUT_TAGGING_MESSAGE" -m "$INPUT_TAGGING_MESSAGE"
     fi
 }
