@@ -17,6 +17,8 @@ _main() {
 
         _local_commit
 
+        _tag_commit
+
         _push_to_github
     else
 
@@ -59,12 +61,21 @@ _local_commit() {
     git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
 }
 
+_tag_commit() {
+    echo "INPUT_TAGGING_MESSAGE: ${INPUT_TAGGING_MESSAGE}"
+
+    if [ -n "$INPUT_TAGGING_MESSAGE" ]
+    then
+        git tag -a "$INPUT_TAGGING_MESSAGE" -m "$INPUT_TAGGING_MESSAGE"
+    fi
+}
+
 _push_to_github() {
     if [ -z "$INPUT_BRANCH" ]
     then
-        git push origin
+        git push origin --tags
     else
-        git push --set-upstream origin "HEAD:$INPUT_BRANCH"
+        git push --set-upstream origin "HEAD:$INPUT_BRANCH" --tags
     fi
 }
 
