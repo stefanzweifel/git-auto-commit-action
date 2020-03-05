@@ -35,7 +35,7 @@ inputs:
     required: false
     default: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
   tagging_message:
-    description: Value used for a git tag. Keep it empty to not tag the commit.
+    description: Message used to create a new git tag with the commit. Keep this empty, if no tag should be created.
     required: false
     default: ''
 

@@ -39,7 +39,7 @@ Add the following step at the end of your job.
     commit_user_email: my-github-actions-bot@example.org
     commit_author: Author <actions@gitub.com>
 
-    # Optional. If value is set, the commit will be tagged with the given value
+    # Optional tag message. Will create and push a new tag to the remote repository
     tagging_message: 'v1.0.0'
 ```
 
