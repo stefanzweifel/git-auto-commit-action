@@ -62,9 +62,9 @@ _local_commit() {
 _push_to_github() {
     if [ -z "$INPUT_BRANCH" ]
     then
-        git push origin
+        git push origin --tags
     else
-        git push --set-upstream origin "HEAD:$INPUT_BRANCH"
+        git push --set-upstream origin "HEAD:$INPUT_BRANCH" --tags
     fi
 }
 
