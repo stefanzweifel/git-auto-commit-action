@@ -17,6 +17,8 @@ _main() {
 
         _local_commit
 
+        _tag_commit
+
         _push_to_github
     else
 
@@ -57,6 +59,15 @@ _add_files() {
 _local_commit() {
     echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}"
     git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
+}
+
+_tag_commit() {
+    if [ -z "$INPUT_TAGGING_MESSAGE" ]
+    then
+        # No tag name given. Do nothing.
+    else
+        git tag -a "$INPUT_TAGGING_MESSAGE" -m "$INPUT_TAGGING_MESSAGE"
+    fi
 }
 
 _push_to_github() {

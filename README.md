@@ -38,6 +38,9 @@ Add the following step at the end of your job.
     commit_user_name: My GitHub Actions Bot
     commit_user_email: my-github-actions-bot@example.org
     commit_author: Author <actions@gitub.com>
+
+    # Optional. If value is set, the commit will be tagged with the given value
+    tagging_message: 'v1.0.0'
 ```
 
 The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!

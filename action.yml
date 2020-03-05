@@ -34,6 +34,10 @@ inputs:
     description: Value used for the commit author. Defaults to the username of whoever triggered this workflow run.
     required: false
     default: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+  tagging_message:
+    description: Value used for a git tag. Keep it empty to not tag the commit.
+    required: false
+    default: ''
 
 outputs:
   changes_detected:
