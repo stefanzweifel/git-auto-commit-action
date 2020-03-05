@@ -4,10 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.0.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.0...HEAD)
+
+> TBD
+
+
+## [v4.1.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.0.0...v4.1.0) - 2020-03-05
 
 ### Added
-- Add `changes_detected` output [#49](https://github.com/stefanzweifel/git-auto-commit-action/pull/49)
+- Add `changes_detected` output [#49](https://github.com/stefanzweifel/git-auto-commit-action/pull/49), [#46](https://github.com/stefanzweifel/git-auto-commit-action/issues/46)
+- Add `tagging_message` input option to create and push tags [#50](https://github.com/stefanzweifel/git-auto-commit-action/pull/50), [#47](https://github.com/stefanzweifel/git-auto-commit-action/issues/47)
+
 
 ## [v4.0.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v3.0.0...v4.0.0) - 2020-02-24
 
