@@ -62,6 +62,8 @@ _local_commit() {
 }
 
 _tag_commit() {
+    echo "INPUT_TAGGING_MESSAGE: ${INPUT_TAGGING_MESSAGE}"
+
     if [ -n "$INPUT_TAGGING_MESSAGE" ]
     then
         git tag -a "$INPUT_TAGGING_MESSAGE" -m "$INPUT_TAGGING_MESSAGE"
