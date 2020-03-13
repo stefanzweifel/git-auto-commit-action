@@ -37,7 +37,7 @@ Add the following step at the end of your job.
     # Optional commit user and author settings
     commit_user_name: My GitHub Actions Bot
     commit_user_email: my-github-actions-bot@example.org
-    commit_author: Author <actions@gitub.com>
+    commit_author: Author <actions@github.com>
 
     # Optional tag message. Will create and push a new tag to the remote repository
     tagging_message: 'v1.0.0'
@@ -117,7 +117,7 @@ You can use these outputs to trigger other Actions in your Workflow run based on
 If your Workflow can't push the commit to the repository because of authentication issues, please update your Workflow configuration and usage of [`actions/checkout`](https://github.com/actions/checkout#usage). (Updating the `token` value with a Personal Access Token should fix your issues)
 
 ### Commit of this Action does not trigger a new Workflow run
-As mentioned in the [Usage](#Usage) section, the commit created by this Action **will not trigger** a new Workflow run automatically. 
+As mentioned in the [Usage](#Usage) section, the commit created by this Action **will not trigger** a new Workflow run automatically.
 
 This is due to limitations set up by GitHub:
 
