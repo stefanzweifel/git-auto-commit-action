@@ -25,5 +25,7 @@ jobs:
         with:
           draft: false
           prerelease: false
+          body: |
+            See [Changelog](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/CHANGELOG.md) for details.
           release_name: "${{ steps.determine-tag.outputs.tag }}"
           tag_name: "${{ steps.determine-tag.outputs.tag }}"
