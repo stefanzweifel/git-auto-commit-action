@@ -67,12 +67,15 @@ _tag_commit() {
     if [ -n "$INPUT_TAGGING_MESSAGE" ]
     then
         git tag -a "$INPUT_TAGGING_MESSAGE" -m "$INPUT_TAGGING_MESSAGE"
+    else
+        echo " No tagging message supplied. Not tag will be added"
     fi
 }
 
 _push_to_github() {
     if [ -z "$INPUT_BRANCH" ]
     then
+        echo "git push origin without branch name"
         git push origin --tags
     else
         git push --set-upstream origin "HEAD:$INPUT_BRANCH" --tags
