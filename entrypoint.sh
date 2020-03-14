@@ -76,7 +76,7 @@ _push_to_github() {
     if [ -z "$INPUT_BRANCH" ]
     then
         echo "git push origin without branch name"
-        git push origin --tags
+        git push origin
     else
         git push --set-upstream origin "HEAD:$INPUT_BRANCH" --tags
     fi
