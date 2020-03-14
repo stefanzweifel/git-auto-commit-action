@@ -68,7 +68,7 @@ _tag_commit() {
     then
         git tag -a "$INPUT_TAGGING_MESSAGE" -m "$INPUT_TAGGING_MESSAGE"
     else
-        echo " No tagging message supplied. Not tag will be added"
+        echo " No tagging message supplied. No tag will be added."
     fi
 }
 
