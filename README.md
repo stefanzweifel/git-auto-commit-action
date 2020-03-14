@@ -17,7 +17,7 @@ This Action has been inspired and adapted from the [auto-commit](https://github.
 Add the following step at the end of your job.
 
 ```yaml
-- uses: stefanzweifel/git-auto-commit-action@v4.1.0
+- uses: stefanzweifel/git-auto-commit-action@v4.1.1
   with:
     commit_message: Apply automatic changes
 
@@ -74,7 +74,7 @@ jobs:
     - name: Run php-cs-fixer
       uses: docker://oskarstark/php-cs-fixer-ga
 
-    - uses: stefanzweifel/git-auto-commit-action@v4.1.0
+    - uses: stefanzweifel/git-auto-commit-action@v4.1.1
       with:
         commit_message: Apply php-cs-fixer changes
         branch: ${{ github.head_ref }}
@@ -97,7 +97,7 @@ jobs:
     - name: Run php-cs-fixer
       uses: docker://oskarstark/php-cs-fixer-ga
 
-    - uses: stefanzweifel/git-auto-commit-action@v4.1.0
+    - uses: stefanzweifel/git-auto-commit-action@v4.1.1
       with:
         commit_message: Apply php-cs-fixer changes
 ```
@@ -145,7 +145,7 @@ jobs:
     - name: Run php-cs-fixer
       uses: docker://oskarstark/php-cs-fixer-ga
 
-    - uses: stefanzweifel/git-auto-commit-action@v4.1.0
+    - uses: stefanzweifel/git-auto-commit-action@v4.1.1
       with:
         commit_message: Apply php-cs-fixer changes
 ```
