@@ -124,7 +124,7 @@ This is due to limitations set up by GitHub:
 > An action in a workflow run can't trigger a new workflow run. For example, if an action pushes code using the repository's GITHUB_TOKEN, a new workflow will not run even when the repository contains a workflow configured to run when push events occur.
 [Source](https://help.github.com/en/actions/reference/events-that-trigger-workflows)
 
-You can change this by creating a new [Pesonal Access Token (PAT)](https://github.com/settings/tokens/new), storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action.
+You can change this by creating a new [Personal Access Token (PAT)](https://github.com/settings/tokens/new), storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action.
 
 #### Example Workflow
 
