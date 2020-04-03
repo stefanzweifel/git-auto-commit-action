@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.1...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.2...HEAD)
 
-## [v4.1.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.1...v4.1.1) - 2020-03-14
+## [v4.1.2](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.1...v4.1.2) - 2020-04-03
+
+### Fixes
+- Fix Issue with `changes_detected`-output [#57](https://github.com/stefanzweifel/git-auto-commit-action/pull/57)
+
+## [v4.1.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.0...v4.1.1) - 2020-03-14
 
 ### Fixes
 - Fix issue where commit has not been pushed to remote repository, when no `branch`-option has been given [#54](https://github.com/stefanzweifel/git-auto-commit-action/pull/54)
