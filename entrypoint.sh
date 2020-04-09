@@ -45,10 +45,13 @@ _setup_git ( ) {
 }
 
 _switch_to_branch() {
-    echo "INPUT_BRANCH value: $INPUT_BRANCH";
+    # echo "INPUT_BRANCH value: $INPUT_BRANCH";
 
     # Switch to branch from current Workflow run
-    git checkout $INPUT_BRANCH
+    # git checkout $INPUT_BRANCH
+
+    git checkout -b git-auto-commit-temp-branch
+
 }
 
 _add_files() {
