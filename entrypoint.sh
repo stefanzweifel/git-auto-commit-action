@@ -68,6 +68,10 @@ _tag_commit() {
 }
 
 _push_to_github() {
+
+    echo "INPUT_BRANCH value: $INPUT_BRANCH";
+    echo "push_to_github";
+
     if [ -z "$INPUT_BRANCH" ]
     then
         # Only add `--tags` option, if `$INPUT_TAGGING_MESSAGE` is set
