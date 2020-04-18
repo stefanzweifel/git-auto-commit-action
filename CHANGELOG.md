@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.2...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.3...HEAD)
+
+## [v4.1.3](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.2...v4.1.3) - 2020-04-18
+
+### Changed
+- Place Git user configuration inline [#59](https://github.com/stefanzweifel/git-auto-commit-action/pull/59)
 
 ## [v4.1.2](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.1...v4.1.2) - 2020-04-03
 
