@@ -86,6 +86,7 @@ _push_to_github() {
         fi
     else
         echo "::debug::Push commit to remote branch $INPUT_BRANCH"
+        git pull origin "HEAD:$INPUT_BRANCH"
         git push --set-upstream origin "HEAD:$INPUT_BRANCH" --tags
     fi
 }
