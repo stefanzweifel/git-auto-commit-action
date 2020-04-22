@@ -52,10 +52,12 @@ _local_commit() {
     echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}";
     echo "::debug::Apply commit options ${INPUT_COMMIT_OPTIONS}";
 
+    INPUT_COMMIT_OPTIONS_ARRAY=( $INPUT_COMMIT_OPTIONS );
+
     git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" \
         commit -m "$INPUT_COMMIT_MESSAGE" \
         --author="$INPUT_COMMIT_AUTHOR" \
-        ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"};
+        ${INPUT_COMMIT_OPTIONS:+"${INPUT_COMMIT_OPTIONS_ARRAY[@]}"};
 }
 
 _tag_commit() {
