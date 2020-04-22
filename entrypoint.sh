@@ -55,8 +55,8 @@ _local_commit() {
 
     if [ -n "$INPUT_COMMIT_OPTIONS" ]
     then
-        echo "::debug::Apply commit options $INPUT_COMMIT_OPTIONS";
-        git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR" "$INPUT_COMMIT_OPTIONS";
+        echo "::debug::Apply commit options ${INPUT_COMMIT_OPTIONS}";
+        git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR" "${INPUT_COMMIT_OPTIONS}";
     else
         git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR";
     fi
