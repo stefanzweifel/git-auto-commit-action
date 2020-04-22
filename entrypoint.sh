@@ -9,6 +9,8 @@ _main() {
 
         echo "::set-output name=changes_detected::true"
 
+        _setup_git
+
         _switch_to_branch
 
         _add_files
@@ -36,6 +38,12 @@ _git_is_dirty() {
     [ -n "$(git status -s)" ]
 }
 
+# Set up git user configuration
+_setup_git ( ) {
+    git config --global user.name "$INPUT_COMMIT_USER_NAME"
+    git config --global user.email "$INPUT_COMMIT_USER_EMAIL"
+}
+
 _switch_to_branch() {
     echo "INPUT_BRANCH value: $INPUT_BRANCH";
 
@@ -50,7 +58,7 @@ _add_files() {
 
 _local_commit() {
     echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}"
-    git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
+    git commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR" ${INPUT_COMMIT_OPTIONS:+"$INPUT_COMMIT_OPTIONS"}
 }
 
 _tag_commit() {
