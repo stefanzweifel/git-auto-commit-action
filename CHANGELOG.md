@@ -6,9 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.3...HEAD)
 
+## [v4.1.4](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.3...v4.1.4) - 2020-04-22
+
+### Fixed
+- Fix bug introduced in previous version, where git user configuration has been placed inline [#62](https://github.com/stefanzweifel/git-auto-commit-action/pull/62)
+
+
 ## [v4.1.3](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.2...v4.1.3) - 2020-04-18
 
-### Changed
+### Changed
 - Place Git user configuration inline [#59](https://github.com/stefanzweifel/git-auto-commit-action/pull/59)
 
 ## [v4.1.2](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.1...v4.1.2) - 2020-04-03
