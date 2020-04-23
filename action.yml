@@ -14,6 +14,7 @@ inputs:
   commit_options:
     description: Commit options (eg. --no-verify)
     required: false
+    default: ''
   file_pattern:
     description: File pattern used for `git add`. For example `src/\*.js`
     required: false
