@@ -4,7 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.3...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.5...HEAD)
+
+> TBD
+
+## [v4.1.5](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.4...v4.1.5) - 2020-04-23
+
+### Added
+- Update `file_pattern` to support multiple file paths [#65](https://github.com/stefanzweifel/git-auto-commit-action/pull/65)
+
+### Changes
+- Revert changes made in v4.1.4 [#63](https://github.com/stefanzweifel/git-auto-commit-action/pull/63)
+
+### Fixes
+- Fix issue with `commit_options` [#64](https://github.com/stefanzweifel/git-auto-commit-action/pull/64)
 
 ## [v4.1.4](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.3...v4.1.4) - 2020-04-22
 
