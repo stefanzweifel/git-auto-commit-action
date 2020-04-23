@@ -29,7 +29,7 @@ Add the following step at the end of your job.
     commit_options: '--no-verify --signoff'
 
     # Optional glob pattern of files which should be added to the commit
-    file_pattern: src/\*.js
+    file_pattern: src/*.js tests/*.js
 
     # Optional local file path to the repository
     repository: .
