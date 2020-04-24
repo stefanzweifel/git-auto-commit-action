@@ -57,6 +57,8 @@ In this example I'm running `php-cs-fixer` in a PHP project.
 
 ### Example on `pull_request` event
 
+If you would like to use this Action in a Workflow which listens to the `pull_request` event, you must add the `ref`-input to the `actions/checkout@v2` step. It's also recommended to add the `branch`-input to the `git-auto-commit`-step. This way you tell the Action exactly where to push the commit.
+
 ```yaml
 name: php-cs-fixer
 
