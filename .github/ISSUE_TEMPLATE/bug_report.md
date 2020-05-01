@@ -7,8 +7,10 @@ assignees: ''
 
 ---
 
+<!-- Before opening an issue, have you tried solving your problem by explicitly setting the `branch`-value in your workflow? -->
+
 **Version of the Action**
-`v2.x.x`
+`v4.x.x`
 
 **Describe the bug**
 A clear and concise description of what the bug is.
@@ -25,6 +27,12 @@ A clear and concise description of what you expected to happen.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
+
+**Used Workflow**
+
+```yaml
+# Paste the Workflow you've used here
+```
 
 **Additional context**
 Add any other context about the problem here.
