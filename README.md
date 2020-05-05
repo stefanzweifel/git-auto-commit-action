@@ -3,28 +3,23 @@
 > The GitHub Action for commiting files for the 80% use case.
 
 This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the commit back to GitHub.  
-The default committer is "GitHub Actions <actions@github.com>" and the default author of the commit is "Your GitHub Username <github_username@users.noreply.github.com>".
+The default committer is "GitHub Actions <actions@github.com>", and the default author of the commit is "Your GitHub Username <github_username@users.noreply.github.com>".
 
 This Action has been inspired and adapted from the [auto-commit](https://github.com/cds-snc/github-actions/tree/master/auto-commit
 )-Action of the Canadian Digital Service and this [commit](https://github.com/elstudio/actions-js-build/blob/41d604d6e73d632e22eac40df8cc69b5added04b/commit/entrypoint.sh)-Action by Eric Johnson.
 
 ## Usage
 
-Please note that this Action requires you to use `action/checkout@v2` or later versions to checkout the repository.
-
-There are currently no restrictions on the events for which this Action can be used.   
-The default settings are optimized for the `push` and `pull_request`. For other events, we highly recommend adding the `branch`-option to your workflow. Explicitly telling the Action which branch should be used solves most of the common problems.
-
-Add the following step at the end of your job.
+Add the following step at the end of your job, after the steps that actually change files.
 
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v4.1.6
   with:
+    # Required
     commit_message: Apply automatic changes
 
     # Optional name of the branch the commit should be pushed to
-    # Required if Action is used in Workflow listening to the `pull_request` event.
-    # Also required for almost all other events (eg. `schedule`)
+    # Required for almost all non-`push` events, eg. `pull_request`, `schedule`
     branch: ${{ github.head_ref }}
 
     # Optional git params
@@ -41,34 +36,70 @@ Add the following step at the end of your job.
     commit_user_email: my-github-actions-bot@example.org
     commit_author: Author <actions@github.com>
 
-    # Optional tag message. 
+    # Optional tag message 
     # Action will create and push a new tag to the remote repository and the defined branch
     tagging_message: 'v1.0.0'
 ```
 
-The Action will only commit files back, if changes are available. The resulting commit **will not trigger** another GitHub Actions Workflow run!
+The Action will only commit if files have changed.
 
-We recommend to use this Action in Workflows, which listen to the `pull_request` event. You can then use the option `branch: ${{ github.head_ref }}` to set up the branch name correctly.
-If you don't pass a branch name, the Action will try to push the commit to a branch with the same name, as with which the repo has been checked out.
+## Limitations & Gotchas
 
-## Example Usage
+### Checkout the correct branch
+
+You must use `action/checkout@v2` or later versions to checkout the repository.
+In non-`push` events, such as `pull_request`, make sure to specify the `ref` to checkout:
+
+```yaml
+- uses: actions/checkout@v2
+  with:
+    ref: ${{ github.head_ref }}
+```
+
+### Specify the branch name
+
+It is highly recommended to always specify the `branch` option explicitly.
+While the default setting works for `push` events, other events such as `pull_request` require it to work correctly.
+
+This Action does not contain magic and can't easily determine to which branch a commit should be pushed to. 🔮.
+
+### Commits of this Action do not trigger new Workflow runs
+
+The resulting commit **will not trigger** another GitHub Actions Workflow run.
+This is due to [limititations set by GitHub](https://help.github.com/en/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token).
+
+> When you use the repository's GITHUB_TOKEN to perform tasks on behalf of the GitHub Actions app, events triggered by the GITHUB_TOKEN will not create a new workflow run. This prevents you from accidentally creating recursive workflow runs.
+
+You can change this by creating a new [Personal Access Token (PAT)](https://github.com/settings/tokens/new),
+storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action.
+
+```yaml
+- uses: actions/checkout@v2
+  with:
+    token: ${{ secrets.PAT_TOKEN }}
+```
+
+### Unable to commit into PRs from forks
+
+GitHub currently prohibits Actions like this to push commits to forks, even when they created a PR and allow edits.
+See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.
+
+## Example
 
 The most common use case for this Action is to create a new build of your project on GitHub Actions and commit the compiled files back to the repository.
-Another simple use case is to run a linter and commit the fixes back to the repository.
+Another simple use case is to run automatic formatting and commit the fixes back to the repository.
 
-In this example, we're running `php-cs-fixer` in a PHP project, let the linter fix possible code issues and commit the changed files back to the repository.
+In this example, we're running `php-cs-fixer` in a PHP project, let the linter fix possible code issues, then commit the changed files back to the repository.
 
-### Example: Listen to `pull_request` event
-
-When using the Action while listening to the `pull_request`-event, you must add the `ref`-input to the `actions/checkout@v2` step. 
-Otherwhise the repository is checked out in a detached state which causes issue with this Action.
-
-It's also recommended to add the `branch`-input to the `git-auto-commit`-step. This way you tell the Action exactly where to push the commit.
+Note that we explicitly specify `${{ github.head_ref }}` in both the checkout and the commit Action.
+This is required in order to work with the `pull_request` event (or any other non-`push` event).
 
 ```yaml
 name: php-cs-fixer
 
-on: pull_request
+on:
+  pull_request:
+  push:
 
 jobs:
   php-cs-fixer:
@@ -88,33 +119,12 @@ jobs:
         branch: ${{ github.head_ref }}
 ```
 
-### Example: Listen to `push` event
-
-```yaml
-name: php-cs-fixer
-
-on: push
-
-jobs:
-  php-cs-fixer:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Run php-cs-fixer
-      uses: docker://oskarstark/php-cs-fixer-ga
-
-    - uses: stefanzweifel/git-auto-commit-action@v4.1.6
-      with:
-        commit_message: Apply php-cs-fixer changes
-```
-
-### Inputs
+## Inputs
 
 Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/action.yml) for a full list of supported inputs.
 
 ## Outputs
+
 You can use these outputs to trigger other Actions in your Workflow run based on the result of `git-auto-commit-action`.
 
 - `changes_detected`: Returns either "true" or "false" if the repository was dirty and files have changed.
@@ -122,53 +132,19 @@ You can use these outputs to trigger other Actions in your Workflow run based on
 ## Troubleshooting
 
 ### Action does not push commit to repository
-The cloned repository can be in different states depending on the event your Workflow is running on.   
-If you listen to antother event than `push` or `pull_requests` it is highly recommended to set the `branch`-input.
 
-This Action does not contain magic and can't easily determine, to which branch a commit should be pushed to. 🔮.  
-It's much easier if you just define the `branch`-value yourself.
-
+Make sure to [checkout the correct branch](#checkout-the-correct-branch) and [specify the branch name](#specify-the-branch-name).
 
 ### Action does not push commit to repository: Authentication Issue
-If your Workflow can't push the commit to the repository because of authentication issues, please update your Workflow configuration and usage of [`actions/checkout`](https://github.com/actions/checkout#usage). (Updating the `token` value with a Personal Access Token should fix your issues)
 
-### Commit of this Action does not trigger a new Workflow run
-As mentioned in the [Usage](#Usage) section, the commit created by this Action **will not trigger** a new Workflow run automatically.
+If your Workflow can't push the commit to the repository because of authentication issues,
+please update your Workflow configuration and usage of [`actions/checkout`](https://github.com/actions/checkout#usage).
 
-This is due to limitations set up by GitHub:
+Updating the `token` value with a Personal Access Token should fix your issues.
 
-> An action in a workflow run can't trigger a new workflow run. For example, if an action pushes code using the repository's GITHUB_TOKEN, a new workflow will not run even when the repository contains a workflow configured to run when push events occur.
-[Source](https://help.github.com/en/actions/reference/events-that-trigger-workflows)
+### No new workflows are triggered by the commit of this action
 
-You can change this by creating a new [Personal Access Token (PAT)](https://github.com/settings/tokens/new), storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action.
-
-#### Example Workflow
-
-```yaml
-name: php-cs-fixer
-
-on: push
-
-jobs:
-  php-cs-fixer:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.PAT_TOKEN }}
-
-    - name: Run php-cs-fixer
-      uses: docker://oskarstark/php-cs-fixer-ga
-
-    - uses: stefanzweifel/git-auto-commit-action@v4.1.6
-      with:
-        commit_message: Apply php-cs-fixer changes
-```
-
-## Known Issues & Limitations
-
-- GitHub currently prohibits Actions like this to push changes from a fork to the upstream repository. See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.
+This is due to limitations set up by GitHub, [commits of this Action do not trigger new Workflow runs](#commits-of-this-action-do-not-trigger-new-workflow-runs).
 
 ## Versioning
 
