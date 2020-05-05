@@ -121,7 +121,7 @@ storing the token as a secret in your repository and then passing the new token 
 
 ### Unable to commit into PRs from forks
 
-GitHub currently prohibits Actions like this to push commits to forks, even when they created a PR and allow edits.
+GitHub currently prohibits Actions to push commits to forks, even when they created a PR and allow edits.
 See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.
 
 ## Inputs
