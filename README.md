@@ -94,6 +94,13 @@ In non-`push` events, such as `pull_request`, make sure to specify the `ref` to 
 It is highly recommended to always specify the `branch` option explicitly.
 While the default setting works for `push` events, other events such as `pull_request` require it to work correctly.
 
+```yaml
+- uses: stefanzweifel/git-auto-commit-action@v4.1.6
+  with:
+    commit_message: Some automated code change
+    branch: ${{ github.head_ref }}
+```
+
 This Action does not contain magic and can't easily determine to which branch a commit should be pushed to. 🔮.
 
 ### Commits of this Action do not trigger new Workflow runs
