@@ -1,6 +1,6 @@
 # git-auto-commit Action
 
-> The GitHub Action for commiting files for the 80% use case.
+> The GitHub Action for committing files for the 80% use case.
 
 This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the commit back to GitHub.  
 The default committer is "GitHub Actions <actions@github.com>", and the default author of the commit is "Your GitHub Username <github_username@users.noreply.github.com>".
@@ -10,7 +10,7 @@ This Action has been inspired and adapted from the [auto-commit](https://github.
 
 ## Usage
 
-Add the following step at the end of your job, after the steps that actually change files.
+Add the following step at the end of your job, after other steps that might add or change files.
 
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v4.1.6
@@ -41,7 +41,40 @@ Add the following step at the end of your job, after the steps that actually cha
     tagging_message: 'v1.0.0'
 ```
 
-The Action will only commit if files have changed.
+## Example
+
+In this example, we're running `php-cs-fixer` in a PHP project to fix the codestyle automatically,
+then commit possible changed files back to the repository.
+
+Note that we explicitly specify `${{ github.head_ref }}` in both the checkout and the commit Action.
+This is required in order to work with the `pull_request` event (or any other non-`push` event).
+
+```yaml
+name: php-cs-fixer
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: Run php-cs-fixer
+      uses: docker://oskarstark/php-cs-fixer-ga
+
+    - uses: stefanzweifel/git-auto-commit-action@v4.1.6
+      with:
+        commit_message: Apply php-cs-fixer changes
+        branch: ${{ github.head_ref }}
+```
 
 ## Limitations & Gotchas
 
@@ -83,41 +116,6 @@ storing the token as a secret in your repository and then passing the new token 
 
 GitHub currently prohibits Actions like this to push commits to forks, even when they created a PR and allow edits.
 See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.
-
-## Example
-
-The most common use case for this Action is to create a new build of your project on GitHub Actions and commit the compiled files back to the repository.
-Another simple use case is to run automatic formatting and commit the fixes back to the repository.
-
-In this example, we're running `php-cs-fixer` in a PHP project, let the linter fix possible code issues, then commit the changed files back to the repository.
-
-Note that we explicitly specify `${{ github.head_ref }}` in both the checkout and the commit Action.
-This is required in order to work with the `pull_request` event (or any other non-`push` event).
-
-```yaml
-name: php-cs-fixer
-
-on:
-  pull_request:
-  push:
-
-jobs:
-  php-cs-fixer:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: ${{ github.head_ref }}
-
-    - name: Run php-cs-fixer
-      uses: docker://oskarstark/php-cs-fixer-ga
-
-    - uses: stefanzweifel/git-auto-commit-action@v4.1.6
-      with:
-        commit_message: Apply php-cs-fixer changes
-        branch: ${{ github.head_ref }}
-```
 
 ## Inputs
 
