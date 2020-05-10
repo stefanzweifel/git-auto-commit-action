@@ -4,12 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.6...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.2.0...HEAD)
 
 > TBD
 
+
+## [v4.2.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.6...v4.2.0) - 2020-05-10
+
 ### Changed
-- Use `${{ github.head_ref }}` as default branch value. [#75](https://github.com/stefanzweifel/git-auto-commit-action/pull/75), [#73](https://github.com/stefanzweifel/git-auto-commit-action/pull/73)
+- Use `${{ github.head_ref }}` as default branch value. Therefore, the branch name when listening for `pull_request`-events is optional. [#75](https://github.com/stefanzweifel/git-auto-commit-action/pull/75), [#73](https://github.com/stefanzweifel/git-auto-commit-action/pull/73)
 
 
 ## [v4.1.6](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.5...v4.1.6) - 2020-04-28
