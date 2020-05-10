@@ -10,7 +10,7 @@ inputs:
   branch:
     description: Git branch name, where changes should be pushed too. Required if Action is used on the `pull_request` event
     required: false
-    default: ''
+    default: ${{ github.head_ref }}
   commit_options:
     description: Commit options (eg. --no-verify)
     required: false
