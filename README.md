@@ -18,8 +18,7 @@ Add the following step at the end of your job, after other steps that might add 
     # Required
     commit_message: Apply automatic changes
 
-    # Optional name of the branch the commit should be pushed to
-    # Required for almost all non-`push` events, eg. `pull_request`, `schedule`
+    # Optional name of another branch the commit should be pushed to
     branch: ${{ github.head_ref }}
 
     # Optional git params
@@ -46,7 +45,7 @@ Add the following step at the end of your job, after other steps that might add 
 In this example, we're running `php-cs-fixer` in a PHP project to fix the codestyle automatically,
 then commit possible changed files back to the repository.
 
-Note that we explicitly specify `${{ github.head_ref }}` in both the checkout and the commit Action.
+Note that we explicitly specify `${{ github.head_ref }}` in the checkout Action.
 This is required in order to work with the `pull_request` event (or any other non-`push` event).
 
 ```yaml
@@ -73,7 +72,6 @@ jobs:
     - uses: stefanzweifel/git-auto-commit-action@v4.1.6
       with:
         commit_message: Apply php-cs-fixer changes
-        branch: ${{ github.head_ref }}
 ```
 
 ## Limitations & Gotchas
@@ -88,20 +86,6 @@ In non-`push` events, such as `pull_request`, make sure to specify the `ref` to 
   with:
     ref: ${{ github.head_ref }}
 ```
-
-### Specify the branch name
-
-It is highly recommended to always specify the `branch` option explicitly.
-While the default setting works for `push` events, other events such as `pull_request` require it to work correctly.
-
-```yaml
-- uses: stefanzweifel/git-auto-commit-action@v4.1.6
-  with:
-    commit_message: Some automated code change
-    branch: ${{ github.head_ref }}
-```
-
-This Action does not contain magic and can't easily determine to which branch a commit should be pushed to. 🔮.
 
 ### Commits of this Action do not trigger new Workflow runs
 
@@ -138,7 +122,7 @@ You can use these outputs to trigger other Actions in your Workflow run based on
 
 ### Action does not push commit to repository
 
-Make sure to [checkout the correct branch](#checkout-the-correct-branch) and [specify the branch name](#specify-the-branch-name).
+Make sure to [checkout the correct branch](#checkout-the-correct-branch).
 
 ### Action does not push commit to repository: Authentication Issue
 
