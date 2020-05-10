@@ -18,7 +18,7 @@ Add the following step at the end of your job, after other steps that might add 
     # Required
     commit_message: Apply automatic changes
 
-    # Optional name of another branch the commit should be pushed to
+    # Optional branch to push to, defaults to the current branch
     branch: ${{ github.head_ref }}
 
     # Optional git params
