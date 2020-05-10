@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 > TBD
 
+### Changed
+- Use `${{ github.head_ref }}` as default branch value. [#75](https://github.com/stefanzweifel/git-auto-commit-action/pull/75), [#73](https://github.com/stefanzweifel/git-auto-commit-action/pull/73)
+
+
 ## [v4.1.6](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.5...v4.1.6) - 2020-04-28
 
 ### Fixes
