@@ -19,7 +19,7 @@ Add the following step at the end of your job, after other steps that might add 
     commit_message: Apply automatic changes
 
     # Optional branch to push to, defaults to the current branch
-    branch: ${{ github.head_ref }}
+    branch: feature-123
 
     # Optional git params
     commit_options: '--no-verify --signoff'
@@ -42,8 +42,7 @@ Add the following step at the end of your job, after other steps that might add 
 
 ## Example
 
-In this example, we're running `php-cs-fixer` in a PHP project to fix the codestyle automatically,
-then commit possible changed files back to the repository.
+In this example, we're running `php-cs-fixer` in a PHP project to fix the codestyle automatically, then commit possible changed files back to the repository.
 
 Note that we explicitly specify `${{ github.head_ref }}` in the checkout Action.
 This is required in order to work with the `pull_request` event (or any other non-`push` event).
@@ -86,6 +85,8 @@ In non-`push` events, such as `pull_request`, make sure to specify the `ref` to 
   with:
     ref: ${{ github.head_ref }}
 ```
+
+You have to do this do avoid that the `checkout`-Action clones your repository in a detached state.
 
 ### Commits of this Action do not trigger new Workflow runs
 
