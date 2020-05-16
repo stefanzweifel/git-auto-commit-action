@@ -13,7 +13,7 @@ This Action has been inspired and adapted from the [auto-commit](https://github.
 Add the following step at the end of your job, after other steps that might add or change files.
 
 ```yaml
-- uses: stefanzweifel/git-auto-commit-action@v4.2.0
+- uses: stefanzweifel/git-auto-commit-action@v4
   with:
     # Required
     commit_message: Apply automatic changes
@@ -71,7 +71,7 @@ jobs:
     - name: Run php-cs-fixer
       uses: docker://oskarstark/php-cs-fixer-ga
 
-    - uses: stefanzweifel/git-auto-commit-action@v4.2.0
+    - uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: Apply php-cs-fixer changes
 ```
@@ -142,7 +142,7 @@ If your repository uses [protected branches](https://help.github.com/en/github/a
 You have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like so.
 
 ```yaml
-    - uses: stefanzweifel/git-auto-commit-action@v4.2.0
+    - uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: Apply php-cs-fixer changes
         push_options: --force
@@ -155,6 +155,9 @@ This is due to limitations set up by GitHub, [commits of this Action do not trig
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/stefanzweifel/git-auto-commit-action/tags).
+
+We also provide major version tags to make it easier to always use the latest release of a major version. For example you can use `stefanzweifel/git-auto-commit-action@v4` to always use the latest release of the current major version.
+(More information about this [here](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md#major-versions).)
 
 ## License
 

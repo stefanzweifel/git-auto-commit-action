@@ -4,9 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.2.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.3.0...HEAD)
 
 > TBD
+
+
+## [v4.3.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.2.0...v4.3.0) - 2020-05-16
+
+Note: Since v4.3.0 we provide major version tags. You can now use `stefanzweifel/git-auto-commit-action@v4` to always use the latest release of a major version. See [#77](https://github.com/stefanzweifel/git-auto-commit-action/issues/77) for details.
+
+### Added
+- Add new `push_options`-input. This feature makes it easier for you to force-push commits to a repository. [#78](https://github.com/stefanzweifel/git-auto-commit-action/pull/78), [#72](https://github.com/stefanzweifel/git-auto-commit-action/issues/72)
 
 
 ## [v4.2.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.6...v4.2.0) - 2020-05-10
