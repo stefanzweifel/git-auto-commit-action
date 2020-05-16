@@ -139,7 +139,7 @@ Updating the `token` value with a Personal Access Token should fix your issues.
 
 If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) this Action will not be able to push to your repository.
 
-You have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to to use force pushes like so.
+You have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like so.
 
 ```yaml
     - uses: stefanzweifel/git-auto-commit-action@v4.2.0
