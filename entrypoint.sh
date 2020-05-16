@@ -73,21 +73,27 @@ _tag_commit() {
 }
 
 _push_to_github() {
+
+    echo "INPUT_PUSH_OPTIONS: ${INPUT_PUSH_OPTIONS}";
+    echo "::debug::Apply push options ${INPUT_PUSH_OPTIONS}";
+
+    INPUT_PUSH_OPTIONS_ARRAY=( $INPUT_PUSH_OPTIONS );
+
     if [ -z "$INPUT_BRANCH" ]
     then
         # Only add `--tags` option, if `$INPUT_TAGGING_MESSAGE` is set
         if [ -n "$INPUT_TAGGING_MESSAGE" ]
         then
             echo "::debug::git push origin --tags";
-            git push origin --tags;
+            git push origin --tags ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
         else
             echo "::debug::git push origin";
-            git push origin;
+            git push origin ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
         fi
 
     else
         echo "::debug::Push commit to remote branch $INPUT_BRANCH";
-        git push --set-upstream origin "HEAD:$INPUT_BRANCH" --tags;
+        git push --set-upstream origin "HEAD:$INPUT_BRANCH" --tags ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
     fi
 }
 

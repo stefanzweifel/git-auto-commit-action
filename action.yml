@@ -39,6 +39,10 @@ inputs:
     description: Message used to create a new git tag with the commit. Keep this empty, if no tag should be created.
     required: false
     default: ''
+  push_options:
+    description: Push options (eg. --force)
+    required: false
+    default: ''
 
 outputs:
   changes_detected:

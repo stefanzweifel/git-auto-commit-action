@@ -21,7 +21,7 @@ Add the following step at the end of your job, after other steps that might add 
     # Optional branch to push to, defaults to the current branch
     branch: feature-123
 
-    # Optional git params
+    # Optional options appended to `git-commit`
     commit_options: '--no-verify --signoff'
 
     # Optional glob pattern of files which should be added to the commit
@@ -38,6 +38,9 @@ Add the following step at the end of your job, after other steps that might add 
     # Optional tag message 
     # Action will create and push a new tag to the remote repository and the defined branch
     tagging_message: 'v1.0.0'
+
+    # Optional options appended to `git-push`
+    push_options: '--force'
 ```
 
 ## Example
@@ -131,6 +134,19 @@ If your Workflow can't push the commit to the repository because of authenticati
 please update your Workflow configuration and usage of [`actions/checkout`](https://github.com/actions/checkout#usage).
 
 Updating the `token` value with a Personal Access Token should fix your issues.
+
+## Action does not push to protected branch
+
+If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) this Action will not be able to push to your repository.
+
+You have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like so.
+
+```yaml
+    - uses: stefanzweifel/git-auto-commit-action@v4.2.0
+      with:
+        commit_message: Apply php-cs-fixer changes
+        push_options: --force
+```
 
 ### No new workflows are triggered by the commit of this action
 
