@@ -21,7 +21,7 @@ Add the following step at the end of your job, after other steps that might add 
     # Optional branch to push to, defaults to the current branch
     branch: feature-123
 
-    # Optional git params
+    # Optional options appended to `git-commit`
     commit_options: '--no-verify --signoff'
 
     # Optional glob pattern of files which should be added to the commit
@@ -38,6 +38,9 @@ Add the following step at the end of your job, after other steps that might add 
     # Optional tag message 
     # Action will create and push a new tag to the remote repository and the defined branch
     tagging_message: 'v1.0.0'
+
+    # Optional options appended to `git-push`
+    push_options: '--force'
 ```
 
 ## Example
