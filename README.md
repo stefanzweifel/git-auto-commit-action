@@ -135,6 +135,19 @@ please update your Workflow configuration and usage of [`actions/checkout`](http
 
 Updating the `token` value with a Personal Access Token should fix your issues.
 
+## Action does not push to protected branch
+
+If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) this Action will not be able to push to your repository.
+
+You have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to to use force pushes like so.
+
+```yaml
+    - uses: stefanzweifel/git-auto-commit-action@v4.2.0
+      with:
+        commit_message: Apply php-cs-fixer changes
+        push_options: --force
+```
+
 ### No new workflows are triggered by the commit of this action
 
 This is due to limitations set up by GitHub, [commits of this Action do not trigger new Workflow runs](#commits-of-this-action-do-not-trigger-new-workflow-runs).
