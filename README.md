@@ -157,7 +157,7 @@ This is due to limitations set up by GitHub, [commits of this Action do not trig
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/stefanzweifel/git-auto-commit-action/tags).
 
 We also provide major version tags to make it easier to always use the latest release of a major version. For example you can use `stefanzweifel/git-auto-commit-action@v4` to always use the latest release of the current major version.
-(More information about this [here](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md#major-versions).)
+(More information about this [here](https://help.github.com/en/actions/building-actions/about-actions#versioning-your-action).)
 
 ## License
 
