@@ -5,7 +5,7 @@ set -eu
 _main() {
     _switch_to_repository
 
-    if _git_is_dirty || [ -n "$INPUT_SKIP_DIRTY_CHECK" ]; then
+    if _git_is_dirty -o [ "$INPUT_SKIP_DIRTY_CHECK" = true ]; then
 
         echo "::set-output name=changes_detected::true";
 
