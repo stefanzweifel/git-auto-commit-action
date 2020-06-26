@@ -43,6 +43,10 @@ inputs:
     description: Push options (eg. --force)
     required: false
     default: ''
+  skip_dirty_check:
+    description: Skip the check if the git repository is dirty and always try to create a commit.
+    required: false
+    default: false
 
 outputs:
   changes_detected:
