@@ -41,6 +41,9 @@ Add the following step at the end of your job, after other steps that might add 
 
     # Optional options appended to `git-push`
     push_options: '--force'
+    
+    # Optional: Disable dirty check and always try to create a commit and push
+    skip_dirty_check: true
 ```
 
 ## Example

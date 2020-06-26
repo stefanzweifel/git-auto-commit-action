@@ -4,9 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.3.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.4.0...HEAD)
 
 > TBD
+
+
+## [v4.4.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.3.0...v4.4.0) - 2020-06-26
+
+### Added
+
+- Add option to skipt the dirty check and always try to create and push a commit [#82](https://github.com/stefanzweifel/git-auto-commit-action/issues/82), [#84](https://github.com/stefanzweifel/git-auto-commit-action/pull/84)
 
 
 ## [v4.3.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.2.0...v4.3.0) - 2020-05-16
@@ -19,7 +26,7 @@ Note: Since v4.3.0 we provide major version tags. You can now use `stefanzweifel
 
 ## [v4.2.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.1.6...v4.2.0) - 2020-05-10
 
-### Changed
+### Changed
 - Use `${{ github.head_ref }}` as default branch value. Therefore, the branch name when listening for `pull_request`-events is optional. [#75](https://github.com/stefanzweifel/git-auto-commit-action/pull/75), [#73](https://github.com/stefanzweifel/git-auto-commit-action/pull/73)
 
 
@@ -78,7 +85,7 @@ Note: Since v4.3.0 we provide major version tags. You can now use `stefanzweifel
 ### Added
 - Add `commit_user_name`, `commit_user_email` and `commit_author` input options for full customzation on how the commit is being created [#39](https://github.com/stefanzweifel/git-auto-commit-action/pull/39)
 
-### Changed
+### Changed
 - Make the `branch` input option optional [#41](https://github.com/stefanzweifel/git-auto-commit-action/pull/41)
 
 ### Removed
