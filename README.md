@@ -22,6 +22,7 @@ Add the following step at the end of your job, after other steps that might add 
     branch: feature-123
 
     # Optional options appended to `git-commit`
+    # See https://git-scm.com/docs/git-commit for a list of available options
     commit_options: '--no-verify --signoff'
 
     # Optional glob pattern of files which should be added to the commit
@@ -138,7 +139,7 @@ please update your Workflow configuration and usage of [`actions/checkout`](http
 
 Updating the `token` value with a Personal Access Token should fix your issues.
 
-## Action does not push to protected branch
+### Action does not push to protected branch
 
 If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) this Action will not be able to push to your repository.
 
