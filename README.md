@@ -116,6 +116,13 @@ storing the token as a secret in your repository and then passing the new token 
 GitHub currently prohibits Actions to push commits to forks, even when they created a PR and allow edits.
 See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.
 
+### Signing Commits & Other Git Command Line Options
+
+Using command lines options needs to be done manually for each workflow which you require the option enabled. So for example signing commits requires you to import the gpg signature each and every time. The following list of actions are worth checking out if you need to automate these tasks regulary
+- [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
+
+
+
 ## Inputs
 
 Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/action.yml) for a full list of supported inputs.
