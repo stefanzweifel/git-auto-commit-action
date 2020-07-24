@@ -149,7 +149,7 @@ Updating the `token` value with a Personal Access Token should fix your issues.
 
 ### Push to protected branches
 
-If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) you have to do the following changes for the Action to work properly.
+If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) you have to do the following changes to your Workflow for the Action to work properly.
 
 You have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like this.
 
