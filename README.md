@@ -26,6 +26,9 @@ Add the following step at the end of your job, after other steps that might add 
     commit_options: '--no-verify --signoff'
 
     # Optional glob pattern of files which should be added to the commit
+    # See the `pathspec`-documentation for git
+    # - https://git-scm.com/docs/git-add#Documentation/git-add.txt-ltpathspecgt82308203
+    # - https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec
     file_pattern: src/*.js tests/*.js
 
     # Optional local file path to the repository
