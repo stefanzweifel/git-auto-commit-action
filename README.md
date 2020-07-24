@@ -147,11 +147,11 @@ please update your Workflow configuration and usage of [`actions/checkout`](http
 
 Updating the `token` value with a Personal Access Token should fix your issues.
 
-### Action does not push to protected branch
+### Push to protected branches
 
-If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) this Action will not be able to push to your repository.
+If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) you have to do the following changes for the Action to work properly.
 
-You have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like so.
+You have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like this.
 
 ```yaml
     - uses: stefanzweifel/git-auto-commit-action@v4
@@ -159,6 +159,17 @@ You have to enable force pushes to a protected branch (See [documentation](https
         commit_message: Apply php-cs-fixer changes
         push_options: --force
 ```
+
+In addition, you have to create a new [Personal Access Token (PAT)](https://github.com/settings/tokens/new),
+store the token as a secret in your repository and pass the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action step.
+
+```yaml
+- uses: actions/checkout@v2
+  with:
+    token: ${{ secrets.PAT }}
+```
+
+You can learn more about Personal Access Token in the [GitHub documentation](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
 
 ### No new workflows are triggered by the commit of this action
 
