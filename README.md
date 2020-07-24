@@ -80,6 +80,16 @@ jobs:
         commit_message: Apply php-cs-fixer changes
 ```
 
+## Inputs
+
+Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/action.yml) for a full list of supported inputs.
+
+## Outputs
+
+You can use these outputs to trigger other Actions in your Workflow run based on the result of `git-auto-commit-action`.
+
+- `changes_detected`: Returns either "true" or "false" if the repository was dirty and files have changed.
+
 ## Limitations & Gotchas
 
 ### Checkout the correct branch
@@ -103,12 +113,12 @@ This is due to [limititations set by GitHub](https://help.github.com/en/actions/
 > When you use the repository's GITHUB_TOKEN to perform tasks on behalf of the GitHub Actions app, events triggered by the GITHUB_TOKEN will not create a new workflow run. This prevents you from accidentally creating recursive workflow runs.
 
 You can change this by creating a new [Personal Access Token (PAT)](https://github.com/settings/tokens/new),
-storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action.
+storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action step.
 
 ```yaml
 - uses: actions/checkout@v2
   with:
-    token: ${{ secrets.PAT_TOKEN }}
+    token: ${{ secrets.PAT }}
 ```
 
 ### Unable to commit into PRs from forks
@@ -120,18 +130,6 @@ See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/2
 
 Using command lines options needs to be done manually for each workflow which you require the option enabled. So for example signing commits requires you to import the gpg signature each and every time. The following list of actions are worth checking out if you need to automate these tasks regulary
 - [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
-
-
-
-## Inputs
-
-Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/action.yml) for a full list of supported inputs.
-
-## Outputs
-
-You can use these outputs to trigger other Actions in your Workflow run based on the result of `git-auto-commit-action`.
-
-- `changes_detected`: Returns either "true" or "false" if the repository was dirty and files have changed.
 
 ## Troubleshooting
 
