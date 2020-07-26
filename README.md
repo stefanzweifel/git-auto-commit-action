@@ -168,8 +168,9 @@ store the token as a secret in your repository and pass the new token to the [`a
   with:
     token: ${{ secrets.PAT }}
 ```
-
 You can learn more about Personal Access Token in the [GitHub documentation](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
+
+Note: If you're working in an organisation and you don't want to create the PAT from your personal account, we recommend using a bot-account for such tokens.
 
 ### No new workflows are triggered by the commit of this action
 
