@@ -12,4 +12,4 @@ jobs:
         env:
           GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         with:
-          - publish_latest_tag: true
+          publish_latest_tag: true
