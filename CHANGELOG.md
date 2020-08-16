@@ -4,15 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.4.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.4.1...HEAD)
 
 > TBD
+
+
+## [v4.4.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.4.0...v4.4.1) - 2020-08-016
+
+### Changed
+- Include given `file_pattern` in git dirty check [#91](https://github.com/stefanzweifel/git-auto-commit-action/pull/91)
 
 
 ## [v4.4.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.3.0...v4.4.0) - 2020-06-26
 
 ### Added
-
 - Add option to skipt the dirty check and always try to create and push a commit [#82](https://github.com/stefanzweifel/git-auto-commit-action/issues/82), [#84](https://github.com/stefanzweifel/git-auto-commit-action/pull/84)
 
 
