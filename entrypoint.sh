@@ -33,7 +33,7 @@ _switch_to_repository() {
 }
 
 _git_is_dirty() {
-    [ -n "$(git status -s)" ]
+    [ -n "$(git status -s -- $INPUT_FILE_PATTERN)" ]
 }
 
 _switch_to_branch() {
