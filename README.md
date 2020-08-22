@@ -168,7 +168,9 @@ Next time someone forks your project **and** enabled GitHub Actions and opened a
 
 Here's how the Pull Request will look like:
 
-> TODO: Add Screenshot
+
+![Screenshot of a Pull Request from a Fork](https://user-images.githubusercontent.com/1080923/90955964-9c74c080-e482-11ea-8097-aa7f5161f50e.png)
+
 
 As you can see, your contributors have to go through hoops to make this work. For Workflows which runter linters and fixers (like the example above) we recommend running them when a push happens on the `master`-branch.
 
