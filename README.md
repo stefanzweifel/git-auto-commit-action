@@ -29,7 +29,7 @@ Add the following step at the end of your job, after other steps that might add 
     # See the `pathspec`-documentation for git
     # - https://git-scm.com/docs/git-add#Documentation/git-add.txt-ltpathspecgt82308203
     # - https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec
-    file_pattern: src/*.js tests/*.js
+    file_pattern: src/*.js tests/*.js *.php
 
     # Optional local file path to the repository
     repository: .
@@ -44,6 +44,7 @@ Add the following step at the end of your job, after other steps that might add 
     tagging_message: 'v1.0.0'
 
     # Optional options appended to `git-push`
+    # See git-push documentation for details: https://git-scm.com/docs/git-push#_options
     push_options: '--force'
     
     # Optional: Disable dirty check and always try to create a commit and push
@@ -124,6 +125,8 @@ storing the token as a secret in your repository and then passing the new token 
     token: ${{ secrets.PAT }}
 ```
 
+If you work in an organization and don't want to create a PAT from your personal account, we recommend using a [robot account](https://docs.github.com/en/github/getting-started-with-github/types-of-github-accounts) for the token.
+
 
 ### Using the Action in forks from public repositories
 
@@ -133,13 +136,13 @@ If you want that a Workflow using this Action runs on Pull Requests opened by fo
 
 1. In addition to listening to the `pull_request` event in your Workflow triggers, you have to add an additional event: `pull_request_target`. You can learn more about this event in [the GitHub docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target).
 2. GitHub Action has to be enabled on the forked repository. \
-For security reasons, GitHub does not automatically enable GitHub Actions on forks. The user has to explicitly enable GitHub Actions in the "Actions"-tab of the forked repository. (Mention this in your projects README!)
+For security reasons, GitHub does not automatically enable GitHub Actions on forks. The user has to explicitly enable GitHub Actions in the "Actions"-tab of the forked repository. (Mention this in your projects README or CONTRIBUTING.md!)
 
-After you have added the `pull_request_target` to your desired Workflow, the forked repository has enabled Actions and a new Pull Request is opened, the Workflow will run **on the forked repository**.
+After you have added the `pull_request_target` to your desired Workflow and the forked repository has enabled Actions and a new Pull Request is opened, the Workflow will run **on the forked repository**.
 
 Due to the fact that the Workflow is not run on the repository the Pull Request is opened in, you won't see any status indicators inside the Pull Request.
 
-#### An Example
+#### Example
 
 The following workflow runs `php-cs-fixer` (a code linter and fixer for PHP) when a `pull_request` is opened. We've added the `pull_request_target`-trigger too, to make it work for forks.
 
@@ -164,10 +167,9 @@ jobs:
         commit_message: Apply php-cs-fixer changes
 ```
 
-Next time someone forks your project **and** enabled GitHub Actions and opened a Pull Request, the Workflow will run on the the forked repository and will push any code fixes into the same branch.
+Next time a user forks your project **and** enabled GitHub Actions **and** opened a Pull Request, the Workflow will run on the the forked repository and will push commits to the same branch.
 
 Here's how the Pull Request will look like:
-
 
 ![Screenshot of a Pull Request from a Fork](https://user-images.githubusercontent.com/1080923/90955964-9c74c080-e482-11ea-8097-aa7f5161f50e.png)
 
