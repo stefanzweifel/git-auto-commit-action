@@ -124,18 +124,71 @@ storing the token as a secret in your repository and then passing the new token 
     token: ${{ secrets.PAT }}
 ```
 
-### Unable to commit into PRs from forks
 
-GitHub currently prohibits Actions to push commits to forks, even when they created a PR and allow edits.
-See [issue #25](https://github.com/stefanzweifel/git-auto-commit-action/issues/25) for more information.
+### Using the Action in forks from public repositories
+
+By default, this Action will not run on Pull Requests which have been opened by forks. (This is a limitation by GitHub, not by us.)
+
+If you want that a Workflow using this Action runs on Pull Requests opened by forks, 2 things have to be changed:
+
+1. In addition to listening to the `pull_request` event in your Workflow triggers, you have to add an additional event: `pull_request_target`. You can learn more about this event in [the GitHub docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target).
+2. GitHub Action has to be enabled on the forked repository. \
+For security reasons, GitHub does not automatically enable GitHub Actions on forks. The user has to explicitly enable GitHub Actions in the "Actions"-tab of the forked repository. (Mention this in your projects README!)
+
+After you have added the `pull_request_target` to your desired Workflow, the forked repository has enabled Actions and a new Pull Request is opened, the Workflow will run **on the forked repository**.
+
+Due to the fact that the Workflow is not run on the repository the Pull Request is opened in, you won't see any status indicators inside the Pull Request.
+
+#### An Example
+
+The following workflow runs `php-cs-fixer` (a code linter and fixer for PHP) when a `pull_request` is opened. We've added the `pull_request_target`-trigger too, to make it work for forks.
+
+```yaml
+name: Format PHP
+
+on: [pull_request, pull_request_target]
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: Run php-cs-fixer
+      uses: docker://oskarstark/php-cs-fixer-ga
+
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Apply php-cs-fixer changes
+```
+
+Next time someone forks your project **and** enabled GitHub Actions and opened a Pull Request, the Workflow will run on the the forked repository and will push any code fixes into the same branch.
+
+Here's how the Pull Request will look like:
+
+> TODO: Add Screenshot
+
+As you can see, your contributors have to go through hoops to make this work. For Workflows which runter linters and fixers (like the example above) we recommend running them when a push happens on the `master`-branch.
+
+
+For more information about running Actions on forks, see [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/).
+
+### Push to forks from private repositories
+
+By default, GitHub Actions doesn't run Workflows on forks from private repositories. To enable Actions for **private** repositories enable "Run workflows from pull requests" in your repository settings.
+
+See [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/) or the [GitHub docs](https://docs.github.com/en/github/administering-a-repository/disabling-or-limiting-github-actions-for-a-repository#enabling-workflows-for-private-repository-forks) for details.
 
 ### Signing Commits & Other Git Command Line Options
 
 Using command lines options needs to be done manually for each workflow which you require the option enabled. So for example signing commits requires you to import the gpg signature each and every time. The following list of actions are worth checking out if you need to automate these tasks regulary
+
 - [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
 
-## Troubleshooting
 
+## Troubleshooting
 ### Action does not push commit to repository
 
 Make sure to [checkout the correct branch](#checkout-the-correct-branch).
