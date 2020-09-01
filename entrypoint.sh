@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -eu
+set -x
 
 _main() {
     _switch_to_repository
@@ -39,8 +40,13 @@ _git_is_dirty() {
 _switch_to_branch() {
     echo "INPUT_BRANCH value: $INPUT_BRANCH";
 
-    # Switch to branch from current Workflow run
-    git checkout $INPUT_BRANCH;
+    if git show-ref --verify --quiet refs/heads/$INPUT_BRANCH; then
+        # Switch to branch from current Workflow run
+        git checkout $INPUT_BRANCH;
+    else 
+        git checkout --orphan $INPUT_BRANCH
+        git rm -rf .
+    fi
 }
 
 _add_files() {
