@@ -4,12 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.4.1...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.5.0...HEAD)
 
 > TBD
 
 
-## [v4.4.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.4.0...v4.4.1) - 2020-08-016
+## [v4.5.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.4.1...v4.5.0) - 2020-09-10
+
+### Added
+- Create orphan branch if branch name does not exist [#95](https://github.com/stefanzweifel/git-auto-commit-action/pull/95)
+
+## [v4.4.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.4.0...v4.4.1) - 2020-08-16
 
 ### Changed
 - Include given `file_pattern` in git dirty check [#91](https://github.com/stefanzweifel/git-auto-commit-action/pull/91)
