@@ -13,3 +13,4 @@ jobs:
           GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         with:
           publish_latest_tag: true
+          prefer_branch_releases: true
