@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [v4.5.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.5.0...v4.5.1) - 2020-09-11
 
-###Removed
+### Removed
 - Remove orphan branch feature added in #95 which broke stuff [#98](https://github.com/stefanzweifel/git-auto-commit-action/pull/98)
 
 ## [v4.5.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.4.1...v4.5.0) - 2020-09-10
