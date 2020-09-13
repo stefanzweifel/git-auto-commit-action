@@ -11,8 +11,8 @@ setup() {
     touch "${test_repository}"/{a,b,c}.txt
     cd "${test_repository}"
     git init -q
-    git add . >/dev/null 2>&1
-    git commit -m "Init Repo" >/dev/null 2>&1
+    git add . > /dev/null 2>&1
+    git commit -m "Init Repo" > /dev/null 2>&1
 
     # Set default INPUT variables
     export INPUT_REPOSITORY="${BATS_TEST_DIRNAME}/test_repo"
