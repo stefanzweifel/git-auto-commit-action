@@ -12,7 +12,7 @@ jobs:
     - name: Install Shell Mock
       run: |
         git clone https://github.com/capitalone/bash_shell_mock
-        echo "::add-path bash_shell_mock/bin
+        echo "::add-path bash_shell_mock/bin"
 
     - name: Install BATS
       run: yarn install
