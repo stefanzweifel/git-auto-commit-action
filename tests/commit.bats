@@ -1,6 +1,8 @@
 #!/usr/bin/env bats
 
 setup() {
+    . shellmock
+
     # Build World
     export test_repository="${BATS_TEST_DIRNAME}/test_repo"
 
@@ -24,8 +26,6 @@ setup() {
     export INPUT_TAGGING_MESSAGE=""
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
-
-    . shellmock
 }
 
 teardown() {
