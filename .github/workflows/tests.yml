@@ -14,7 +14,8 @@ jobs:
         git clone https://github.com/capitalone/bash_shell_mock
         echo "::add-path::bash_shell_mock/bin"
 
-    - run: which shellmock
+    - name: Where is shellmock?
+      run: which shellmock
 
     - name: Install BATS
       run: yarn install
