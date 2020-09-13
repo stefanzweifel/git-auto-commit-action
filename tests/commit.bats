@@ -13,7 +13,13 @@ setup() {
 
     git init --quiet
     git add . > /dev/null 2>&1
-    git -c user.name="Test Suite" -c user.email="test@github.com" commit --quiet -m "Init Repo"
+
+    if [[ -z $(git config user.name) ]]; then
+        git config --global user.email "test@github.com"
+        git config --global user.name "Test Suite"
+    fi
+
+    git commit --quiet -m "Init Repo"
 
     # Set default INPUT variables
     export INPUT_REPOSITORY="${BATS_TEST_DIRNAME}/test_repo"
