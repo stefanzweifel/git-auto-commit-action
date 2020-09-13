@@ -11,15 +11,9 @@ setup() {
     touch "${test_repository}"/{a,b,c}.txt
     cd "${test_repository}"
 
-    if [[ $(pwd) == "/home/runner/work/git-auto-commit-action/git-auto-commit-action" ]]; then
-        git config --global user.email "test@github.com"
-        git config --global user.name "Test Suite"
-    fi
-
-
     git init --quiet
     git add . > /dev/null 2>&1
-    git commit --quiet -m "Init Repo"
+    git -c user.name="Test Suite" -c user.email="test@github.com" commit --quiet -m "Init Repo"
 
     # Set default INPUT variables
     export INPUT_REPOSITORY="${BATS_TEST_DIRNAME}/test_repo"
