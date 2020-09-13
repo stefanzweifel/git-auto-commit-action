@@ -11,8 +11,11 @@ setup() {
     touch "${test_repository}"/{a,b,c}.txt
     cd "${test_repository}"
 
-    git config user.email "test@github.com"
-    git config user.name "Test Suite"
+    if [[ -n $GITHUB ]]; then
+        git config --global user.email "test@github.com"
+        git config --global user.name "Test Suite"
+    fi
+
 
     git init --quiet
     git add . > /dev/null 2>&1
