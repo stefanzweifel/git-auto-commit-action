@@ -10,6 +10,10 @@ setup() {
     mkdir "${test_repository}"
     touch "${test_repository}"/{a,b,c}.txt
     cd "${test_repository}"
+
+    git config --global user.email "test@github.com"
+    git config --global user.name "Test Suite"
+
     git init --quiet
     git add . > /dev/null 2>&1
     git commit --quiet -m "Init Repo"
