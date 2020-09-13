@@ -1,3 +1,4 @@
 tests/test_repo
 tests/tmpstubs
 tests/shellmock.*
+yarn.lock
