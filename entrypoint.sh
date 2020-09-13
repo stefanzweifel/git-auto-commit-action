@@ -68,7 +68,7 @@ _tag_commit() {
         echo "::debug::Create tag $INPUT_TAGGING_MESSAGE";
         git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" tag -a "$INPUT_TAGGING_MESSAGE" -m "$INPUT_TAGGING_MESSAGE";
     else
-        echo " No tagging message supplied. No tag will be added.";
+        echo "No tagging message supplied. No tag will be added.";
     fi
 }
 

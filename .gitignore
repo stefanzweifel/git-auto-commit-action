@@ -1,0 +1,3 @@
+tests/test_repo
+tests/tmpstubs
+tests/shellmock.*
