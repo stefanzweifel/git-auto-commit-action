@@ -10,9 +10,9 @@ setup() {
     mkdir "${test_repository}"
     touch "${test_repository}"/{a,b,c}.txt
     cd "${test_repository}"
-    git init -q
+    git init --quiet
     git add . > /dev/null 2>&1
-    git commit -m "Init Repo" > /dev/null 2>&1
+    git commit --quiet -m "Init Repo"
 
     # Set default INPUT variables
     export INPUT_REPOSITORY="${BATS_TEST_DIRNAME}/test_repo"
