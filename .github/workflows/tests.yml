@@ -15,13 +15,6 @@ jobs:
         cd bash_shell_mock
         sudo ./install.sh /usr/local
 
-    - name: Where is shellmock?
-      run: which shellmock
-
-    - name: GitHub Detection
-      run: |
-        pwd
-
     - name: Install BATS
       run: yarn install
 
