@@ -12,6 +12,7 @@ jobs:
     - name: Install Shell Mock
       run: |
         git clone https://github.com/capitalone/bash_shell_mock
+        cd bash_shell_mock
         sudo ./install.sh /usr/local
 
     - name: Where is shellmock?
