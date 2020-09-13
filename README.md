@@ -2,6 +2,8 @@
 
 > The GitHub Action for committing files for the 80% use case.
 
+![tests](https://github.com/stefanzweifel/git-auto-commit-action/workflows/tests/badge.svg)
+
 This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the commit back to GitHub.  
 The default committer is "GitHub Actions <actions@github.com>", and the default author of the commit is "Your GitHub Username <github_username@users.noreply.github.com>".
 
@@ -232,6 +234,14 @@ Note: If you're working in an organisation and you don't want to create the PAT 
 ### No new workflows are triggered by the commit of this action
 
 This is due to limitations set up by GitHub, [commits of this Action do not trigger new Workflow runs](#commits-of-this-action-do-not-trigger-new-workflow-runs).
+
+## Running the tests
+
+The package has tests written in [bats](https://github.com/bats-core/bats-core). You can run them with the following command.
+
+```shell
+npm run tests
+```
 
 ## Versioning
 
