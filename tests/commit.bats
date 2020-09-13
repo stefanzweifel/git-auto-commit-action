@@ -11,7 +11,7 @@ setup() {
     touch "${test_repository}"/{a,b,c}.txt
     cd "${test_repository}"
 
-    if [[ -n $GITHUB ]]; then
+    if [[ $(pwd) == "/home/runner/work/git-auto-commit-action/git-auto-commit-action" ]]; then
         git config --global user.email "test@github.com"
         git config --global user.name "Test Suite"
     fi
