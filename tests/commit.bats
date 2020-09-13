@@ -22,16 +22,11 @@ setup() {
     export INPUT_COMMIT_OPTIONS=""
     export INPUT_FILE_PATTERN="."
     export INPUT_COMMIT_USER_NAME="Test Suite"
-    export INPUT_COMMIT_USER_NAME="test@github.com"
+    export INPUT_COMMIT_USER_EMAIL="test@github.com"
     export INPUT_COMMIT_AUTHOR="Test Suite <test@users.noreply.github.com>"
     export INPUT_TAGGING_MESSAGE=""
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
-
-    # TODO:
-    # - Create new Git Repo in ${BATS_TMPDIR}
-    # - Create some Files with some data
-    # - Create Init Commit
 }
 
 teardown() {
@@ -40,7 +35,6 @@ teardown() {
     fi
 
     rm -rf "${test_repository}"
-    rm -rf "${BATS_TEST_DIRNAME}/tmpstubs"
 }
 
 main() {
@@ -60,28 +54,33 @@ main() {
 
 @test "skip-dirty-on-clean-repo-failure" {
 
-    touch "${test_repository}/new-file.txt"
+    # touch "${test_repository}/new-file.txt"
 
-    # INPUT_SKIP_DIRTY_CHECK=true
+    INPUT_SKIP_DIRTY_CHECK=true
+    INPUT_COMMIT_OPTIONS='--force'
 
-    # shellmock_expect git --match '-c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" commit -m "$INPUT_COMMIT_MESSAGE" --author="$INPUT_COMMIT_AUTHOR" ${INPUT_COMMIT_OPTIONS:+"${INPUT_COMMIT_OPTIONS_ARRAY[@]}"}'
+    shellmock_expect git --type exact --match "status -s ." --output "fuck"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type exact --match "add ."
+    shellmock_expect git --type partial --match '-c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com> --force'
+    shellmock_expect git --type partial --match 'push origin'
 
     run main
 
-    echo $output;
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub checkout master" ]
+    [ "${capture[2]}" = "git-stub add ." ]
+    [ "${capture[3]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com> --force" ]
+    [ "${capture[4]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
 
-    # shellmock_verify
-    # [ "${capture[0]}" = '-c user.name="${INPUT_COMMIT_USER_NAME}"' ]
-    # [ "${capture[1]}" = "some-stub2 arg1 arg2" ]
+    # Failed Exit Code
+    [ "$status" -ne 0 ]
 
-
-    [ "$status" -eq 0 ]
     [ "${lines[0]}" = "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}" ]
     [ "${lines[1]}" = "::set-output name=changes_detected::true" ]
     [ "${lines[2]}" = "INPUT_BRANCH value: master" ]
-    [ "${lines[3]}" = "Already on 'master'" ]
-    [ "${lines[4]}" = "INPUT_FILE_PATTERN: ." ]
-    # [ "${lines[2]}" = "INPUT_BRANCH value: master" ]
-    # [ "${lines[2]}" = "INPUT_BRANCH value: master" ]
-    # [ "$output" = "Working tree clean. Nothing to commit." ]
+    [ "${lines[3]}" = "INPUT_FILE_PATTERN: ." ]
+    [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: --force" ]
+    [ "${lines[5]}" = "::debug::Apply commit options --force" ]
 }
