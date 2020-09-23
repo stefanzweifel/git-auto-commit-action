@@ -109,7 +109,7 @@ In non-`push` events, such as `pull_request`, make sure to specify the `ref` to 
     ref: ${{ github.head_ref }}
 ```
 
-You have to do this do avoid that the `checkout`-Action clones your repository in a detached state.
+You have to do this to avoid that the `checkout`-Action clones your repository in a detached state.
 
 ### Commits of this Action do not trigger new Workflow runs
 
