@@ -96,6 +96,18 @@ You can use these outputs to trigger other Actions in your Workflow run based on
 
 - `changes_detected`: Returns either "true" or "false" if the repository was dirty and files have changed.
 
+### Example
+
+```yaml
+  - name: "Run if changes have been detected"
+    if: steps.auto-commit-action.outputs.changes_detected == true
+    run: echo "Changes!"
+
+  - name: "Run if no changes have been detected"
+    if: steps.auto-commit-action.outputs.changes_detected == false
+    run: echo "No Changes!"
+```
+
 ## Limitations & Gotchas
 
 ### Checkout the correct branch
