@@ -100,11 +100,11 @@ You can use these outputs to trigger other Actions in your Workflow run based on
 
 ```yaml
   - name: "Run if changes have been detected"
-    if: steps.auto-commit-action.outputs.changes_detected == true
+    if: steps.auto-commit-action.outputs.changes_detected == 'true'
     run: echo "Changes!"
 
   - name: "Run if no changes have been detected"
-    if: steps.auto-commit-action.outputs.changes_detected == false
+    if: steps.auto-commit-action.outputs.changes_detected == 'false'
     run: echo "No Changes!"
 ```
 
