@@ -67,7 +67,7 @@ on:
   pull_request:
   push:
     branches:
-      - "master"
+      - "main"
 
 jobs:
   php-cs-fixer:
