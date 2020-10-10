@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.5.1...HEAD)
 
-> TBD
+### Fixes
+- Better support for branch names with special characters in them [#108](https://github.com/stefanzweifel/git-auto-commit-action/pull/108)
 
 
 ## [v4.5.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.5.0...v4.5.1) - 2020-09-11
