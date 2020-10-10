@@ -98,6 +98,7 @@ main() {
     INPUT_SKIP_DIRTY_CHECK=true
 
     shellmock_expect git --type exact --match "status -s ."
+    shellmock_expect git --type exact --match "fetch"
     shellmock_expect git --type exact --match "checkout master"
     shellmock_expect git --type exact --match "add ."
     shellmock_expect git --type partial --match '-c'
@@ -109,10 +110,11 @@ main() {
 
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- ." ]
-    [ "${capture[1]}" = "git-stub checkout master" ]
-    [ "${capture[2]}" = "git-stub add ." ]
-    [ "${capture[3]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
-    [ "${capture[4]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
 
     # Failed Exit Code
     [ "$status" -ne 0 ]

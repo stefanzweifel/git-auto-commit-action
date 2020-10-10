@@ -39,6 +39,9 @@ _git_is_dirty() {
 _switch_to_branch() {
     echo "INPUT_BRANCH value: $INPUT_BRANCH";
 
+    # Fetch remote to make sure that repo can be switched to the right branch.
+    git fetch;
+
     # Switch to branch from current Workflow run
     git checkout $INPUT_BRANCH;
 }
