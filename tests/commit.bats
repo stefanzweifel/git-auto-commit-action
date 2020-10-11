@@ -58,39 +58,45 @@ main() {
     [ "${lines[2]}" = "Working tree clean. Nothing to commit." ]
 }
 
-# TODO: Fix Issue where changes in git repo are not detected
-# @test "commit-changed-files-and-push-to-remote" {
+@test "commit-changed-files-and-push-to-remote" {
 
-#     touch "${test_repository}"/new-file-{1,2,3}.txt
+    touch "${test_repository}"/new-file-{1,2,3}.txt
 
-#     shellmock_expect git --type partial --match "status"
-#     shellmock_expect git --type partial --match "checkout"
-#     shellmock_expect git --type partial --match "add"
-#     shellmock_expect git --type partial --match '-c'
-#     shellmock_expect git --type partial --match 'push origin'
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type partial --match "add ."
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
 
-#     run main
+    run main
 
-#     echo "$output"
+    echo "$output"
 
-#     # Success Exit Code
-#     [ "$status" = 0 ]
+    # Success Exit Code
+    [ "$status" = 0 ]
 
-#     [ "${lines[0]}" = "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}" ]
-#     [ "${lines[1]}" = "::set-output name=changes_detected::true" ]
-#     [ "${lines[2]}" = "INPUT_BRANCH value: master" ]
-#     [ "${lines[3]}" = "INPUT_FILE_PATTERN: ." ]
-#     [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: " ]
-#     [ "${lines[5]}" = "::debug::Apply commit options " ]
+    [ "${lines[0]}" = "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}" ]
+    [ "${lines[1]}" = "::set-output name=changes_detected::true" ]
+    [ "${lines[2]}" = "INPUT_BRANCH value: master" ]
+    [ "${lines[3]}" = "INPUT_FILE_PATTERN: ." ]
+    [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: " ]
+    [ "${lines[5]}" = "::debug::Apply commit options " ]
+    [ "${lines[6]}" = "INPUT_TAGGING_MESSAGE: " ]
+    [ "${lines[7]}" = "No tagging message supplied. No tag will be added." ]
+    [ "${lines[8]}" = "INPUT_PUSH_OPTIONS: " ]
+    [ "${lines[9]}" = "::debug::Apply push options " ]
+    [ "${lines[10]}" = "::debug::Push commit to remote branch master" ]
 
 
-#     shellmock_verify
-#     [ "${capture[0]}" = "git-stub status -s -- ." ]
-#     [ "${capture[1]}" = "git-stub checkout master" ]
-#     [ "${capture[2]}" = "git-stub add ." ]
-#     [ "${capture[3]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
-#     [ "${capture[4]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
-# }
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
+}
 
 
 @test "skip-dirty-on-clean-repo-failure" {
