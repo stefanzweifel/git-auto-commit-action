@@ -173,3 +173,34 @@ main() {
     [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
 }
 
+@test "git-commit-options-are-applied" {
+
+    INPUT_COMMIT_OPTIONS="--no-verify --signoff"
+
+    touch "${test_repository}"/new-file-{1,2}.txt
+
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type partial --match "add"
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+    [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: --no-verify --signoff" ]
+    [ "${lines[10]}" = "::debug::Push commit to remote branch master" ]
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com> --no-verify --signoff" ]
+    [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
+}
+
