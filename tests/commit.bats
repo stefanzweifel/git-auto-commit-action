@@ -33,9 +33,16 @@ setup() {
     export INPUT_TAGGING_MESSAGE=""
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
+
+    skipIfNot "$BATS_TEST_DESCRIPTION"
+
+    if [ -z "$TEST_FUNCTION" ]; then
+        shellmock_clean
+    fi
 }
 
 teardown() {
+
     if [ -z "$TEST_FUNCTION" ]; then
         shellmock_clean
     fi
