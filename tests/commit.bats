@@ -237,3 +237,39 @@ main() {
     [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
 }
 
+@test "can-create-tag" {
+
+    INPUT_TAGGING_MESSAGE="v1.0.0"
+
+    touch "${test_repository}"/new-file-{1,2,3}.txt
+
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type partial --match "add ."
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+
+    [ "${lines[6]}" = "INPUT_TAGGING_MESSAGE: v1.0.0" ]
+    [ "${lines[7]}" = "::debug::Create tag v1.0.0" ]
+    [ "${lines[10]}" = "::debug::Push commit to remote branch master" ]
+
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com tag -a v1.0.0 -m v1.0.0" ]
+    [ "${capture[6]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
+
+}
+
