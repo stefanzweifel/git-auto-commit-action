@@ -19,7 +19,7 @@ Add the following step at the end of your job, after other steps that might add 
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v4
   with:
-    # Required
+    # Optional but recommended, defaults to "Apply automatic changes"
     commit_message: Apply automatic changes
 
     # Optional branch to push to, defaults to the current branch
