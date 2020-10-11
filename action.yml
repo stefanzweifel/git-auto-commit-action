@@ -6,6 +6,7 @@ author: Stefan Zweifel <hello@stefanzweifel.io>
 inputs:
   commit_message:
     description: Commit message
+    required: false
     default: Apply automatic changes
   branch:
     description: Git branch name, where changes should be pushed too. Required if Action is used on the `pull_request` event
