@@ -11,8 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [v4.6.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.5.1...v4.6.0) - 2020-10-11
 
-### Changes
-
+### Changed
 - Make "commit_message" optional and set default commit message to "Apply automatic changes" [#103](https://github.com/stefanzweifel/git-auto-commit-action/issues/103), [#110](https://github.com/stefanzweifel/git-auto-commit-action/pull/110)
 
 ### Fixes
