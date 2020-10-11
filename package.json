@@ -3,6 +3,6 @@
     "bats": "^1.1.0"
   },
   "scripts": {
-    "test": "bats tests"
+    "test": "rm -rf tests/tmpstubs && rm -rf tests/shellmock.* && bats tests"
   }
 }

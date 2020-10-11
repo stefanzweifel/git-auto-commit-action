@@ -33,9 +33,16 @@ setup() {
     export INPUT_TAGGING_MESSAGE=""
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
+
+    skipIfNot "$BATS_TEST_DESCRIPTION"
+
+    if [ -z "$TEST_FUNCTION" ]; then
+        shellmock_clean
+    fi
 }
 
 teardown() {
+
     if [ -z "$TEST_FUNCTION" ]; then
         shellmock_clean
     fi
@@ -58,40 +65,45 @@ main() {
     [ "${lines[2]}" = "Working tree clean. Nothing to commit." ]
 }
 
-# TODO: Fix Issue where changes in git repo are not detected
-# @test "commit-changed-files-and-push-to-remote" {
+@test "commit-changed-files-and-push-to-remote" {
 
-#     touch "${test_repository}"/new-file-{1,2,3}.txt
+    touch "${test_repository}"/new-file-{1,2,3}.txt
 
-#     shellmock_expect git --type partial --match "status"
-#     shellmock_expect git --type partial --match "checkout"
-#     shellmock_expect git --type partial --match "add"
-#     shellmock_expect git --type partial --match '-c'
-#     shellmock_expect git --type partial --match 'push origin'
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type partial --match "add ."
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
 
-#     run main
+    run main
 
-#     echo "$output"
+    echo "$output"
 
-#     # Success Exit Code
-#     [ "$status" = 0 ]
+    # Success Exit Code
+    [ "$status" = 0 ]
 
-#     [ "${lines[0]}" = "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}" ]
-#     [ "${lines[1]}" = "::set-output name=changes_detected::true" ]
-#     [ "${lines[2]}" = "INPUT_BRANCH value: master" ]
-#     [ "${lines[3]}" = "INPUT_FILE_PATTERN: ." ]
-#     [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: " ]
-#     [ "${lines[5]}" = "::debug::Apply commit options " ]
+    [ "${lines[0]}" = "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}" ]
+    [ "${lines[1]}" = "::set-output name=changes_detected::true" ]
+    [ "${lines[2]}" = "INPUT_BRANCH value: master" ]
+    [ "${lines[3]}" = "INPUT_FILE_PATTERN: ." ]
+    [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: " ]
+    [ "${lines[5]}" = "::debug::Apply commit options " ]
+    [ "${lines[6]}" = "INPUT_TAGGING_MESSAGE: " ]
+    [ "${lines[7]}" = "No tagging message supplied. No tag will be added." ]
+    [ "${lines[8]}" = "INPUT_PUSH_OPTIONS: " ]
+    [ "${lines[9]}" = "::debug::Apply push options " ]
+    [ "${lines[10]}" = "::debug::Push commit to remote branch master" ]
 
 
-#     shellmock_verify
-#     [ "${capture[0]}" = "git-stub status -s -- ." ]
-#     [ "${capture[1]}" = "git-stub checkout master" ]
-#     [ "${capture[2]}" = "git-stub add ." ]
-#     [ "${capture[3]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
-#     [ "${capture[4]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
-# }
-
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
+}
 
 @test "skip-dirty-on-clean-repo-failure" {
 
@@ -127,3 +139,301 @@ main() {
     [ "${lines[5]}" = "::debug::Apply commit options " ]
 }
 
+@test "git-add-file-pattern-is-applied" {
+
+    INPUT_FILE_PATTERN="*.txt *.html"
+
+    touch "${test_repository}"/new-file-{1,2}.php
+    touch "${test_repository}"/new-file-{1,2}.html
+
+    shellmock_expect git --type partial --output " M new-file-1.html M new-file-2.html" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type partial --match "add"
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+
+    [ "${lines[3]}" = "INPUT_FILE_PATTERN: *.txt *.html" ]
+    [ "${lines[10]}" = "::debug::Push commit to remote branch master" ]
+
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- a.txt b.txt c.txt new-file-1.html new-file-2.html" ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add a.txt b.txt c.txt new-file-1.html new-file-2.html" ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
+}
+
+@test "git-commit-options-are-applied" {
+
+    INPUT_COMMIT_OPTIONS="--no-verify --signoff"
+
+    touch "${test_repository}"/new-file-{1,2}.txt
+
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type partial --match "add"
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+    [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: --no-verify --signoff" ]
+    [ "${lines[10]}" = "::debug::Push commit to remote branch master" ]
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com> --no-verify --signoff" ]
+    [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
+}
+
+@test "commit-user-and-author-settings-are-applied" {
+
+    INPUT_COMMIT_USER_NAME="A Single Test"
+    INPUT_COMMIT_USER_EMAIL="single-test@github.com"
+    INPUT_COMMIT_AUTHOR="A Single Test <single@users.noreply.github.com>"
+
+    touch "${test_repository}"/new-file-{1,2}.txt
+
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type partial --match "add"
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+
+    [ "${lines[10]}" = "::debug::Push commit to remote branch master" ]
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=A Single Test -c user.email=single-test@github.com commit -m Commit Message --author=A Single Test <single@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
+}
+
+@test "can-create-tag" {
+
+    INPUT_TAGGING_MESSAGE="v1.0.0"
+
+    touch "${test_repository}"/new-file-{1,2,3}.txt
+
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type partial --match "add ."
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+
+    [ "${lines[6]}" = "INPUT_TAGGING_MESSAGE: v1.0.0" ]
+    [ "${lines[7]}" = "::debug::Create tag v1.0.0" ]
+    [ "${lines[10]}" = "::debug::Push commit to remote branch master" ]
+
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com tag -a v1.0.0 -m v1.0.0" ]
+    [ "${capture[6]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
+
+}
+
+@test "git-push-options-are-applied" {
+
+    INPUT_PUSH_OPTIONS="--force"
+
+    touch "${test_repository}"/new-file-{1,2,3}.txt
+
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type partial --match "add ."
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+
+    [ "${lines[8]}" = "INPUT_PUSH_OPTIONS: --force" ]
+    [ "${lines[9]}" = "::debug::Apply push options --force" ]
+    [ "${lines[10]}" = "::debug::Push commit to remote branch master" ]
+
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags --force" ]
+
+}
+
+@test "can-checkout-different-branch" {
+
+    INPUT_BRANCH="foo"
+
+    touch "${test_repository}"/new-file-{1,2,3}.txt
+
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout foo"
+    shellmock_expect git --type partial --match "add ."
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+
+    [ "${lines[0]}" = "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}" ]
+    [ "${lines[1]}" = "::set-output name=changes_detected::true" ]
+    [ "${lines[2]}" = "INPUT_BRANCH value: foo" ]
+    [ "${lines[3]}" = "INPUT_FILE_PATTERN: ." ]
+    [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: " ]
+    [ "${lines[5]}" = "::debug::Apply commit options " ]
+    [ "${lines[6]}" = "INPUT_TAGGING_MESSAGE: " ]
+    [ "${lines[7]}" = "No tagging message supplied. No tag will be added." ]
+    [ "${lines[8]}" = "INPUT_PUSH_OPTIONS: " ]
+    [ "${lines[9]}" = "::debug::Apply push options " ]
+    [ "${lines[10]}" = "::debug::Push commit to remote branch foo" ]
+
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout foo" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:foo --tags" ]
+
+}
+
+@test "can-work-with-empty-branch-name" {
+
+    INPUT_BRANCH=""
+
+    touch "${test_repository}"/new-file-{1,2,3}.txt
+
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout"
+    shellmock_expect git --type partial --match "add ."
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+
+    [ "${lines[0]}" = "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}" ]
+    [ "${lines[1]}" = "::set-output name=changes_detected::true" ]
+    [ "${lines[2]}" = "INPUT_BRANCH value: " ]
+    [ "${lines[3]}" = "INPUT_FILE_PATTERN: ." ]
+    [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: " ]
+    [ "${lines[5]}" = "::debug::Apply commit options " ]
+    [ "${lines[6]}" = "INPUT_TAGGING_MESSAGE: " ]
+    [ "${lines[7]}" = "No tagging message supplied. No tag will be added." ]
+    [ "${lines[8]}" = "INPUT_PUSH_OPTIONS: " ]
+    [ "${lines[9]}" = "::debug::Apply push options " ]
+    [ "${lines[10]}" = "::debug::git push origin" ]
+
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub push origin" ]
+}
+
+@test "can-work-with-empty-branch-name-and-tags" {
+
+    INPUT_BRANCH=""
+    INPUT_TAGGING_MESSAGE="v2.0.0"
+
+    touch "${test_repository}"/new-file-{1,2,3}.txt
+
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout"
+    shellmock_expect git --type partial --match "add ."
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+
+    [ "${lines[0]}" = "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}" ]
+    [ "${lines[1]}" = "::set-output name=changes_detected::true" ]
+    [ "${lines[2]}" = "INPUT_BRANCH value: " ]
+    [ "${lines[3]}" = "INPUT_FILE_PATTERN: ." ]
+    [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: " ]
+    [ "${lines[5]}" = "::debug::Apply commit options " ]
+    [ "${lines[6]}" = "INPUT_TAGGING_MESSAGE: v2.0.0" ]
+    [ "${lines[7]}" = "::debug::Create tag v2.0.0" ]
+    [ "${lines[8]}" = "INPUT_PUSH_OPTIONS: " ]
+    [ "${lines[9]}" = "::debug::Apply push options " ]
+    [ "${lines[10]}" = "::debug::git push origin --tags" ]
+
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com tag -a v2.0.0 -m v2.0.0" ]
+    [ "${capture[6]}" = "git-stub push origin --tags" ]
+
+}
