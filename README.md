@@ -2,7 +2,9 @@
 
 > The GitHub Action for committing files for the 80% use case.
 
-![tests](https://github.com/stefanzweifel/git-auto-commit-action/workflows/tests/badge.svg)
+<a href="https://github.com/stefanzweifel/git-auto-commit-action/actions?query=workflow%3Atests">
+    <img src="https://github.com/stefanzweifel/git-auto-commit-action/workflows/tests/badge.svg" alt="">
+</a>
 
 This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the commit back to GitHub.  
 The default committer is "GitHub Actions <actions@github.com>", and the default author of the commit is "Your GitHub Username <github_username@users.noreply.github.com>".
