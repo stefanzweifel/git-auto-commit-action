@@ -139,3 +139,37 @@ main() {
     [ "${lines[5]}" = "::debug::Apply commit options " ]
 }
 
+@test "git-add-file-pattern-is-applied" {
+
+    INPUT_FILE_PATTERN="*.txt *.html"
+
+    touch "${test_repository}"/new-file-{1,2}.php
+    touch "${test_repository}"/new-file-{1,2}.html
+
+    shellmock_expect git --type partial --output " M new-file-1.html M new-file-2.html" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type partial --match "add"
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push --set-upstream origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+
+    [ "${lines[3]}" = "INPUT_FILE_PATTERN: *.txt *.html" ]
+    [ "${lines[10]}" = "::debug::Push commit to remote branch master" ]
+
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- a.txt b.txt c.txt new-file-1.html new-file-2.html" ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[3]}" = "git-stub add a.txt b.txt c.txt new-file-1.html new-file-2.html" ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
+}
+
