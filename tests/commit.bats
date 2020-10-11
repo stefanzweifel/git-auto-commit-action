@@ -105,7 +105,6 @@ main() {
     [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
 }
 
-
 @test "skip-dirty-on-clean-repo-failure" {
 
     INPUT_SKIP_DIRTY_CHECK=true
