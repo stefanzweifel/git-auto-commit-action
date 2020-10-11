@@ -392,3 +392,48 @@ main() {
     [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
     [ "${capture[5]}" = "git-stub push origin" ]
 }
+
+@test "can-work-with-empty-branch-name-and-tags" {
+
+    INPUT_BRANCH=""
+    INPUT_TAGGING_MESSAGE="v2.0.0"
+
+    touch "${test_repository}"/new-file-{1,2,3}.txt
+
+    shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
+    shellmock_expect git --type exact --match "fetch"
+    shellmock_expect git --type exact --match "checkout"
+    shellmock_expect git --type partial --match "add ."
+    shellmock_expect git --type partial --match '-c'
+    shellmock_expect git --type partial --match 'push origin'
+
+    run main
+
+    echo "$output"
+
+    # Success Exit Code
+    [ "$status" = 0 ]
+
+    [ "${lines[0]}" = "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}" ]
+    [ "${lines[1]}" = "::set-output name=changes_detected::true" ]
+    [ "${lines[2]}" = "INPUT_BRANCH value: " ]
+    [ "${lines[3]}" = "INPUT_FILE_PATTERN: ." ]
+    [ "${lines[4]}" = "INPUT_COMMIT_OPTIONS: " ]
+    [ "${lines[5]}" = "::debug::Apply commit options " ]
+    [ "${lines[6]}" = "INPUT_TAGGING_MESSAGE: v2.0.0" ]
+    [ "${lines[7]}" = "::debug::Create tag v2.0.0" ]
+    [ "${lines[8]}" = "INPUT_PUSH_OPTIONS: " ]
+    [ "${lines[9]}" = "::debug::Apply push options " ]
+    [ "${lines[10]}" = "::debug::git push origin --tags" ]
+
+
+    shellmock_verify
+    [ "${capture[0]}" = "git-stub status -s -- ." ]
+    [ "${capture[1]}" = "git-stub fetch" ]
+    [ "${capture[2]}" = "git-stub checkout" ]
+    [ "${capture[3]}" = "git-stub add ." ]
+    [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
+    [ "${capture[5]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com tag -a v2.0.0 -m v2.0.0" ]
+    [ "${capture[6]}" = "git-stub push origin --tags" ]
+
+}
