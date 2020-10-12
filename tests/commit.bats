@@ -71,7 +71,7 @@ main() {
 
     shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
     shellmock_expect git --type exact --match "fetch"
-    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type exact --match "checkout master --"
     shellmock_expect git --type partial --match "add ."
     shellmock_expect git --type partial --match '-c'
     shellmock_expect git --type partial --match 'push --set-upstream origin'
@@ -99,7 +99,7 @@ main() {
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- ." ]
     [ "${capture[1]}" = "git-stub fetch" ]
-    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[2]}" = "git-stub checkout master --" ]
     [ "${capture[3]}" = "git-stub add ." ]
     [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
     [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
@@ -111,7 +111,7 @@ main() {
 
     shellmock_expect git --type exact --match "status -s ."
     shellmock_expect git --type exact --match "fetch"
-    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type exact --match "checkout master --"
     shellmock_expect git --type exact --match "add ."
     shellmock_expect git --type partial --match '-c'
     shellmock_expect git --type partial --match 'push origin'
@@ -123,7 +123,7 @@ main() {
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- ." ]
     [ "${capture[1]}" = "git-stub fetch" ]
-    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[2]}" = "git-stub checkout master --" ]
     [ "${capture[3]}" = "git-stub add ." ]
     [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
     [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
@@ -148,7 +148,7 @@ main() {
 
     shellmock_expect git --type partial --output " M new-file-1.html M new-file-2.html" --match "status"
     shellmock_expect git --type exact --match "fetch"
-    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type exact --match "checkout master --"
     shellmock_expect git --type partial --match "add"
     shellmock_expect git --type partial --match '-c'
     shellmock_expect git --type partial --match 'push --set-upstream origin'
@@ -167,7 +167,7 @@ main() {
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- a.txt b.txt c.txt new-file-1.html new-file-2.html" ]
     [ "${capture[1]}" = "git-stub fetch" ]
-    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[2]}" = "git-stub checkout master --" ]
     [ "${capture[3]}" = "git-stub add a.txt b.txt c.txt new-file-1.html new-file-2.html" ]
     [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
     [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
@@ -181,7 +181,7 @@ main() {
 
     shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt" --match "status"
     shellmock_expect git --type exact --match "fetch"
-    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type exact --match "checkout master --"
     shellmock_expect git --type partial --match "add"
     shellmock_expect git --type partial --match '-c'
     shellmock_expect git --type partial --match 'push --set-upstream origin'
@@ -198,7 +198,7 @@ main() {
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- ." ]
     [ "${capture[1]}" = "git-stub fetch" ]
-    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[2]}" = "git-stub checkout master --" ]
     [ "${capture[3]}" = "git-stub add ." ]
     [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com> --no-verify --signoff" ]
     [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
@@ -214,7 +214,7 @@ main() {
 
     shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt" --match "status"
     shellmock_expect git --type exact --match "fetch"
-    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type exact --match "checkout master --"
     shellmock_expect git --type partial --match "add"
     shellmock_expect git --type partial --match '-c'
     shellmock_expect git --type partial --match 'push --set-upstream origin'
@@ -231,7 +231,7 @@ main() {
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- ." ]
     [ "${capture[1]}" = "git-stub fetch" ]
-    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[2]}" = "git-stub checkout master --" ]
     [ "${capture[3]}" = "git-stub add ." ]
     [ "${capture[4]}" = "git-stub -c user.name=A Single Test -c user.email=single-test@github.com commit -m Commit Message --author=A Single Test <single@users.noreply.github.com>" ]
     [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags" ]
@@ -245,7 +245,7 @@ main() {
 
     shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
     shellmock_expect git --type exact --match "fetch"
-    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type exact --match "checkout master --"
     shellmock_expect git --type partial --match "add ."
     shellmock_expect git --type partial --match '-c'
     shellmock_expect git --type partial --match 'push --set-upstream origin'
@@ -265,7 +265,7 @@ main() {
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- ." ]
     [ "${capture[1]}" = "git-stub fetch" ]
-    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[2]}" = "git-stub checkout master --" ]
     [ "${capture[3]}" = "git-stub add ." ]
     [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
     [ "${capture[5]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com tag -a v1.0.0 -m v1.0.0" ]
@@ -281,7 +281,7 @@ main() {
 
     shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
     shellmock_expect git --type exact --match "fetch"
-    shellmock_expect git --type exact --match "checkout master"
+    shellmock_expect git --type exact --match "checkout master --"
     shellmock_expect git --type partial --match "add ."
     shellmock_expect git --type partial --match '-c'
     shellmock_expect git --type partial --match 'push --set-upstream origin'
@@ -301,7 +301,7 @@ main() {
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- ." ]
     [ "${capture[1]}" = "git-stub fetch" ]
-    [ "${capture[2]}" = "git-stub checkout master" ]
+    [ "${capture[2]}" = "git-stub checkout master --" ]
     [ "${capture[3]}" = "git-stub add ." ]
     [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
     [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:master --tags --force" ]
@@ -316,7 +316,7 @@ main() {
 
     shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
     shellmock_expect git --type exact --match "fetch"
-    shellmock_expect git --type exact --match "checkout foo"
+    shellmock_expect git --type exact --match "checkout foo --"
     shellmock_expect git --type partial --match "add ."
     shellmock_expect git --type partial --match '-c'
     shellmock_expect git --type partial --match 'push --set-upstream origin'
@@ -344,7 +344,7 @@ main() {
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- ." ]
     [ "${capture[1]}" = "git-stub fetch" ]
-    [ "${capture[2]}" = "git-stub checkout foo" ]
+    [ "${capture[2]}" = "git-stub checkout foo --" ]
     [ "${capture[3]}" = "git-stub add ." ]
     [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
     [ "${capture[5]}" = "git-stub push --set-upstream origin HEAD:foo --tags" ]
@@ -359,7 +359,7 @@ main() {
 
     shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
     shellmock_expect git --type exact --match "fetch"
-    shellmock_expect git --type exact --match "checkout"
+    shellmock_expect git --type exact --match "checkout --"
     shellmock_expect git --type partial --match "add ."
     shellmock_expect git --type partial --match '-c'
     shellmock_expect git --type partial --match 'push origin'
@@ -387,7 +387,7 @@ main() {
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- ." ]
     [ "${capture[1]}" = "git-stub fetch" ]
-    [ "${capture[2]}" = "git-stub checkout" ]
+    [ "${capture[2]}" = "git-stub checkout --" ]
     [ "${capture[3]}" = "git-stub add ." ]
     [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
     [ "${capture[5]}" = "git-stub push origin" ]
@@ -402,7 +402,7 @@ main() {
 
     shellmock_expect git --type partial --output " M new-file-1.txt M new-file-2.txt M new-file-3.txt" --match "status"
     shellmock_expect git --type exact --match "fetch"
-    shellmock_expect git --type exact --match "checkout"
+    shellmock_expect git --type exact --match "checkout --"
     shellmock_expect git --type partial --match "add ."
     shellmock_expect git --type partial --match '-c'
     shellmock_expect git --type partial --match 'push origin'
@@ -430,7 +430,7 @@ main() {
     shellmock_verify
     [ "${capture[0]}" = "git-stub status -s -- ." ]
     [ "${capture[1]}" = "git-stub fetch" ]
-    [ "${capture[2]}" = "git-stub checkout" ]
+    [ "${capture[2]}" = "git-stub checkout --" ]
     [ "${capture[3]}" = "git-stub add ." ]
     [ "${capture[4]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com commit -m Commit Message --author=Test Suite <test@users.noreply.github.com>" ]
     [ "${capture[5]}" = "git-stub -c user.name=Test Suite -c user.email=test@github.com tag -a v2.0.0 -m v2.0.0" ]
