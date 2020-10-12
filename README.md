@@ -254,7 +254,7 @@ This is due to limitations set up by GitHub, [commits of this Action do not trig
 The package has tests written in [bats](https://github.com/bats-core/bats-core). You can run them with the following command.
 
 ```shell
-npm run tests
+npm run test
 ```
 
 ## Versioning
