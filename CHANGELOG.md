@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.6.0...HEAD)
 
-> TBD
+### Added
+- Add `checkout_options` [#115](https://github.com/stefanzweifel/git-auto-commit-action/pull/115)
 
 
 ## [v4.6.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.5.1...v4.6.0) - 2020-10-11
