@@ -42,8 +42,11 @@ _switch_to_branch() {
     # Fetch remote to make sure that repo can be switched to the right branch.
     git fetch;
 
+    # shellcheck disable=SC2206
+    INPUT_CHECKOUT_OPTIONS_ARRAY=( $INPUT_CHECKOUT_OPTIONS );
+
     # Switch to branch from current Workflow run
-    git checkout "$INPUT_BRANCH" --;
+    git checkout ${INPUT_CHECKOUT_OPTIONS:+"${INPUT_CHECKOUT_OPTIONS_ARRAY[@]}"} "$INPUT_BRANCH" --;
 }
 
 _add_files() {
