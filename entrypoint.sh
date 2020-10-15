@@ -29,10 +29,11 @@ _main() {
 
 _switch_to_repository() {
     echo "INPUT_REPOSITORY value: $INPUT_REPOSITORY";
-    cd $INPUT_REPOSITORY;
+    cd "$INPUT_REPOSITORY";
 }
 
 _git_is_dirty() {
+    # shellcheck disable=SC2086
     [ -n "$(git status -s -- $INPUT_FILE_PATTERN)" ]
 }
 
