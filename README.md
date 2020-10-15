@@ -53,6 +53,9 @@ Add the following step at the end of your job, after other steps that might add 
     
     # Optional: Disable dirty check and always try to create a commit and push
     skip_dirty_check: true
+
+    # Optional: Allows you to update how the repo is checked out
+    checkout_options: '-q --force -b'
 ```
 
 ## Example
