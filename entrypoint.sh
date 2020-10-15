@@ -29,10 +29,11 @@ _main() {
 
 _switch_to_repository() {
     echo "INPUT_REPOSITORY value: $INPUT_REPOSITORY";
-    cd $INPUT_REPOSITORY;
+    cd "$INPUT_REPOSITORY";
 }
 
 _git_is_dirty() {
+    # shellcheck disable=SC2086
     [ -n "$(git status -s -- $INPUT_FILE_PATTERN)" ]
 }
 
@@ -42,12 +43,17 @@ _switch_to_branch() {
     # Fetch remote to make sure that repo can be switched to the right branch.
     git fetch;
 
+    # shellcheck disable=SC2206
+    INPUT_CHECKOUT_OPTIONS_ARRAY=( $INPUT_CHECKOUT_OPTIONS );
+
     # Switch to branch from current Workflow run
-    git checkout "$INPUT_BRANCH" --;
+    git checkout ${INPUT_CHECKOUT_OPTIONS:+"${INPUT_CHECKOUT_OPTIONS_ARRAY[@]}"} "$INPUT_BRANCH" --;
 }
 
 _add_files() {
     echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
+
+    # shellcheck disable=SC2086
     git add ${INPUT_FILE_PATTERN};
 }
 
@@ -55,6 +61,7 @@ _local_commit() {
     echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}";
     echo "::debug::Apply commit options ${INPUT_COMMIT_OPTIONS}";
 
+    # shellcheck disable=SC2206
     INPUT_COMMIT_OPTIONS_ARRAY=( $INPUT_COMMIT_OPTIONS );
 
     git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" \
@@ -80,6 +87,7 @@ _push_to_github() {
     echo "INPUT_PUSH_OPTIONS: ${INPUT_PUSH_OPTIONS}";
     echo "::debug::Apply push options ${INPUT_PUSH_OPTIONS}";
 
+    # shellcheck disable=SC2206
     INPUT_PUSH_OPTIONS_ARRAY=( $INPUT_PUSH_OPTIONS );
 
     if [ -z "$INPUT_BRANCH" ]
