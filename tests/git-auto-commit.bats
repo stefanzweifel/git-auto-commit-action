@@ -33,6 +33,7 @@ setup() {
     export INPUT_COMMIT_AUTHOR="GitHub Actions <actions@users.noreply.github.com>"
     export INPUT_TAGGING_MESSAGE=""
     export INPUT_PUSH_OPTIONS=""
+    export INPUT_CHECKOUT_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
 
     skipIfNot "$BATS_TEST_DESCRIPTION"
@@ -71,7 +72,7 @@ main() {
     TIMESTAMP="$(date +%s)"
 
     INPUT_BRANCH="ci-test-$TIMESTAMP"
-    INPUT_BRANCH="master"
+    INPUT_CHECKOUT_OPTIONS="-b"
     INPUT_PUSH_OPTIONS="--force"
 
     touch "${test_repository}"/new-file-{1,2,3}.txt
