@@ -20,7 +20,7 @@ setup() {
     fi
 
     git commit --quiet -m "Init Repo"
-    git remote add origin git@github.com:stefanzweifel/git-auto-commit-action-demo-app.git
+    git remote add origin git@github.com:stefanzweifel/git-auto-commit-action.git
 
     # Set default INPUT variables
     export INPUT_REPOSITORY="${BATS_TEST_DIRNAME}/test_repo"
