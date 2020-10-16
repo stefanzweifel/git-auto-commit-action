@@ -168,15 +168,13 @@ The following workflow runs `php-cs-fixer` (a code linter and fixer for PHP) whe
 ```yaml
 name: Format PHP
 
-on: [pull_request, pull_request_target]
+on: [pull_request_target]
 
 jobs:
   php-cs-fixer:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        ref: ${{ github.head_ref }}
 
     - name: Run php-cs-fixer
       uses: docker://oskarstark/php-cs-fixer-ga
