@@ -3,6 +3,6 @@
 
 
 bats@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/bats/-/bats-1.1.0.tgz#6fc44f283ed4e7af2b6ffac93ec5026a1acbdc66"
-  integrity sha512-1pA29OhDByrUtAXX+nmqZxgRgx2y8PvuZzbLJVjd2dpEDVDvz0MjcBMdmIPNq5lC+tG53G+RbeRsbIlv3vw7tg==
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/bats/-/bats-1.2.1.tgz#c15aecc3eb331aedf28678880fab2be0b73eba43"
+  integrity sha512-2fcPDRQa/Kvh6j1IcCqsHpT5b9ObMzRzw6abC7Bg298PX8Qdh9VRkvO2WJUEhdyfjq2rLBCOAWdcv0tS4+xTUA==
