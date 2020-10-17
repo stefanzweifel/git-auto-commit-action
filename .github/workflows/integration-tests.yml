@@ -3,7 +3,7 @@ name: Integration Tests
 on: push
 
 jobs:
-  tests:
+  test-commit-works:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,9 +18,9 @@ jobs:
       id: "auto-commit-action"
       uses: ./
       with:
+        branch: ci-test
         commit_message: Message
         checkout_options: -b
-        branch: ci-test
 
     - name: Delete Branch
       run: git push -d origin ci-test
