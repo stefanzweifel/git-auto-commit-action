@@ -149,6 +149,10 @@ If you work in an organization and don't want to create a PAT from your personal
 
 ### Using the Action in forks from public repositories
 
+**☝️ Important Notice**: This Action technically works with forks. However, please note that the combination of triggers and their options can cause issues. Please read [the documentation](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows) on which triggers GitHub Actions support.\
+If you use this Action in combination with a linter/fixer, it's easier if you run the Action on `push` on your `main`-branch.
+
+
 By default, this Action will not run on Pull Requests which have been opened by forks. (This is a limitation by GitHub, not by us.)
 
 If you want that a Workflow using this Action runs on Pull Requests opened by forks, 2 things have to be changed:
@@ -168,7 +172,7 @@ The following workflow runs `php-cs-fixer` (a code linter and fixer for PHP) whe
 ```yaml
 name: Format PHP
 
-on: [pull_request_target]
+on: [push, pull_request, pull_request_target]
 
 jobs:
   php-cs-fixer:
@@ -191,7 +195,7 @@ Here's how the Pull Request will look like:
 ![Screenshot of a Pull Request from a Fork](https://user-images.githubusercontent.com/1080923/90955964-9c74c080-e482-11ea-8097-aa7f5161f50e.png)
 
 
-As you can see, your contributors have to go through hoops to make this work. For Workflows which runter linters and fixers (like the example above) we recommend running them when a push happens on the `master`-branch.
+As you can see, your contributors have to go through hoops to make this work. **For Workflows which runter linters and fixers (like the example above) we recommend running them when a push happens on the `master`-branch.**
 
 
 For more information about running Actions on forks, see [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/).
