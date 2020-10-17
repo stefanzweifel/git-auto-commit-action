@@ -21,3 +21,6 @@ jobs:
         commit_message: Message
         checkout_options: -b
         branch: ci-test
+
+    - name: Delete Branch
+      run: git push -d origin ci-test
