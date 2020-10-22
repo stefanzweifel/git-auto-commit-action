@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [v4.7.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.7.0...v4.7.1) - 2020-10-12
 
-### Removed
+### Removed
 - Remove `checkout_options` as it broke everything [#120](https://github.com/stefanzweifel/git-auto-commit-action/pull/120/)
 
 
