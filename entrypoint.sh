@@ -29,11 +29,10 @@ _main() {
 
 _switch_to_repository() {
     echo "INPUT_REPOSITORY value: $INPUT_REPOSITORY";
-    cd "$INPUT_REPOSITORY";
+    cd $INPUT_REPOSITORY;
 }
 
 _git_is_dirty() {
-    # shellcheck disable=SC2086
     [ -n "$(git status -s -- $INPUT_FILE_PATTERN)" ]
 }
 
@@ -43,11 +42,8 @@ _switch_to_branch() {
     # Fetch remote to make sure that repo can be switched to the right branch.
     git fetch;
 
-    # shellcheck disable=SC2206
-    INPUT_CHECKOUT_OPTIONS_ARRAY=( $INPUT_CHECKOUT_OPTIONS );
-
     # Switch to branch from current Workflow run
-    git checkout ${INPUT_CHECKOUT_OPTIONS:+"${INPUT_CHECKOUT_OPTIONS_ARRAY[@]}"} "$INPUT_BRANCH" --;
+    git checkout "$INPUT_BRANCH" --;
 }
 
 _add_files() {
