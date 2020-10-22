@@ -11,6 +11,12 @@ jobs:
       with:
         ref: master
 
+    - name: Create Remote Branch
+      run: |
+        git checkout -b ci-test
+        git push origin ci-test
+        git checkout master
+
     - name: Add Files
       run: touch {a,b,c}.txt
 
@@ -20,7 +26,6 @@ jobs:
       with:
         branch: ci-test
         commit_message: Message
-        checkout_options: -b
 
     - name: Delete Branch
       run: git push -d origin ci-test
