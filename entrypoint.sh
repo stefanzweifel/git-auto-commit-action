@@ -44,6 +44,7 @@ _switch_to_branch() {
     git fetch;
 
     # Switch to branch from current Workflow run
+    # shellcheck disable=SC2086
     git checkout $INPUT_BRANCH;
 }
 
