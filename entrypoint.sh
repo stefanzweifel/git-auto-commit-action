@@ -44,7 +44,7 @@ _switch_to_branch() {
     git fetch;
 
     # Switch to branch from current Workflow run
-    git checkout "$INPUT_BRANCH" --;
+    git checkout $INPUT_BRANCH;
 }
 
 _add_files() {
