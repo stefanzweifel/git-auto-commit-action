@@ -4,18 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.7.1...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.7.2...HEAD)
 
 > TBD
 
 
-## [v4.7.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.7.0...v4.7.1) - 2020-10-12
+## [v4.7.2](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.7.1...v4.7.2) - 2020-10-24
+
+This release basically reverts the Action to the state of `v4.6.0`.
+
+### Changed
+- Revert change to fix git-checkout with special characters in branch names [#122](https://github.com/stefanzweifel/git-auto-commit-action/pull/122)
+
+
+## [v4.7.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.7.0...v4.7.1) - 2020-10-22
 
 ### Removed
 - Remove `checkout_options` as it broke everything [#120](https://github.com/stefanzweifel/git-auto-commit-action/pull/120/)
 
 
-## [v4.7.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.6.0...v4.7.0) - 2020-10-11
+## [v4.7.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.6.0...v4.7.0) - 2020-10-21
 
 ### Added
 - Add `checkout_options` [#115](https://github.com/stefanzweifel/git-auto-commit-action/pull/115)
