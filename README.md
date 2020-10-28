@@ -21,11 +21,20 @@ Add the following step at the end of your job, after other steps that might add 
 
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v4
+```
+
+
+This is a more extended example with all possible options.
+
+```yaml
+- uses: stefanzweifel/git-auto-commit-action@v4
   with:
-    # Optional but recommended, defaults to "Apply automatic changes"
+    # Optional but recommended
+    # Defaults to "Apply automatic changes"
     commit_message: Apply automatic changes
 
-    # Optional branch to push to, defaults to the current branch
+    # Optional branch name where commit should be pushed to
+    # Defaults to the current branch
     branch: feature-123
 
     # Optional options appended to `git-commit`
@@ -33,18 +42,20 @@ Add the following step at the end of your job, after other steps that might add 
     commit_options: '--no-verify --signoff'
 
     # Optional glob pattern of files which should be added to the commit
+    # Defaults to all (.)
     # See the `pathspec`-documentation for git
     # - https://git-scm.com/docs/git-add#Documentation/git-add.txt-ltpathspecgt82308203
     # - https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec
     file_pattern: src/*.js tests/*.js *.php
 
     # Optional local file path to the repository
+    # Defaults to the root of the repository
     repository: .
 
     # Optional commit user and author settings
-    commit_user_name: My GitHub Actions Bot
-    commit_user_email: my-github-actions-bot@example.org
-    commit_author: Author <actions@github.com>
+    commit_user_name: My GitHub Actions Bot # defaults to "GitHub Actions"
+    commit_user_email: my-github-actions-bot@example.org # defaults to "actions@github.com"
+    commit_author: Author <actions@github.com> # defaults to author of the commit that triggered the run
 
     # Optional tag message 
     # Action will create and push a new tag to the remote repository and the defined branch
