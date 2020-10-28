@@ -10,7 +10,7 @@
 </a>
 
 This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the commit back to GitHub.  
-The default committer is "GitHub Actions <actions@github.com>", and the default author of the commit is "Your GitHub Username <github_username@users.noreply.github.com>".
+By default, the commit is made in the name of "GitHub Actions" and co-authored by the user that made the last commit.
 
 This Action has been inspired and adapted from the [auto-commit](https://github.com/cds-snc/github-actions/tree/master/auto-commit
 )-Action of the Canadian Digital Service and this [commit](https://github.com/elstudio/actions-js-build/blob/41d604d6e73d632e22eac40df8cc69b5added04b/commit/entrypoint.sh)-Action by Eric Johnson.
