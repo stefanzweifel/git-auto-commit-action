@@ -2,6 +2,7 @@
 
 > The GitHub Action for committing files for the 80% use case.
 
+<a href="https://github.com/search?o=desc&q=stefanzweifel%2Fgit-auto-commit-action+path%3A.github%2Fworkflows+language%3AYAML&s=&type=Code" target="_blank" title="Public workflows that use this action."><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fapi-git-master.endbug.vercel.app%2Fapi%2Fgithub-actions%2Fused-by%3Faction%3Dstefanzweifel%2Fgit-auto-commit-action%26badge%3Dtrue" alt="Public workflows that use this action."></a>
 <a href="https://github.com/stefanzweifel/git-auto-commit-action/actions?query=workflow%3Atests">
     <img src="https://github.com/stefanzweifel/git-auto-commit-action/workflows/tests/badge.svg" alt="">
 </a>
