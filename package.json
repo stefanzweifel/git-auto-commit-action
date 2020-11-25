@@ -1,8 +1,10 @@
 {
   "devDependencies": {
-    "bats": "^1.1.0"
+    "bats": "^1.1.0",
+    "bats-assert": "ztombol/bats-assert",
+    "bats-support": "ztombol/bats-support"
   },
   "scripts": {
-    "test": "rm -rf tests/tmpstubs && rm -rf tests/shellmock.* && bats tests"
+    "test": "bats tests"
   }
 }
