@@ -62,8 +62,10 @@ _setup_local_repository() {
     cd "${FAKE_LOCAL_REPOSITORY}";
 
     # Configure Git
-    git config user.email "test@github.com"
-    git config user.name "Test Suite"
+    if [[ -z $(git config user.name) ]]; then
+        git config --global user.email "test@github.com"
+        git config --global user.name "Test Suite"
+    fi
 }
 
 # Run the main code related to this GitHub Action
