@@ -1,4 +1,4 @@
-tests/test_repo
-tests/tmpstubs
-tests/shellmock.*
+tests/test_fake_local_repository
+tests/test_fake_remote_repository
+tests/test_fake_temp_local_repository
 yarn.lock

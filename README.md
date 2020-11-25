@@ -6,9 +6,6 @@
 <a href="https://github.com/stefanzweifel/git-auto-commit-action/actions?query=workflow%3Atests">
     <img src="https://github.com/stefanzweifel/git-auto-commit-action/workflows/tests/badge.svg" alt="">
 </a>
-<a href="https://github.com/stefanzweifel/git-auto-commit-action/actions?query=workflow%3A%22Integration+Tests%22">
-    <img src="https://github.com/stefanzweifel/git-auto-commit-action/workflows/Integration%20Tests/badge.svg" alt="">
-</a>
 
 This GitHub Action automatically commits files which have been changed during a Workflow run and pushes the commit back to GitHub.  
 By default, the commit is made in the name of "GitHub Actions" and co-authored by the user that made the last commit.
@@ -269,10 +266,18 @@ This is due to limitations set up by GitHub, [commits of this Action do not trig
 
 ## Running the tests
 
-The package has tests written in [bats](https://github.com/bats-core/bats-core). You can run them with the following command.
+The package has tests written in [bats](https://github.com/bats-core/bats-core). Before you can run the test suite locally, you have to install the dependencies with `npm` or `yarn`.
+
+```shell
+npm install
+yarn
+```
+
+You can run the test suite with `npm` or `yarn`.
 
 ```shell
 npm run test
+yarn test
 ```
 
 ## Versioning

@@ -62,6 +62,11 @@ _local_commit() {
     # shellcheck disable=SC2206
     INPUT_COMMIT_OPTIONS_ARRAY=( $INPUT_COMMIT_OPTIONS );
 
+    echo "INPUT_COMMIT_USER_NAME: ${INPUT_COMMIT_USER_NAME}";
+    echo "INPUT_COMMIT_USER_EMAIL: ${INPUT_COMMIT_USER_EMAIL}";
+    echo "INPUT_COMMIT_MESSAGE: ${INPUT_COMMIT_MESSAGE}";
+    echo "INPUT_COMMIT_AUTHOR: ${INPUT_COMMIT_AUTHOR}";
+
     git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" \
         commit -m "$INPUT_COMMIT_MESSAGE" \
         --author="$INPUT_COMMIT_AUTHOR" \

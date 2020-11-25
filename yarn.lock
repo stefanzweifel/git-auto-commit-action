@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+bats-assert@ztombol/bats-assert:
+  version "0.3.0"
+  resolved "https://codeload.github.com/ztombol/bats-assert/tar.gz/9f88b4207da750093baabc4e3f41bf68f0dd3630"
+
+bats-support@ztombol/bats-support:
+  version "0.3.0"
+  resolved "https://codeload.github.com/ztombol/bats-support/tar.gz/004e707638eedd62e0481e8cdc9223ad471f12ee"
+
 bats@^1.1.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/bats/-/bats-1.2.1.tgz#c15aecc3eb331aedf28678880fab2be0b73eba43"
