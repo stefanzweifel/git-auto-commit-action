@@ -22,6 +22,12 @@ setup() {
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
 
+    # Configure Git
+    if [[ -z $(git config user.name) ]]; then
+        git config --global user.name "Test Suite"
+        git config --global user.email "test@github.com"
+    fi
+
     # Create and setup some fake repositories for testing
     _setup_fake_remote_repository
     _setup_local_repository
@@ -60,15 +66,6 @@ _setup_local_repository() {
     git clone "${FAKE_REMOTE}" "${FAKE_LOCAL_REPOSITORY}"
 
     cd "${FAKE_LOCAL_REPOSITORY}";
-
-    # Configure Git
-    # if [[ -z $(git config user.name) ]]; then
-    #     git config --global user.name "Test Suite"
-    #     git config --global user.email "test@github.com"
-    # fi
-
-    git config --global user.name "Test Suite"
-    git config --global user.email "test@github.com"
 }
 
 # Run the main code related to this GitHub Action
