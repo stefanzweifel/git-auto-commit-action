@@ -207,6 +207,14 @@ git_auto_commit() {
 }
 
 @test "It applies INPUT_PUSH_OPTIONS when pushing commit to remote" {
+
+    touch "${FAKE_TEMP_LOCAL_REPOSITORY}"/newer-remote-files{1,2,3}.txt
+    cd "${FAKE_TEMP_LOCAL_REPOSITORY}";
+    git add .;
+    git commit --quiet -m "Add more remote files";
+    git push origin master;
+
+
     INPUT_PUSH_OPTIONS="--force"
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
@@ -219,8 +227,12 @@ git_auto_commit() {
     assert_line "::debug::Apply push options --force"
     assert_line "::debug::Push commit to remote branch master"
 
-    # TODO: Assert that on last push --force was used
-    # Assert that ref-log on local and remote are the same
+    # Assert that the commit has been pushed with --force and
+    # sha values are equal on local and remote
+    current_sha="$(git rev-parse --verify --short master)"
+    remote_sha="$(git rev-parse --verify --short origin/master)"
+
+    assert_equal $current_sha $remote_sha
 }
 
 @test "It can checkout a different branch" {
@@ -239,7 +251,9 @@ git_auto_commit() {
     assert_line "INPUT_BRANCH value: foo"
     assert_line "::debug::Push commit to remote branch foo"
 
-    # TODO: Assert a new branch "foo" exists on remote
+    # Assert a new branch "foo" exists on remote
+    run git ls-remote --heads
+    assert_output --partial refs/heads/foo
 }
 
 @test "It uses existing branch name when pushing when INPUT_BRANCH is empty" {
@@ -254,7 +268,11 @@ git_auto_commit() {
     assert_line "INPUT_BRANCH value: "
     assert_line --partial "::debug::git push origin"
 
-    # TODO: Assert that branch "master" was updated on remote
+    # Assert that branch "master" was updated on remote
+    current_sha="$(git rev-parse --verify --short master)"
+    remote_sha="$(git rev-parse --verify --short origin/master)"
+
+    assert_equal $current_sha $remote_sha
 }
 
 @test "It uses existing branch when INPUT_BRANCH is empty and INPUT_TAGGING_MESSAGE is set" {
