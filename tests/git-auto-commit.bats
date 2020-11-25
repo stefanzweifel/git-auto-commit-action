@@ -63,8 +63,8 @@ _setup_local_repository() {
 
     # Configure Git
     if [[ -z $(git config user.name) ]]; then
-        git config --global user.email "test@github.com"
         git config --global user.name "Test Suite"
+        git config --global user.email "test@github.com"
     fi
 }
 
