@@ -41,7 +41,12 @@ _switch_to_branch() {
     echo "INPUT_BRANCH value: $INPUT_BRANCH";
 
     # Fetch remote to make sure that repo can be switched to the right branch.
-    git fetch;
+
+    if "$INPUT_SKIP_FETCH"; then
+        echo "::debug::git-fetch has not been executed";
+    else
+        git fetch --depth=1;
+    fi
 
     # Switch to branch from current Workflow run
     # shellcheck disable=SC2086

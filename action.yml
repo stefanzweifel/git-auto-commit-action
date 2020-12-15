@@ -48,6 +48,10 @@ inputs:
     description: Skip the check if the git repository is dirty and always try to create a commit.
     required: false
     default: false
+  skip_fetch:
+    description: Skip the call to git-fetch.
+    required: false
+    default: false
 
 outputs:
   changes_detected:

@@ -21,6 +21,7 @@ setup() {
     export INPUT_TAGGING_MESSAGE=""
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
+    export INPUT_SKIP_FETCH=false
 
     # Configure Git
     if [[ -z $(git config user.name) ]]; then
@@ -296,4 +297,17 @@ git_auto_commit() {
     # Assert tag v2.0.0 has been pushed to remote
     run git ls-remote --tags --refs
     assert_output --partial refs/tags/v2.0.0
+}
+
+@test "If SKIP_FETCH is true git-fetch will not be called" {
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    INPUT_SKIP_FETCH=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "::debug::git-fetch has not been executed"
 }
