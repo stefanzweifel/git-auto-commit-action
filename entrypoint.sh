@@ -45,7 +45,7 @@ _switch_to_branch() {
     if "$INPUT_SKIP_FETCH"; then
         echo "::debug::git-fetch has not been executed";
     else
-        git fetch --depth=3;
+        git fetch --depth=1;
     fi
 
     # Switch to branch from current Workflow run
