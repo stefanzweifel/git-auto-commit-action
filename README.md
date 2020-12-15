@@ -64,7 +64,10 @@ This is a more extended example with all possible options.
     push_options: '--force'
     
     # Optional: Disable dirty check and always try to create a commit and push
-    skip_dirty_check: true
+    skip_dirty_check: true    
+    
+    # Optional: Skip internal call to `git fetch`
+    skip_fetch: true
 ```
 
 ## Example
