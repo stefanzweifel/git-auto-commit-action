@@ -94,6 +94,26 @@ git_auto_commit() {
     assert_line "::debug::Push commit to remote branch master"
 }
 
+@test "It detects when files have been deleted, commits changes and pushes them to the remote repository" {
+    rm -rf "${FAKE_LOCAL_REPOSITORY}"/remote-files1.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line "INPUT_BRANCH value: master"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch master"
+}
+
 @test "It prints a 'Nothing to commit' message in a clean repository" {
     run git_auto_commit
 
