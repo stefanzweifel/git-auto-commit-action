@@ -65,7 +65,7 @@ _switch_to_branch() {
         # If not create one
 
 
-        if [ -n "$(git branch | grep $INPUT_BRANCH)" ]
+        if [ -n "$(git branch --list $INPUT_BRANCH)" ]
         then
 
             # Switch to branch from current Workflow run
