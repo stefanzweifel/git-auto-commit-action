@@ -49,37 +49,24 @@ _switch_to_branch() {
     fi
 
 
-
-
     # If INPUT_BRANCH is empty, just run `git checkout`
     if [ -z "$INPUT_BRANCH" ]
     then
-
-        # Switch to branch from current Workflow run
         # shellcheck disable=SC2086
         git checkout $INPUT_BRANCH;
-
     else
-
-        # If INPUT_BRANCH is given, check if a branch already exists
-        # If not create one
-
-
+        # If the branch which we should checkout already exists, just
+        # run `git checkout $INPUT_BRANCH`
+        # Otherwhise create a new branch by adding the `-b` option to
+        # `git-checkout`
         if [ -n "$(git branch --list $INPUT_BRANCH)" ]
         then
-
-            # Switch to branch from current Workflow run
             # shellcheck disable=SC2086
             git checkout $INPUT_BRANCH;
-
         else
-
-            # Switch to branch from current Workflow run
             # shellcheck disable=SC2086
             git checkout -b $INPUT_BRANCH;
-
         fi
-
     fi
 
 }
