@@ -331,3 +331,25 @@ git_auto_commit() {
 
     assert_line "::debug::git-fetch has not been executed"
 }
+
+@test "If INPUT_BRANCH is set and the branch does not exist it creates one" {
+    INPUT_BRANCH="new-branch"
+
+    run git branch
+    refute_line "new-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_BRANCH value: new-branch"
+    assert_line --partial "::debug::Push commit to remote branch new-branch"
+
+    # Assert that branch "new-branch" was updated on remote
+    current_sha="$(git rev-parse --verify --short new-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/new-branch)"
+
+    assert_equal $current_sha $remote_sha
+}
