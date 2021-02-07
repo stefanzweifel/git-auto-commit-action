@@ -59,6 +59,7 @@ _switch_to_branch() {
         # run `git checkout $INPUT_BRANCH`
         # Otherwhise create a new branch by adding the `-b` option to
         # `git-checkout`
+        # shellcheck disable=SC2086
         if [ -n "$(git branch --list $INPUT_BRANCH)" ]
         then
             # shellcheck disable=SC2086
