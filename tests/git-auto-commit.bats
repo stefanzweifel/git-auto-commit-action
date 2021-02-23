@@ -353,3 +353,47 @@ git_auto_commit() {
 
     assert_equal $current_sha $remote_sha
 }
+
+
+@test "It fails to push commit to remote if branch already exists and local repo is behind its remote counterpart" {
+
+    # Create `new-branch` on Remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY;
+
+    git checkout -b "new-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+
+    git commit --quiet -m "Add additional file";
+    git push origin new-branch;
+
+    run git branch -r
+    assert_line --partial "origin/new-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY;
+
+    INPUT_BRANCH="new-branch"
+
+    run git branch
+    refute_line --partial "new-branch"
+
+    run git branch -r
+    refute_line --partial "origin/new-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_BRANCH value: new-branch"
+    assert_line --partial "::debug::Push commit to remote branch new-branch"
+
+    # Assert that branch "new-branch" was updated on remote
+    current_sha="$(git rev-parse --verify --short new-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/new-branch)"
+
+    assert_equal $current_sha $remote_sha
+}
