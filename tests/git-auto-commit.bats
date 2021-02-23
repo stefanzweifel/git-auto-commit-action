@@ -5,9 +5,9 @@ load '../node_modules/bats-assert/load'
 
 setup() {
     # Define Paths for local repository used during tests
-    export FAKE_LOCAL_REPOSITORY="${BATS_TEST_DIRNAME}/test_fake_local_repository"
-    export FAKE_REMOTE="${BATS_TEST_DIRNAME}/test_fake_remote_repository"
-    export FAKE_TEMP_LOCAL_REPOSITORY="${BATS_TEST_DIRNAME}/test_fake_temp_local_repository"
+    export FAKE_LOCAL_REPOSITORY="${BATS_TEST_DIRNAME}/tests_local_repository"
+    export FAKE_REMOTE="${BATS_TEST_DIRNAME}/tests_remote_repository"
+    export FAKE_TEMP_LOCAL_REPOSITORY="${BATS_TEST_DIRNAME}/tests_clone_of_remote_repository"
 
     # Set default INPUT variables used by the GitHub Action
     export INPUT_REPOSITORY="${FAKE_LOCAL_REPOSITORY}"
