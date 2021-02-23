@@ -48,28 +48,9 @@ _switch_to_branch() {
         git fetch --depth=1;
     fi
 
-
-    # If INPUT_BRANCH is empty, just run `git checkout`
-    if [ -z "$INPUT_BRANCH" ]
-    then
-        # shellcheck disable=SC2086
-        git checkout $INPUT_BRANCH;
-    else
-        # If the branch which we should checkout already exists, just
-        # run `git checkout $INPUT_BRANCH`
-        # Otherwhise create a new branch by adding the `-b` option to
-        # `git-checkout`
-        # shellcheck disable=SC2086
-        if [ -n "$(git branch --list $INPUT_BRANCH)" ]
-        then
-            # shellcheck disable=SC2086
-            git checkout $INPUT_BRANCH;
-        else
-            # shellcheck disable=SC2086
-            git checkout -b $INPUT_BRANCH;
-        fi
-    fi
-
+    # Switch to branch from current Workflow run
+    # shellcheck disable=SC2086
+    git checkout $INPUT_BRANCH;
 }
 
 _add_files() {
