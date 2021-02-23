@@ -4,15 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.9.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.9.1...HEAD)
 
 > TBD
+
+
+## [v4.9.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.9.0...v4.9.1) - 2021-02-23
+
+### Changed
+- Revert changes made in v4.9.0. A branch will no longer be automatically generated. [#144](https://github.com/stefanzweifel/git-auto-commit-action/pull/144)
 
 
 ## [v4.9.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.8.0...v4.9.0) - 2021-02-20
 
 ### Changed
-- Automatically create btanch if a branch with the given name does not exist [#140](https://github.com/stefanzweifel/git-auto-commit-action/pull/140)
+- Automatically create branch if a branch with the given name does not exist [#140](https://github.com/stefanzweifel/git-auto-commit-action/pull/140)
 
 
 ## [v4.8.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.7.2...v4.8.0) - 2020-12-15
