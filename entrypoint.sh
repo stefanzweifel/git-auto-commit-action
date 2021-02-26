@@ -104,7 +104,7 @@ _push_to_github() {
         if [ -n "$INPUT_TAGGING_MESSAGE" ]
         then
             echo "::debug::git push origin --tags";
-            git push origin --tags ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
+            git push origin --follow-tags --atomic ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
         else
             echo "::debug::git push origin";
             git push origin ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
@@ -112,7 +112,7 @@ _push_to_github() {
 
     else
         echo "::debug::Push commit to remote branch $INPUT_BRANCH";
-        git push --set-upstream origin "HEAD:$INPUT_BRANCH" --tags ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
+        git push --set-upstream origin "HEAD:$INPUT_BRANCH" --follow-tags --atomic ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
     fi
 }
 
