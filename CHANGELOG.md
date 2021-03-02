@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.9.1...HEAD)
 
-> TBD
+### Fixes
+- Push created annotated tags to remote by using `--follow-tags` and `--atomic` [#146](https://github.com/stefanzweifel/git-auto-commit-action/pull/146)
 
 
 ## [v4.9.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.9.0...v4.9.1) - 2021-02-23
