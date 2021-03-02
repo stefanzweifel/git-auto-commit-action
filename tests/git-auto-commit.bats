@@ -225,6 +225,13 @@ git_auto_commit() {
 
     run git ls-remote --tags --refs
     assert_output --partial refs/tags/v1.0.0
+
+    # Assert that the commit has been pushed with --force and
+    # sha values are equal on local and remote
+    current_sha="$(git rev-parse --verify --short master)"
+    remote_sha="$(git rev-parse --verify --short origin/master)"
+
+    assert_equal $current_sha $remote_sha
 }
 
 @test "It applies INPUT_PUSH_OPTIONS when pushing commit to remote" {
@@ -330,4 +337,66 @@ git_auto_commit() {
     assert_success
 
     assert_line "::debug::git-fetch has not been executed"
+}
+
+@test "It pushes generated commit and tag to remote and actually updates the commit shas" {
+    INPUT_BRANCH=""
+    INPUT_TAGGING_MESSAGE="v2.0.0"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_TAGGING_MESSAGE: v2.0.0"
+    assert_line "::debug::Create tag v2.0.0"
+    assert_line "::debug::git push origin --tags"
+
+    # Assert a tag v2.0.0 has been created
+    run git tag
+    assert_output v2.0.0
+
+    # Assert tag v2.0.0 has been pushed to remote
+    run git ls-remote --tags --refs
+    assert_output --partial refs/tags/v2.0.0
+
+    # Assert that branch "master" was updated on remote
+    current_sha="$(git rev-parse --verify --short master)"
+    remote_sha="$(git rev-parse --verify --short origin/master)"
+
+    assert_equal $current_sha $remote_sha
+}
+
+@test "It pushes generated commit and tag to remote branch and updates commit sha" {
+    # Create "a-new-branch"-branch and then immediately switch back to master
+    git checkout -b a-new-branch
+    git checkout master
+
+    INPUT_BRANCH="a-new-branch"
+    INPUT_TAGGING_MESSAGE="v2.0.0"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_TAGGING_MESSAGE: v2.0.0"
+    assert_line "::debug::Create tag v2.0.0"
+    assert_line "::debug::Push commit to remote branch a-new-branch"
+
+    # Assert a tag v2.0.0 has been created
+    run git tag
+    assert_output v2.0.0
+
+    # Assert tag v2.0.0 has been pushed to remote
+    run git ls-remote --tags --refs
+    assert_output --partial refs/tags/v2.0.0
+
+    # Assert that branch "a-new-branch" was updated on remote
+    current_sha="$(git rev-parse --verify --short a-new-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/a-new-branch)"
+
+    assert_equal $current_sha $remote_sha
 }
