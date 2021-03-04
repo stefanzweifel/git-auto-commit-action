@@ -4,10 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.9.1...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.9.2...HEAD)
+
+> TBD
+
+## [v4.9.2](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.9.1...v4.9.2) - 2021-03-04
 
 ### Fixes
-- Push created annotated tags to remote by using `--follow-tags` and `--atomic` [#146](https://github.com/stefanzweifel/git-auto-commit-action/pull/146)
+- Push created annotated tags to remote by using `--follow-tags` and `--atomic` instead of just `--tags` [#146](https://github.com/stefanzweifel/git-auto-commit-action/pull/146)
 
 
 ## [v4.9.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.9.0...v4.9.1) - 2021-02-23
