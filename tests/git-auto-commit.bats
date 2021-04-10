@@ -402,7 +402,7 @@ git_auto_commit() {
     assert_equal $current_sha $remote_sha
 }
 
-@test "It does not expand wildcard glob when using INPUT_PATTERN in git-status and git-add" {
+@test "It does not expand wildcard glob when using INPUT_PATTERN and INPUT_DISABLE_GLOBBING in git-status and git-add" {
 
     # Create additional files in a nested directory structure
     echo "Create Additional files";
@@ -432,7 +432,7 @@ git_auto_commit() {
     assert_line "INPUT_FILE_PATTERN: *.py"
     assert_line "::debug::Push commit to remote branch master"
 
-    # Assert that py files have not been added.
+    # Assert that the updated py file has been commited.
     run git status
     refute_output --partial 'nested/new-file-b.py'
 }
