@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -eu
+set -o noglob;
 
 _main() {
     _switch_to_repository
