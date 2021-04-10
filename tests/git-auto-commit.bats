@@ -22,6 +22,7 @@ setup() {
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
     export INPUT_SKIP_FETCH=false
+    export INPUT_DISABLE_GLOBBING=false
 
     # Configure Git
     if [[ -z $(git config user.name) ]]; then
@@ -422,6 +423,7 @@ git_auto_commit() {
     # ---
 
     INPUT_FILE_PATTERN="*.py"
+    INPUT_DISABLE_GLOBBING=true
 
     run git_auto_commit
 

@@ -1,7 +1,10 @@
 #!/bin/bash
 
 set -eu
-set -o noglob;
+
+if "$INPUT_DISABLE_GLOBBING"; then
+    set -o noglob;
+fi
 
 _main() {
     _switch_to_repository
