@@ -69,7 +69,10 @@ This is a more extended example with all possible options.
     skip_dirty_check: true    
     
     # Optional: Skip internal call to `git fetch`
-    skip_fetch: true
+    skip_fetch: true    
+    
+    # Optional: Prevents the shell from expanding filenames. Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
+    disable_globbing: true
 ```
 
 ## Example
