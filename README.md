@@ -304,6 +304,11 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 We also provide major version tags to make it easier to always use the latest release of a major version. For example you can use `stefanzweifel/git-auto-commit-action@v4` to always use the latest release of the current major version.
 (More information about this [here](https://help.github.com/en/actions/building-actions/about-actions#versioning-your-action).)
 
+## Credits
+
+* [Stefan Zweifel](https://github.com/stefanzweifel)
+* [All Contributors](https://github.com/stefanzweifel/git-auto-commit-action/graphs/contributors)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/LICENSE) file for details.
