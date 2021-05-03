@@ -37,8 +37,11 @@ _switch_to_repository() {
 }
 
 _git_is_dirty() {
+    echo "INPUT_STATUS_OPTIONS: ${INPUT_STATUS_OPTIONS}";
+    echo "::debug::Apply status options ${INPUT_STATUS_OPTIONS}";
+
     # shellcheck disable=SC2086
-    [ -n "$(git status -s -- $INPUT_FILE_PATTERN)" ]
+    [ -n "$(git status -s $INPUT_STATUS_OPTIONS -- $INPUT_FILE_PATTERN)" ]
 }
 
 _switch_to_branch() {
@@ -58,10 +61,13 @@ _switch_to_branch() {
 }
 
 _add_files() {
+    echo "INPUT_ADD_OPTIONS: ${INPUT_ADD_OPTIONS}";
+    echo "::debug::Apply add options ${INPUT_ADD_OPTIONS}";
+
     echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
 
     # shellcheck disable=SC2086
-    git add ${INPUT_FILE_PATTERN};
+    git add ${INPUT_ADD_OPTIONS} ${INPUT_FILE_PATTERN};
 }
 
 _local_commit() {
