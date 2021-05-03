@@ -29,16 +29,16 @@ This is a more extended example with all possible options.
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v4
   with:
-    # Optional but recommended
+    # Optional, but recommended
     # Defaults to "Apply automatic changes"
-    commit_message: Apply automatic changes
+    commit_message: Automated Change
 
-    # Optional branch name where commit should be pushed to
-    # Defaults to the current branch
+    # Optional branch name where commit should be pushed to.
+    # Defaults to the current branch.
     branch: feature-123
 
-    # Optional options appended to `git-commit`
-    # See https://git-scm.com/docs/git-commit for a list of available options
+    # Optional. Used by `git-commit`.
+    # See https://git-scm.com/docs/git-commit#_options
     commit_options: '--no-verify --signoff'
 
     # Optional glob pattern of files which should be added to the commit
@@ -61,17 +61,26 @@ This is a more extended example with all possible options.
     # Action will create and push a new tag to the remote repository and the defined branch
     tagging_message: 'v1.0.0'
 
-    # Optional options appended to `git-push`
-    # See git-push documentation for details: https://git-scm.com/docs/git-push#_options
+    # Optional. Used by `git-status`
+    # See https://git-scm.com/docs/git-status#_options
+    status_options: '--untracked-files=no'
+
+    # Optional. Used by `git-add`
+    # See https://git-scm.com/docs/git-add#_options
+    add_options: '-u'
+
+    # Optional. Used by `git-push`
+    # See https://git-scm.com/docs/git-push#_options
     push_options: '--force'
     
-    # Optional: Disable dirty check and always try to create a commit and push
+    # Optional. Disable dirty check and always try to create a commit and push
     skip_dirty_check: true    
     
-    # Optional: Skip internal call to `git fetch`
+    # Optional. Skip internal call to `git fetch`
     skip_fetch: true    
     
-    # Optional: Prevents the shell from expanding filenames. Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
+    # Optional. Prevents the shell from expanding filenames. 
+    # Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
     disable_globbing: true
 ```
 
