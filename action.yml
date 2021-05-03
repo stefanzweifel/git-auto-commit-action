@@ -16,6 +16,14 @@ inputs:
     description: Commit options (eg. --no-verify)
     required: false
     default: ''
+  add_options:
+    description: Add options (eg. -u)
+    required: false
+    default: ''
+  status_options:
+    description: Status options (eg. --untracked-files=no)
+    required: false
+    default: ''
   file_pattern:
     description: File pattern used for `git add`. For example `src/\*.js`
     required: false
