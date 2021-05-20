@@ -236,6 +236,41 @@ Using command lines options needs to be done manually for each workflow which yo
 - [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
 
 
+## Using `--amend` and `--no-edit` as commit options
+
+If you would like to use this Action to create a commit using [`--amend`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---amend) and [`--no-edit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---no-edit) you need to make some adjustments.
+
+**☝️ Important Notice:** You should understand the implications of rewriting history if you amend a commit that has already been published. [See rebasing](https://git-scm.com/docs/git-rebase#_recovering_from_upstream_rebase)
+
+First, you need to extract the previous commit message by using `git log -1 --pretty=%B`.
+Then you need to provide this last commit message to the Action through the `commit_message` input option.
+
+Finally, you have to use `push_options: '--force'` to overwrite the git history on the GitHub remote repository. (git-auto-commit will not do a `git-rebase` for you!)
+
+The steps in your workflow might look like this:
+
+```yaml
+- uses: actions/checkout@master
+  with:
+    fetch-depth: 2
+
+# Other steps in your workflow to trigger a changed file
+
+- name: Get last commit message
+  id: last-commit-message
+  run: |
+    echo "::set-output name=msg::$(git log -1 --pretty=%B)"
+
+- uses: stefanzweifel/git-auto-commit-action@v4
+  with:
+    commit_message: ${{ steps.last-commit-message.outputs.msg }}
+    commit_options: '--amend --no-edit'
+    push_options: '--force'
+    skip_fetch: true
+```
+
+See discussion in [#159](https://github.com/stefanzweifel/git-auto-commit-action/issues/159#issuecomment-845347950) for details.
+
 ## Troubleshooting
 ### Action does not push commit to repository
 
