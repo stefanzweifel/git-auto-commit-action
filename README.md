@@ -242,7 +242,7 @@ If you would like to use this Action to create a commit using [`--amend`](https:
 
 **☝️ Important Notice:** You should understand the implications of rewriting history if you amend a commit that has already been published. [See rebasing](https://git-scm.com/docs/git-rebase#_recovering_from_upstream_rebase)
 
-First, you need to extract the previous commit message by using `git log -1 --pretty=%B`.
+First, you need to extract the previous commit message by using `git log -1 --pretty=%s`.
 Then you need to provide this last commit message to the Action through the `commit_message` input option.
 
 Finally, you have to use `push_options: '--force'` to overwrite the git history on the GitHub remote repository. (git-auto-commit will not do a `git-rebase` for you!)
@@ -252,6 +252,7 @@ The steps in your workflow might look like this:
 ```yaml
 - uses: actions/checkout@master
   with:
+    # Fetch the last 2 commits instead of just 1. (Fetching just 1 commit would overwrite the whole history)
     fetch-depth: 2
 
 # Other steps in your workflow to trigger a changed file
@@ -259,7 +260,7 @@ The steps in your workflow might look like this:
 - name: Get last commit message
   id: last-commit-message
   run: |
-    echo "::set-output name=msg::$(git log -1 --pretty=%B)"
+    echo "::set-output name=msg::$(git log -1 --pretty=%s)"
 
 - uses: stefanzweifel/git-auto-commit-action@v4
   with:
