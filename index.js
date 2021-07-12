@@ -24,7 +24,7 @@ const exec = (cmd, args=[]) => new Promise((resolve, reject) => {
 });
 
 const main = async () => {
-    await exec('bash', [path.join(__dirname, './entrypoint.sh')]);
+    await exec('sh', [path.join(__dirname, './entrypoint.sh')]);
 };
 
 main().catch(err => {
