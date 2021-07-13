@@ -80,6 +80,8 @@ The following is an extended example with all possible options available for thi
     disable_globbing: true
 ```
 
+Please note that the Action depends on `bash`. If you're using the Action in a job in combination with a custom Docker container, make sure that `bash` is installed.
+
 ## Example Workflow
 
 In this example, we're running `php-cs-fixer` in a PHP project to fix the codestyle automatically, then commit possible changed files back to the repository.
