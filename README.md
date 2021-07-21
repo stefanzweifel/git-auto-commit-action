@@ -12,7 +12,7 @@ By default, the commit is made in the name of "GitHub Actions" and co-authored b
 
 If you want to learn more how this Action works under the hood, check out [this article](https://michaelheap.com/git-auto-commit/) by Michael Heap.
 
-## Usage
+## Usage..
 
 Add the following step at the end of your job, after other steps that might add or change files.
 
