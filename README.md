@@ -181,8 +181,10 @@ storing the token as a secret in your repository and then passing the new token 
 
 If you work in an organization and don't want to create a PAT from your personal account, we recommend using a [robot account](https://docs.github.com/en/github/getting-started-with-github/types-of-github-accounts) for the token.
 
+## Advanced Uses
 
-### Using the Action in forks from public repositories
+<details>
+<summary>Use in forks from public repositories</summary>
 
 **☝️ Important Notice**: This Action technically works with forks. However, please note that the combination of triggers and their options can cause issues. Please read [the documentation](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows) on which triggers GitHub Actions support.\
 If you use this Action in combination with a linter/fixer, it's easier if you run the Action on `push` on your `main`-branch.
@@ -236,20 +238,35 @@ As you can see, your contributors have to go through hoops to make this work. **
 
 For more information about running Actions on forks, see [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/).
 
-### Push to forks from private repositories
+</details>
+
+<details>
+<summary>Push to forks from private repositories</summary>
 
 By default, GitHub Actions doesn't run Workflows on forks from private repositories. To enable Actions for **private** repositories enable "Run workflows from pull requests" in your repository settings.
 
 See [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/) or the [GitHub docs](https://docs.github.com/en/github/administering-a-repository/disabling-or-limiting-github-actions-for-a-repository#enabling-workflows-for-private-repository-forks) for details.
 
-### Signing Commits & Other Git Command Line Options
+</details>
+
+<details>
+<summary>
+  Signing Commits & Other Git Command Line Options
+</summary>
 
 Using command lines options needs to be done manually for each workflow which you require the option enabled. So for example signing commits requires you to import the gpg signature each and every time. The following list of actions are worth checking out if you need to automate these tasks regulary.
 
 - [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
 
+</details>
 
-### Using `--amend` and `--no-edit` as commit options
+<details>
+<summary>
+  Using `--amend` and `--no-edit` as commit options
+</summary>
+
+
+
 
 If you would like to use this Action to create a commit using [`--amend`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---amend) and [`--no-edit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---no-edit) you need to make some adjustments.
 
@@ -284,6 +301,8 @@ The steps in your workflow might look like this:
 ```
 
 See discussion in [#159](https://github.com/stefanzweifel/git-auto-commit-action/issues/159#issuecomment-845347950) for details.
+
+</details>
 
 ## Troubleshooting
 ### Action does not push commit to repository
