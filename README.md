@@ -34,10 +34,10 @@ The following is an extended example with all possible options available for thi
     branch: feature-123
 
     # Optional. Used by `git-commit`.
-    # See https://git-scm.com/docs/git-commit#_options
+    # See https://git-scm.com/docs/git-commit#_options
     commit_options: '--no-verify --signoff'
 
-    # Optional glob pattern of files which should be added to the commit
+    # Optional glob pattern of files which should be added to the commit
     # Defaults to all (.)
     # See the `pathspec`-documentation for git
     # - https://git-scm.com/docs/git-add#Documentation/git-add.txt-ltpathspecgt82308203
@@ -57,8 +57,8 @@ The following is an extended example with all possible options available for thi
     # Action will create and push a new tag to the remote repository and the defined branch
     tagging_message: 'v1.0.0'
 
-    # Optional. Used by `git-status`
-    # See https://git-scm.com/docs/git-status#_options
+    # Optional. Used by `git-status`
+    # See https://git-scm.com/docs/git-status#_options
     status_options: '--untracked-files=no'
 
     # Optional. Used by `git-add`
@@ -138,6 +138,17 @@ You can use these outputs to trigger other Actions in your Workflow run based on
 ```
 
 ## Limitations & Gotchas
+
+The goal of this Action is to be "the Action for committing files for the 80% use case". Therefore you might run into issues if your Workflow falls into the not supported 20% portion.
+
+The following is a list of edge cases the Action knowingly does not support:
+
+**No `git pull` when the repository is out of the date with remote.** The will not do a `git pull` before doing the `git push`. **You** are responsible for keeping the repository up to date in your Workflow runs. 
+
+**No support for running the Action in build matrices**. For example, if your Workflow is using build matrices, and you want that each job commits and pushes files to the remote, you will run into the issue, that the repository in the workflow will become out of date. As the Action will not do a `git pull` for you, you have to do that yourself.
+
+**No support for `git rebase` or `git merge`**. There are many strategies on how to integrate remote upstream changes to a local repository. `git-auto-commit` does not want to be responsible for doing that. 
+
 
 ### Checkout the correct branch
 
@@ -238,7 +249,7 @@ Using command lines options needs to be done manually for each workflow which yo
 - [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
 
 
-## Using `--amend` and `--no-edit` as commit options
+### Using `--amend` and `--no-edit` as commit options
 
 If you would like to use this Action to create a commit using [`--amend`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---amend) and [`--no-edit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---no-edit) you need to make some adjustments.
 
@@ -254,7 +265,7 @@ The steps in your workflow might look like this:
 ```yaml
 - uses: actions/checkout@master
   with:
-    # Fetch the last 2 commits instead of just 1. (Fetching just 1 commit would overwrite the whole history)
+    # Fetch the last 2 commits instead of just 1. (Fetching just 1 commit would overwrite the whole history)
     fetch-depth: 2
 
 # Other steps in your workflow to trigger a changed file
