@@ -149,6 +149,7 @@ The following is a list of edge cases the Action knowingly does not support:
 
 **No support for `git rebase` or `git merge`**. There are many strategies on how to integrate remote upstream changes to a local repository. `git-auto-commit` does not want to be responsible for doing that. 
 
+If this Action doesn't work for your workflow, check out [EndBug/add-and-commit](https://github.com/EndBug/add-and-commit).
 
 ### Checkout the correct branch
 
