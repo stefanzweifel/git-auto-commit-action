@@ -26,7 +26,7 @@ setup() {
     export INPUT_SKIP_FETCH=false
     export INPUT_DISABLE_GLOBBING=false
 
-    # Configure Git
+    # Configure Git
     if [[ -z $(git config user.name) ]]; then
         git config --global user.name "Test Suite"
         git config --global user.email "test@github.com"
@@ -43,7 +43,7 @@ teardown() {
     rm -rf "${FAKE_TEMP_LOCAL_REPOSITORY}"
 }
 
-# Create a fake remote repository which tests can push against
+# Create a fake remote repository which tests can push against
 _setup_fake_remote_repository() {
     # Create the bare repository, which will act as our remote/origin
     rm -rf "${FAKE_REMOTE}";
@@ -72,7 +72,7 @@ _setup_local_repository() {
     cd "${FAKE_LOCAL_REPOSITORY}";
 }
 
-# Run the main code related to this GitHub Action
+# Run the main code related to this GitHub Action
 git_auto_commit() {
     bash "${BATS_TEST_DIRNAME}"/../entrypoint.sh
 }
@@ -306,7 +306,7 @@ git_auto_commit() {
 }
 
 @test "It can checkout a different branch" {
-    # Create foo-branch and then immediately switch back to master
+    # Create foo-branch and then immediately switch back to master
     git checkout -b foo
     git checkout master
 
@@ -321,7 +321,7 @@ git_auto_commit() {
     assert_line "INPUT_BRANCH value: foo"
     assert_line "::debug::Push commit to remote branch foo"
 
-    # Assert a new branch "foo" exists on remote
+    # Assert a new branch "foo" exists on remote
     run git ls-remote --heads
     assert_output --partial refs/heads/foo
 }
@@ -411,7 +411,7 @@ git_auto_commit() {
 }
 
 @test "It pushes generated commit and tag to remote branch and updates commit sha" {
-    # Create "a-new-branch"-branch and then immediately switch back to master
+    # Create "a-new-branch"-branch and then immediately switch back to master
     git checkout -b a-new-branch
     git checkout master
 
@@ -451,7 +451,7 @@ git_auto_commit() {
     mkdir "${FAKE_LOCAL_REPOSITORY}"/nested
     touch "${FAKE_LOCAL_REPOSITORY}"/nested/new-file-b.py
 
-    # Commit changes
+    # Commit changes
     echo "Commit changes before running git_auto_commit";
     cd "${FAKE_LOCAL_REPOSITORY}";
     git add . > /dev/null;
