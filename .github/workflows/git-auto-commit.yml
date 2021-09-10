@@ -1,6 +1,10 @@
 name: git-auto-commit
 
-on: push
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   git-auto-commit:
