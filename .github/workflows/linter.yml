@@ -1,4 +1,5 @@
 name: Lint Code Base
+
 on: push
 
 jobs:
