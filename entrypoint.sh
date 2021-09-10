@@ -86,6 +86,8 @@ _local_commit() {
         commit -m "$INPUT_COMMIT_MESSAGE" \
         --author="$INPUT_COMMIT_AUTHOR" \
         ${INPUT_COMMIT_OPTIONS:+"${INPUT_COMMIT_OPTIONS_ARRAY[@]}"};
+
+    echo "::set-output name=commit_hash::$(git rev-parse HEAD)";
 }
 
 _tag_commit() {

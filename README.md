@@ -124,6 +124,7 @@ Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/
 You can use these outputs to trigger other Actions in your Workflow run based on the result of `git-auto-commit-action`.
 
 - `changes_detected`: Returns either "true" or "false" if the repository was dirty and files have changed.
+- `commit_hash`: Returns the full hash of the commit if one was created.
 
 ### Example
 
