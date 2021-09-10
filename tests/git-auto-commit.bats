@@ -86,6 +86,7 @@ git_auto_commit() {
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
     assert_line "::set-output name=changes_detected::true"
+    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
     assert_line "INPUT_BRANCH value: master"
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
@@ -106,6 +107,7 @@ git_auto_commit() {
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
     assert_line "::set-output name=changes_detected::true"
+    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
     assert_line "INPUT_BRANCH value: master"
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
@@ -128,6 +130,7 @@ git_auto_commit() {
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
     assert_line "::set-output name=changes_detected::false"
+    refute_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
     assert_line "Working tree clean. Nothing to commit."
 }
 
@@ -138,6 +141,7 @@ git_auto_commit() {
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
     assert_line "::set-output name=changes_detected::false"
+    refute_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
     assert_line "Working tree clean. Nothing to commit."
 }
 
@@ -150,8 +154,7 @@ git_auto_commit() {
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
     assert_line "::set-output name=changes_detected::true"
-
-    assert_line "::set-output name=changes_detected::true"
+    refute_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
     assert_line "INPUT_BRANCH value: master"
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
