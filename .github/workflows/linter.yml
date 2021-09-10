@@ -1,10 +1,6 @@
 name: Lint Code Base
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
+on: push
 
 jobs:
   build:
