@@ -477,3 +477,19 @@ git_auto_commit() {
     run git status
     refute_output --partial 'nested/new-file-b.py'
 }
+
+@test "it does not throw an error if not changes are detected and SKIP_DIRTY_CHECK is false" {
+    INPUT_FILE_PATTERN="."
+    INPUT_SKIP_DIRTY_CHECK=false
+    INPUT_SKIP_FETCH=false
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::false"
+
+    run git status
+    assert_output --partial 'nothing to commit, working tree clean'
+}
