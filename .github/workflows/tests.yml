@@ -8,7 +8,13 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    name: Tests ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v2
