@@ -20,6 +20,8 @@ Add the following step at the end of your job, after other steps that might add 
 - uses: stefanzweifel/git-auto-commit-action@v4
 ```
 
+Note that the Action has to be used in a Job that runs on a UNIX system (eg. `ubuntu-latest`).
+
 The following is an extended example with all possible options available for this Action.
 
 ```yaml
