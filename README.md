@@ -21,6 +21,7 @@ Add the following step at the end of your job, after other steps that might add 
 ```
 
 Note that the Action has to be used in a Job that runs on a UNIX system (eg. `ubuntu-latest`).
+If you don't use the default permission of the GITHUB_TOKEN, give the Job or Workflow at least the `contents: write` permission.
 
 The following is an extended example with all possible options available for this Action.
 
