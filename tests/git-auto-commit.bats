@@ -443,6 +443,7 @@ git_auto_commit() {
     assert_equal $current_sha $remote_sha
 }
 
+EkoRizki-patch-1
 @test "It does not expand wildcard glob when using INPUT_PATTERN and INPUT_DISABLE_GLOBBING in git-status and git-add" {
 
     # Create additional files in a nested directory structure
@@ -482,14 +483,56 @@ git_auto_commit() {
     INPUT_FILE_PATTERN="."
     INPUT_SKIP_DIRTY_CHECK=false
     INPUT_SKIP_FETCH=false
+=======
+
+@test "It fails to push commit to remote if branch already exists and local repo is behind its remote counterpart" {
+
+    # Create `new-branch` on Remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY;
+
+    git checkout -b "new-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+
+    git commit --quiet -m "Add additional file";
+    git push origin new-branch;
+
+    run git branch -r
+    assert_line --partial "origin/new-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY;
+
+    INPUT_BRANCH="new-branch"
+
+    run git branch
+    refute_line --partial "new-branch"
+
+    run git branch -r
+    refute_line --partial "origin/new-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+ fixes/142
 
     run git_auto_commit
 
     assert_success
 
+EkoRizki-patch-1
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
     assert_line "::set-output name=changes_detected::false"
 
     run git status
     assert_output --partial 'nothing to commit, working tree clean'
+=======
+    assert_line "INPUT_BRANCH value: new-branch"
+    assert_line --partial "::debug::Push commit to remote branch new-branch"
+
+    # Assert that branch "new-branch" was updated on remote
+    current_sha="$(git rev-parse --verify --short new-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/new-branch)"
+
+    assert_equal $current_sha $remote_sha
+fixes/142
 }
