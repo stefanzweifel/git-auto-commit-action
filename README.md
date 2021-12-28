@@ -30,11 +30,11 @@ The following is an extended example with all possible options available for thi
   with:
     # Optional, but recommended
     # Defaults to "Apply automatic changes"
-    commit_message: Automated Change
+    commit_message: 'Automated Change'
 
     # Optional branch name where commit should be pushed to.
     # Defaults to the current branch.
-    branch: feature-123
+    branch: 'feature-123'
 
     # Optional. Used by `git-commit`.
     # See https://git-scm.com/docs/git-commit#_options
@@ -45,16 +45,16 @@ The following is an extended example with all possible options available for thi
     # See the `pathspec`-documentation for git
     # - https://git-scm.com/docs/git-add#Documentation/git-add.txt-ltpathspecgt82308203
     # - https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec
-    file_pattern: src/*.js tests/*.js *.php
+    file_pattern: 'src/*.js tests/*.js *.php'
 
     # Optional local file path to the repository
     # Defaults to the root of the repository
-    repository: .
+    repository: '.'
 
     # Optional commit user and author settings
-    commit_user_name: My GitHub Actions Bot # defaults to "GitHub Actions"
-    commit_user_email: my-github-actions-bot@example.org # defaults to "actions@github.com"
-    commit_author: Author <actions@github.com> # defaults to author of the commit that triggered the run
+    commit_user_name: 'My GitHub Actions Bot' # defaults to "GitHub Actions"
+    commit_user_email: 'my-github-actions-bot@example.org' # defaults to "actions@github.com"
+    commit_author: 'Author <actions@github.com>' # defaults to author of the commit that triggered the run
 
     # Optional tag message 
     # Action will create and push a new tag to the remote repository and the defined branch
