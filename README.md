@@ -78,6 +78,9 @@ The following is an extended example with all possible options available for thi
     # Optional. Skip internal call to `git fetch`
     skip_fetch: true    
     
+    # Optional. Skip internal call to `git checkout`
+    skip_checkout: true
+
     # Optional. Prevents the shell from expanding filenames. 
     # Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
     disable_globbing: true
