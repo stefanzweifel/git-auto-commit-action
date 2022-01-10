@@ -55,9 +55,13 @@ _switch_to_branch() {
         git fetch --depth=1;
     fi
 
-    # Switch to branch from current Workflow run
-    # shellcheck disable=SC2086
-    git checkout $INPUT_BRANCH;
+    if "$INPUT_SKIP_CHECKOUT"; then
+        echo "::debug::git-checkout has not been executed";
+    else
+        # Switch to branch from current Workflow run
+        # shellcheck disable=SC2086
+        git checkout $INPUT_BRANCH;
+    fi
 }
 
 _add_files() {

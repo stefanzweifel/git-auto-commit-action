@@ -24,6 +24,7 @@ setup() {
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
     export INPUT_SKIP_FETCH=false
+    export INPUT_SKIP_CHECKOUT=false
     export INPUT_DISABLE_GLOBBING=false
 
     # Configure Git
@@ -379,6 +380,19 @@ git_auto_commit() {
     assert_success
 
     assert_line "::debug::git-fetch has not been executed"
+}
+
+@test "If SKIP_CHECKOUT is true git-checkout will not be called" {
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    INPUT_SKIP_CHECKOUT=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "::debug::git-checkout has not been executed"
 }
 
 @test "It pushes generated commit and tag to remote and actually updates the commit shas" {
