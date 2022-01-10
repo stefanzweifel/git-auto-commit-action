@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Add `skip_checkout` option (#197) @cmbuckley
 
-## Changed
+## Changed
 
 - Add note on minimum permissions to the docs (#180) @ericcornelissen
 
