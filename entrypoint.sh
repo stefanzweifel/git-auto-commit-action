@@ -60,7 +60,7 @@ _switch_to_branch() {
     else
         # Switch to branch from current Workflow run
         # shellcheck disable=SC2086
-        git checkout $INPUT_BRANCH;
+        git checkout $INPUT_BRANCH --;
     fi
 }
 
