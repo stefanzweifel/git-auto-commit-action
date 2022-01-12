@@ -507,3 +507,29 @@ git_auto_commit() {
     run git status
     assert_output --partial 'nothing to commit, working tree clean'
 }
+
+@test "It does not throw an error if branch is checked out with same name as a file or folder in the repo" {
+
+    # Add File called dev and commit/push
+    echo "Create dev file";
+    cd "${FAKE_LOCAL_REPOSITORY}";
+    echo this is a file named dev > dev
+    git add dev
+    git commit -m 'add file named dev'
+    git update-ref refs/remotes/origin/master master
+    git update-ref refs/remotes/origin/dev master
+
+    # ---
+
+    INPUT_BRANCH=dev
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{4,5,6}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line "::debug::Push commit to remote branch dev"
+}
