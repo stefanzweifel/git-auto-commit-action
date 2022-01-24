@@ -174,7 +174,7 @@ You have to do this to avoid that the `checkout`-Action clones your repository i
 ### Commits made by this Action do not trigger new Workflow runs
 
 The resulting commit **will not trigger** another GitHub Actions Workflow run.
-This is due to [limitations set by GitHub](https://help.github.com/en/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token).
+This is due to [limitations set by GitHub](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#triggering-a-workflow-from-a-workflow).
 
 > When you use the repository's GITHUB_TOKEN to perform tasks on behalf of the GitHub Actions app, events triggered by the GITHUB_TOKEN will not create a new workflow run. This prevents you from accidentally creating recursive workflow runs.
 
