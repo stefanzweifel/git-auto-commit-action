@@ -187,6 +187,8 @@ storing the token as a secret in your repository and then passing the new token 
     token: ${{ secrets.PAT }}
 ```
 
+If you create a personal access token, apply the `repo` and `workflow` scopes.
+
 If you work in an organization and don't want to create a PAT from your personal account, we recommend using a [robot account](https://docs.github.com/en/github/getting-started-with-github/types-of-github-accounts) for the token.
 
 ## Advanced Uses
