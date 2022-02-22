@@ -47,7 +47,7 @@ _git_is_dirty() {
 _switch_to_branch() {
     echo "INPUT_BRANCH value: $INPUT_BRANCH";
 
-    # Fetch remote to make sure that repo can be switched to the right branch.
+    # Fetch remote to make sure that repo can be switched to the right branch.
 
     if "$INPUT_SKIP_FETCH"; then
         echo "::debug::git-fetch has not been executed";
