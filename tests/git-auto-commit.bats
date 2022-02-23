@@ -26,6 +26,7 @@ setup() {
     export INPUT_SKIP_FETCH=false
     export INPUT_SKIP_CHECKOUT=false
     export INPUT_DISABLE_GLOBBING=false
+    export INPUT_CREATE_BRANCH=false
 
     # Configure Git
     if [[ -z $(git config user.name) ]]; then
@@ -532,4 +533,233 @@ git_auto_commit() {
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
     assert_line "::set-output name=changes_detected::true"
     assert_line "::debug::Push commit to remote branch dev"
+}
+
+@test "It creates new local branch and pushes the new branch to remote" {
+
+    INPUT_BRANCH="not-existend-branch"
+    INPUT_CREATE_BRANCH=true
+
+    run git branch
+    refute_line --partial "not-existend-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line "INPUT_BRANCH value: not-existend-branch"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch not-existend-branch"
+
+    run git branch
+    assert_line --partial "not-existend-branch"
+
+    run git branch -r
+    assert_line --partial "origin/not-existend-branch"
+}
+
+@test "it does not create new local branch if local branch already exists" {
+
+    git checkout -b not-existend-remote-branch
+    git checkout master
+
+    INPUT_BRANCH="not-existend-remote-branch"
+    INPUT_CREATE_BRANCH=true
+
+    run git branch
+    assert_line --partial "not-existend-remote-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-remote-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line "INPUT_BRANCH value: not-existend-remote-branch"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch not-existend-remote-branch"
+
+    run git branch
+    assert_line --partial "not-existend-remote-branch"
+
+    run git branch -r
+    assert_line --partial "origin/not-existend-remote-branch"
+}
+
+@test "it creates new local branch and pushed branch to remote even if the remote branch already exists" {
+
+    # Create `existing-remote-branch` on remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY;
+    git checkout -b "existing-remote-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+    git commit -m "Add additional file";
+    git push origin existing-remote-branch;
+
+    run git branch;
+    assert_line --partial "existing-remote-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY;
+
+    INPUT_BRANCH="existing-remote-branch"
+    INPUT_CREATE_BRANCH=true
+
+    run git branch
+    refute_line --partial "existing-remote-branch"
+
+    run git fetch --all;
+    run git pull origin existing-remote-branch;
+    run git branch -r;
+    assert_line --partial "origin/existing-remote-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line "INPUT_BRANCH value: existing-remote-branch"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch existing-remote-branch"
+
+    run git branch
+    assert_line --partial "existing-remote-branch"
+
+    run git branch -r
+    assert_line --partial "origin/existing-remote-branch"
+
+    # Assert that branch "existing-remote-branch" was updated on remote
+    current_sha="$(git rev-parse --verify --short existing-remote-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/existing-remote-branch)"
+
+    assert_equal $current_sha $remote_sha;
+}
+
+@test "script fails if new local branch is checked out and push fails as remote has newer commits than local" {
+    # Create `existing-remote-branch` on remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY;
+    git checkout -b "existing-remote-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+    git commit -m "Add additional file";
+    git push origin existing-remote-branch;
+
+    run git branch;
+    assert_line --partial "existing-remote-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY;
+
+    INPUT_BRANCH="existing-remote-branch"
+    INPUT_CREATE_BRANCH=true
+
+    run git branch
+    refute_line --partial "existing-remote-branch"
+
+    run git fetch --all;
+    run git branch -r;
+    assert_line --partial "origin/existing-remote-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_failure
+
+    assert_line "hint: Updates were rejected because the tip of your current branch is behind"
+
+    # Assert that branch exists locally and on remote
+    run git branch
+    assert_line --partial "existing-remote-branch"
+
+    run git branch -r
+    assert_line --partial "origin/existing-remote-branch"
+
+    # Assert that branch "existing-remote-branch" was not updated on remote
+    current_sha="$(git rev-parse --verify --short existing-remote-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/existing-remote-branch)"
+
+    refute [assert_equal $current_sha $remote_sha];
+}
+
+@test "It pushes commit to remote if branch already exists and local repo is behind its remote counterpart" {
+    # Create `new-branch` on remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY;
+
+    git checkout -b "new-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+
+    git commit --quiet -m "Add additional file";
+    git push origin new-branch;
+
+    run git branch -r
+    assert_line --partial "origin/new-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY;
+
+    INPUT_BRANCH="new-branch"
+
+    # Assert that local remote does not know have "new-branch" locally nor does
+    # know about the remote branch.
+    run git branch
+    refute_line --partial "new-branch"
+
+    run git branch -r
+    refute_line --partial "origin/new-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_BRANCH value: new-branch"
+    assert_line --partial "::debug::Push commit to remote branch new-branch"
+
+    # Assert that branch "new-branch" was not updated on remote
+    current_sha="$(git rev-parse --verify --short new-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/new-branch)"
+
+    assert_equal $current_sha $remote_sha;
 }
