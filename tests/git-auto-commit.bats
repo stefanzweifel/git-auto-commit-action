@@ -535,8 +535,35 @@ git_auto_commit() {
     assert_line "::debug::Push commit to remote branch dev"
 }
 
-@test "It creates new local branch and pushes the new branch to remote" {
+@test "script fails to push commit to new branch that does not exist yet" {
+    INPUT_BRANCH="not-existend-branch"
+    INPUT_CREATE_BRANCH=false
 
+    run git branch
+    refute_line --partial "not-existend-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_failure
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line "INPUT_BRANCH value: not-existend-branch"
+    assert_line "fatal: invalid reference: not-existend-branch"
+
+    run git branch
+    refute_line --partial "not-existend-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-branch"
+}
+
+@test "It creates new local branch and pushes the new branch to remote" {
     INPUT_BRANCH="not-existend-branch"
     INPUT_CREATE_BRANCH=true
 
