@@ -58,8 +58,7 @@ _switch_to_branch() {
     if "$INPUT_SKIP_CHECKOUT"; then
         echo "::debug::git-checkout has not been executed";
     else
-
-        # Create new local branch if `create_branch` input is true
+        # Create new local branch if `create_branch`-input is true
         if "$INPUT_CREATE_BRANCH"; then
             # shellcheck disable=SC2086
             git checkout -B $INPUT_BRANCH --;
