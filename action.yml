@@ -67,6 +67,9 @@ inputs:
   disable_globbing:
     description: Stop the shell from expanding filenames (https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
     default: false
+  create_branch:
+    description: Checkout new local branch and try to create new branch on remote.
+    default: false
 
 outputs:
   changes_detected:
