@@ -75,9 +75,10 @@ _add_files() {
     echo "::debug::Apply add options ${INPUT_ADD_OPTIONS}";
 
     echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
+    INPUT_FILE_PATTERN_ARRAY=( ${INPUT_FILE_PATTERN} )
 
     # shellcheck disable=SC2086
-    git add ${INPUT_ADD_OPTIONS} ${INPUT_FILE_PATTERN};
+    git add ${INPUT_ADD_OPTIONS} ${INPUT_FILE_PATTERN:+"${INPUT_FILE_PATTERN_ARRAY[@]}"};
 }
 
 _local_commit() {
