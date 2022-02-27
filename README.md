@@ -87,6 +87,7 @@ The following is an extended example with all possible options available for thi
     disable_globbing: true
 
     # Optional. Create given branch name in local and remote repository.
+    # (Not released yet, available when @master is used)
     create_branch: true
 ```
 
@@ -106,7 +107,7 @@ on:
   pull_request:
   push:
     branches:
-      - "main"
+      - main
 
 jobs:
   php-cs-fixer:
@@ -154,9 +155,9 @@ The goal of this Action is to be "the Action for committing files for the 80% us
 
 The following is a list of edge cases the Action knowingly does not support:
 
-**No `git pull` when the repository is out of the date with remote.** The will not do a `git pull` before doing the `git push`. **You** are responsible for keeping the repository up to date in your Workflow runs. 
+**No `git pull` when the repository is out of the date with remote.** The Action will not do a `git pull` before doing the `git push`. **You** are responsible for keeping the repository up to date in your Workflow runs. 
 
-**No support for running the Action in build matrices**. For example, if your Workflow is using build matrices, and you want that each job commits and pushes files to the remote, you will run into the issue, that the repository in the workflow will become out of date. As the Action will not do a `git pull` for you, you have to do that yourself.
+**No support for running the Action in build matrices**. If your Workflow is using build matrices, and you want that each job commits and pushes files to the remote, you will run into the issue, that the repository in the workflow will become out of date. As the Action will not do a `git pull` for you, you have to do that yourself.
 
 **No support for `git rebase` or `git merge`**. There are many strategies on how to integrate remote upstream changes to a local repository. `git-auto-commit` does not want to be responsible for doing that. 
 
@@ -164,8 +165,8 @@ If this Action doesn't work for your workflow, check out [EndBug/add-and-commit]
 
 ### Checkout the correct branch
 
-You must use `action/checkout@v2` or later versions to checkout the repository.
-In non-`push` events, such as `pull_request`, make sure to specify the `ref` to checkout:
+You must use `action/checkout@v2` or later versions to check out the repository.
+In non-`push` events, such as `pull_request`, make sure to specify the `ref` to check out:
 
 ```yaml
 - uses: actions/checkout@v2
@@ -173,7 +174,7 @@ In non-`push` events, such as `pull_request`, make sure to specify the `ref` to 
     ref: ${{ github.head_ref }}
 ```
 
-You have to do this to avoid that the `checkout`-Action clones your repository in a detached state.
+Do this to avoid checking out the repository in a detached state.
 
 ### Commits made by this Action do not trigger new Workflow runs
 
@@ -362,7 +363,7 @@ This is due to limitations set up by GitHub, [commits of this Action do not trig
 
 ## Running the tests
 
-The package has tests written in [bats](https://github.com/bats-core/bats-core). Before you can run the test suite locally, you have to install the dependencies with `npm` or `yarn`.
+The Action has tests written in [bats](https://github.com/bats-core/bats-core). Before you can run the test suite locally, you have to install the dependencies with `npm` or `yarn`.
 
 ```shell
 npm install
