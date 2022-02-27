@@ -186,7 +186,10 @@ git_auto_commit() {
 }
 
 @test "It applies INPUT_FILE_PATTERN when creating commit" {
-    INPUT_FILE_PATTERN="*.txt *.html"
+    INPUT_FILE_PATTERN="src/*.js *.txt *.html"
+
+    mkdir src;
+    touch src/new-file-{1,2}.js;
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2}.php
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2}.html
@@ -195,7 +198,7 @@ git_auto_commit() {
 
     assert_success
 
-    assert_line "INPUT_FILE_PATTERN: *.txt *.html"
+    assert_line "INPUT_FILE_PATTERN: src/*.js *.txt *.html"
     assert_line "::debug::Push commit to remote branch master"
 
     # Assert that PHP files have not been added.
