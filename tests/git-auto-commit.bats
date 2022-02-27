@@ -639,7 +639,7 @@ git_auto_commit() {
     assert_line --partial "origin/not-existend-remote-branch"
 }
 
-@test "it creates new local branch and pushed branch to remote even if the remote branch already exists" {
+@test "it creates new local branch and pushes branch to remote even if the remote branch already exists" {
 
     # Create `existing-remote-branch` on remote with changes the local repository does not yet have
     cd $FAKE_TEMP_LOCAL_REPOSITORY;
@@ -784,7 +784,7 @@ git_auto_commit() {
     assert_line "INPUT_BRANCH value: new-branch"
     assert_line --partial "::debug::Push commit to remote branch new-branch"
 
-    # Assert that branch "new-branch" was not updated on remote
+    # Assert that branch "new-branch" was updated on remote
     current_sha="$(git rev-parse --verify --short new-branch)"
     remote_sha="$(git rev-parse --verify --short origin/new-branch)"
 
