@@ -25,7 +25,7 @@ inputs:
     required: false
     default: ''
   file_pattern:
-    description: File pattern used for `git add`. For example `src/\*.js`
+    description: File pattern used for `git add`. For example `src/*.js`
     required: false
     default: '.'
   repository:
@@ -66,6 +66,9 @@ inputs:
     default: false
   disable_globbing:
     description: Stop the shell from expanding filenames (https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
+    default: false
+  create_branch:
+    description: Create new branch with the name of `branch`-input in local and remote repository, if it doesn't exist yet.
     default: false
 
 outputs:

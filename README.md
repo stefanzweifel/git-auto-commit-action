@@ -28,15 +28,16 @@ The following is an extended example with all possible options available for thi
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v4
   with:
-    # Optional, but recommended
+    # Optional. Commit message for the created commit.
     # Defaults to "Apply automatic changes"
     commit_message: Automated Change
 
-    # Optional branch name where commit should be pushed to.
-    # Defaults to the current branch.
+    # Optional. Local and remote branch name where commit is going to be pushed
+    #  to. Defaults to the current branch.
+    #  You might need to set `create_branch: true` if the branch does not exist.
     branch: feature-123
 
-    # Optional. Used by `git-commit`.
+    # Optional. Options used by `git-commit`.
     # See https://git-scm.com/docs/git-commit#_options
     commit_options: '--no-verify --signoff'
 
@@ -47,8 +48,8 @@ The following is an extended example with all possible options available for thi
     # - https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec
     file_pattern: src/*.js tests/*.js *.php
 
-    # Optional local file path to the repository
-    # Defaults to the root of the repository
+    # Optional. Local file path to the repository.
+    # Defaults to the root of the repository.
     repository: .
 
     # Optional commit user and author settings
@@ -56,19 +57,19 @@ The following is an extended example with all possible options available for thi
     commit_user_email: my-github-actions-bot@example.org # defaults to "actions@github.com"
     commit_author: Author <actions@github.com> # defaults to author of the commit that triggered the run
 
-    # Optional tag message 
-    # Action will create and push a new tag to the remote repository and the defined branch
+    # Optional. Tag name being created in the local repository and 
+    # pushed to remtoe repository and defined branch.
     tagging_message: 'v1.0.0'
 
-    # Optional. Used by `git-status`
-    # See https://git-scm.com/docs/git-status#_options
+    # Optional. Option used by `git-status` to determine if the repository is 
+    # dirty. See https://git-scm.com/docs/git-status#_options
     status_options: '--untracked-files=no'
 
-    # Optional. Used by `git-add`
+    # Optional. Options used by `git-add`.
     # See https://git-scm.com/docs/git-add#_options
     add_options: '-u'
 
-    # Optional. Used by `git-push`
+    # Optional. Options used by `git-push`.
     # See https://git-scm.com/docs/git-push#_options
     push_options: '--force'
     
@@ -84,6 +85,9 @@ The following is an extended example with all possible options available for thi
     # Optional. Prevents the shell from expanding filenames. 
     # Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
     disable_globbing: true
+
+    # Optional. Create given branch name in local and remote repository.
+    create_branch: true
 ```
 
 Please note that the Action depends on `bash`. If you're using the Action in a job in combination with a custom Docker container, make sure that `bash` is installed.
