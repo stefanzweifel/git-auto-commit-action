@@ -40,8 +40,11 @@ _git_is_dirty() {
     echo "INPUT_STATUS_OPTIONS: ${INPUT_STATUS_OPTIONS}";
     echo "::debug::Apply status options ${INPUT_STATUS_OPTIONS}";
 
+    echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
+    INPUT_FILE_PATTERN_ARRAY=( ${INPUT_FILE_PATTERN} )
+
     # shellcheck disable=SC2086
-    [ -n "$(git status -s $INPUT_STATUS_OPTIONS -- $INPUT_FILE_PATTERN)" ]
+    [ -n "$(git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN:+${INPUT_FILE_PATTERN_ARRAY[@]}})" ]
 }
 
 _switch_to_branch() {
