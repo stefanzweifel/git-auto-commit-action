@@ -5,9 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.14.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.14.1...HEAD)
 
 > TBD
+
+## [v4.14.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.14.0...v4.14.1) - 2022-04-12
+
+## Changed
+
+- Change Commit User Name from "GitHub Actions" to "github-actions[bot]" (#213) @jooola
+- Change Commit User Email from "actions@github.com" to "github-actions[bot]@users.noreply.github.com" (#213) @jooola
+
+## Fixed
+
+- Update doc link to GITHUB_TOKEN not triggering new workflow runs (#206) @gapple
 
 ## [v4.14.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.13.1...v4.14.0) - 2022-03-18
 
