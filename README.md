@@ -22,7 +22,7 @@ Add the following step at the end of your job, after other steps that might add 
 Note that the Action has to be used in a Job that runs on a UNIX system (eg. `ubuntu-latest`).
 If you don't use the default permission of the GITHUB_TOKEN, give the Job or Workflow at least the `contents: write` permission.
 
-The following is an extended example with all possible options available for this Action.
+The following is an extended example with all available options.
 
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v4
@@ -153,7 +153,7 @@ The goal of this Action is to be "the Action for committing files for the 80% us
 
 The following is a list of edge cases the Action knowingly does not support:
 
-**No `git pull` when the repository is out of the date with remote.** The Action will not do a `git pull` before doing the `git push`. **You** are responsible for keeping the repository up to date in your Workflow runs. 
+**No `git pull` when the repository is out of date with remote.** The Action will not do a `git pull` before doing the `git push`. **You** are responsible for keeping the repository up to date in your Workflow runs. 
 
 **No support for running the Action in build matrices**. If your Workflow is using build matrices, and you want that each job commits and pushes files to the remote, you will run into the issue, that the repository in the workflow will become out of date. As the Action will not do a `git pull` for you, you have to do that yourself.
 
@@ -204,9 +204,45 @@ If you use this Action in combination with a linter/fixer, it's easier if you ru
 
 ---
 
-By default, this Action will not run on Pull Requests which have been opened by forks. (This is a limitation by GitHub, not by us.)
+By default, this Action will not run on Pull Requests which have been opened by forks. (This is a limitation by GitHub, not by us.)   
+However, there are a couple of ways to use this Actions in Workflows that should be triggered by forked repositories.
 
-If you want that a Workflow using this Action runs on Pull Requests opened by forks, 2 things have to be changed:
+### Workflow should run in **base** repository
+
+The workflow below runs whenever a commit is pushed to the `main`-branch or when activity on a pull request happens, by listening to the  [`pull_request_target`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target) event.
+
+If the workflow is triggered by the `pull_request_target`-event, the workflow will run in the context of the base of the pull request, rather than in the context of the merge commit, as the `pull_request` event does.
+In other words, this will allow your workflow to be run in the repository where the pull request is opened to and will push changes back to the fork.
+
+Check out the discussion in [#211](https://github.com/stefanzweifel/git-auto-commit-action/issues/211) for more information on this.
+
+```yaml
+name: Format PHP
+
+on:
+  push:
+    branches:
+      - main
+  pull_request_target:
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        ref: ${{ github.head_ref }}
+
+    - name: Run php-cs-fixer
+      uses: docker://oskarstark/php-cs-fixer-ga
+
+    - uses: stefanzweifel/git-auto-commit-action@v4
+```
+
+### Workflow should run in **forked** repository
+
+If the workflow should run in the forked repository, follow these steps:
 
 1. In addition to listening to the `pull_request` event in your Workflow triggers, you have to add an additional event: `pull_request_target`. You can learn more about this event in [the GitHub docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target).
 2. GitHub Action has to be enabled on the forked repository. \
@@ -239,7 +275,7 @@ jobs:
         commit_message: Apply php-cs-fixer changes
 ```
 
-Next time a user forks your project **and** enabled GitHub Actions **and** opened a Pull Request, the Workflow will run on the the forked repository and will push commits to the same branch.
+Next time a user forks your project **and** enabled GitHub Actions **and** opened a Pull Request, the Workflow will run on the the **forked** repository and will push commits to the same branch.
 
 Here's how the Pull Request will look like:
 
