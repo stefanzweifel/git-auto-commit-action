@@ -1,7 +1,7 @@
 ame-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
+change-template: '- $TITLE ([#$NUMBER](https://github.com/stefanzweifel/git-auto-commit-action/pull/$NUMBER)) [@$AUTHOR](https://github.com/@$AUTHOR)'
 template: |
-  # What's Changed
   $CHANGES
 categories:
   - title: Added
