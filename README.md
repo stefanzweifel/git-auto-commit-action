@@ -194,6 +194,10 @@ If you create a personal access token, apply the `repo` and `workflow` scopes.
 
 If you work in an organization and don't want to create a PAT from your personal account, we recommend using a [robot account](https://docs.github.com/en/github/getting-started-with-github/types-of-github-accounts) for the token.
 
+### Change to file is not detected
+
+Does your workflow change a file but "git-auto-commit" does not detect the change? Check the `.gitignore` that applies to the respective file. You might have accidentally marked the file to be ignored by git.
+
 ## Advanced Uses
 
 <details>
