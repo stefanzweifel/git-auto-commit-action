@@ -793,3 +793,33 @@ git_auto_commit() {
 
     assert_equal $current_sha $remote_sha;
 }
+
+@test "throws fatal error if file pattern includes files that do not exist" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.foo
+
+    INPUT_FILE_PATTERN="*.foo *.bar"
+
+    run git_auto_commit
+
+    assert_failure
+    assert_line --partial "fatal: pathspec '*.bar' did not match any files"
+}
+
+@test "does not throw fataal error if files for file pattern exist but only one is dirty" {
+    # Add some .foo and .bar files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.foo
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.bar
+
+    INPUT_FILE_PATTERN="*.foo *.bar"
+
+    run git_auto_commit
+
+    # Add more .foo files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{4,5,6}.foo
+
+    INPUT_FILE_PATTERN="*.foo *.bar"
+
+    run git_auto_commit
+
+    assert_success
+}
