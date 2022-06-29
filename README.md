@@ -399,6 +399,14 @@ If you go the "force pushes" route, you have to enable force pushes to a protect
 
 This is due to limitations set up by GitHub, [commits of this Action do not trigger new Workflow runs](#commits-of-this-action-do-not-trigger-new-workflow-runs).
 
+### Pathspec 'x' did not match any files
+
+If you're using the Action with a custom `file_pattern` and the Action throws a fatal error with the message "Pathspec 'file-pattern' did not match any files", the problem is probably that no file for the pattern exists in the repository.
+
+`file_pattern` is used both for `git-status` and `git-add` in this Action. `git-add` will throw a fatal error, if for example, you use a file pattern like `*.js *.ts` but no `*.ts` files exist in your projects repository.
+
+See [Issue #227](https://github.com/stefanzweifel/git-auto-commit-action/issues/227) for details.
+
 ## Running the tests
 
 The Action has tests written in [bats](https://github.com/bats-core/bats-core). Before you can run the test suite locally, you have to install the dependencies with `npm` or `yarn`.
