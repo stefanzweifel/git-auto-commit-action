@@ -57,7 +57,7 @@ The following is an extended example with all available options.
     commit_author: Author <actions@github.com> # defaults to author of the commit that triggered the run
 
     # Optional. Tag name being created in the local repository and 
-    # pushed to remtoe repository and defined branch.
+    # pushed to remote repository and defined branch.
     tagging_message: 'v1.0.0'
 
     # Optional. Option used by `git-status` to determine if the repository is 
