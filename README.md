@@ -19,7 +19,7 @@ Add the following step at the end of your job, after other steps that might add 
 - uses: stefanzweifel/git-auto-commit-action@v4
 ```
 
-Note that the Action has to be used in a Job that runs on a UNIX system (eg. `ubuntu-latest`).
+Note that the Action has to be used in a Job that runs on a UNIX system (e.g. `ubuntu-latest`).
 If you don't use the default permission of the GITHUB_TOKEN, give the Job or Workflow at least the `contents: write` permission.
 
 The following is an extended example with all available options.
@@ -149,7 +149,7 @@ You can use these outputs to trigger other Actions in your Workflow run based on
 
 ## Limitations & Gotchas
 
-The goal of this Action is to be "the Action for committing files for the 80% use case". Therefore you might run into issues if your Workflow falls into the not supported 20% portion.
+The goal of this Action is to be "the Action for committing files for the 80% use case". Therefore, you might run into issues if your Workflow falls into the not supported 20% portion.
 
 The following is a list of edge cases the Action knowingly does not support:
 
@@ -279,7 +279,7 @@ jobs:
         commit_message: Apply php-cs-fixer changes
 ```
 
-Next time a user forks your project **and** enabled GitHub Actions **and** opened a Pull Request, the Workflow will run on the the **forked** repository and will push commits to the same branch.
+Next time a user forks your project **and** enabled GitHub Actions **and** opened a Pull Request, the Workflow will run on the **forked** repository and will push commits to the same branch.
 
 Here's how the Pull Request will look like:
 
@@ -307,7 +307,7 @@ See [this announcement from GitHub](https://github.blog/2020-08-03-github-action
   Signing Commits & Other Git Command Line Options
 </summary>
 
-Using command lines options needs to be done manually for each workflow which you require the option enabled. So for example signing commits requires you to import the gpg signature each and every time. The following list of actions are worth checking out if you need to automate these tasks regulary.
+Using command lines options needs to be done manually for each workflow which you require the option enabled. So for example signing commits requires you to import the gpg signature each and every time. The following list of actions are worth checking out if you need to automate these tasks regularly.
 
 - [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
 
@@ -371,7 +371,7 @@ Updating the `token` value with a Personal Access Token should fix your issues.
 
 ### Push to protected branches
 
-If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) you have to make some changes to your Workflow for the Action to work properly: You need a Personal Access Token and you either have to allow force pushes or the Personal Acess Token needs to belong to an Administrator.
+If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) you have to make some changes to your Workflow for the Action to work properly: You need a Personal Access Token and you either have to allow force pushes or the Personal Access Token needs to belong to an Administrator.
 
 First, you have to create a new [Personal Access Token (PAT)](https://github.com/settings/tokens/new),
 store the token as a secret in your repository and pass the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action step.
@@ -383,7 +383,7 @@ store the token as a secret in your repository and pass the new token to the [`a
 ```
 You can learn more about Personal Access Token in the [GitHub documentation](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
 
-**Note:** If you're working in an organisation and you don't want to create the PAT from your personal account, we recommend using a bot-account for such tokens.
+**Note:** If you're working in an organisation, and you don't want to create the PAT from your personal account, we recommend using a bot-account for such tokens.
 
 
 If you go the "force pushes" route, you have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like this.
@@ -403,7 +403,7 @@ This is due to limitations set up by GitHub, [commits of this Action do not trig
 
 If you're using the Action with a custom `file_pattern` and the Action throws a fatal error with the message "Pathspec 'file-pattern' did not match any files", the problem is probably that no file for the pattern exists in the repository.
 
-`file_pattern` is used both for `git-status` and `git-add` in this Action. `git-add` will throw a fatal error, if for example, you use a file pattern like `*.js *.ts` but no `*.ts` files exist in your projects repository.
+`file_pattern` is used both for `git-status` and `git-add` in this Action. `git-add` will throw a fatal error, if for example, you use a file pattern like `*.js *.ts` but no `*.ts` files exist in your projects' repository.
 
 See [Issue #227](https://github.com/stefanzweifel/git-auto-commit-action/issues/227) for details.
 
@@ -427,7 +427,7 @@ yarn test
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/stefanzweifel/git-auto-commit-action/tags).
 
-We also provide major version tags to make it easier to always use the latest release of a major version. For example you can use `stefanzweifel/git-auto-commit-action@v4` to always use the latest release of the current major version.
+We also provide major version tags to make it easier to always use the latest release of a major version. For example, you can use `stefanzweifel/git-auto-commit-action@v4` to always use the latest release of the current major version.
 (More information about this [here](https://help.github.com/en/actions/building-actions/about-actions#versioning-your-action).)
 
 ## Credits
