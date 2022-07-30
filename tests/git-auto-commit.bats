@@ -805,7 +805,7 @@ git_auto_commit() {
     assert_line --partial "fatal: pathspec '*.bar' did not match any files"
 }
 
-@test "does not throw fataal error if files for file pattern exist but only one is dirty" {
+@test "does not throw fatal error if files for file pattern exist but only one is dirty" {
     # Add some .foo and .bar files
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.foo
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.bar
