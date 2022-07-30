@@ -823,3 +823,19 @@ git_auto_commit() {
 
     assert_success
 }
+
+@test "detects and commits changed files based on pattern in root and subfolders" {
+    # Add some .neon files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.neon
+    mkdir foo;
+    touch "${FAKE_LOCAL_REPOSITORY}"/foo/new-file-2.neon
+
+    INPUT_FILE_PATTERN="**/*.neon *.neon"
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "new-file-1.neon"
+    assert_line --partial "foo/new-file-2.neon"
+}
