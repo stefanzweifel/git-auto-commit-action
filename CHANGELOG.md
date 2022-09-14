@@ -5,25 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.13.1...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.14.1...HEAD)
 
 > TBD
+
+## [v4.14.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.14.0...v4.14.1) - 2022-04-12
+
+## Changed
+
+- Change Commit User Name from "GitHub Actions" to "github-actions[bot]" ([#213](https://github.com/stefanzweifel/git-auto-commit-action/pull/213)) @jooola
+- Change Commit User Email from "actions@github.com" to "github-actions[bot]@users.noreply.github.com" ([#213](https://github.com/stefanzweifel/git-auto-commit-action/pull/213)) @jooola
+
+## Fixed
+
+- Update doc link to GITHUB_TOKEN not triggering new workflow runs ([#206](https://github.com/stefanzweifel/git-auto-commit-action/pull/206)) @gapple
+
+## [v4.14.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.13.1...v4.14.0) - 2022-03-18
+
+## Added
+
+- Add `create_branch` option to force create a new branch ([#203](https://github.com/stefanzweifel/git-auto-commit-action/pull/203)) @stefanzweifel
+
+## Fixed
+
+- README.md: Updates hyperlink to GH docs ([#200](https://github.com/stefanzweifel/git-auto-commit-action/pull/200)) @funkyfuture
 
 ## [v4.13.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.13.0...v4.13.1) - 2022-01-13
 
 ## Fixed
 
-- Properly disambiguate between branch or file checkout (#199) @kenodegard
+- Properly disambiguate between branch or file checkout ([#199](https://github.com/stefanzweifel/git-auto-commit-action/pull/199)) @kenodegard
 
 ## [v4.13.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.12.0...v4.13.0) - 2022-01-10
 
 ## Added
 
-- Add `skip_checkout` option (#197) @cmbuckley
+- Add `skip_checkout` option ([#197](https://github.com/stefanzweifel/git-auto-commit-action/pull/197)) @cmbuckley
 
 ## Changed
 
-- Add note on minimum permissions to the docs (#180) @ericcornelissen
+- Add note on minimum permissions to the docs ([#180](https://github.com/stefanzweifel/git-auto-commit-action/pull/180)) @ericcornelissen
 
 ## [v4.12.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.11.0...v4.12.0) - 2021-09-10
 

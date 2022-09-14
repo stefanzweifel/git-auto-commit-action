@@ -35,11 +35,11 @@ inputs:
   commit_user_name:
     description: Name used for the commit user
     required: false
-    default: GitHub Actions
+    default: github-actions[bot]
   commit_user_email:
     description: Email address used for the commit user
     required: false
-    default: actions@github.com
+    default: github-actions[bot]@users.noreply.github.com
   commit_author:
     description: Value used for the commit author. Defaults to the username of whoever triggered this workflow run.
     required: false

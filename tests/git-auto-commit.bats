@@ -793,3 +793,82 @@ git_auto_commit() {
 
     assert_equal $current_sha $remote_sha;
 }
+
+@test "throws fatal error if file pattern includes files that do not exist" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.foo
+
+    INPUT_FILE_PATTERN="*.foo *.bar"
+
+    run git_auto_commit
+
+    assert_failure
+    assert_line --partial "fatal: pathspec '*.bar' did not match any files"
+}
+
+@test "does not throw fatal error if files for file pattern exist but only one is dirty" {
+    # Add some .foo and .bar files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.foo
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.bar
+
+    INPUT_FILE_PATTERN="*.foo *.bar"
+
+    run git_auto_commit
+
+    # Add more .foo files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{4,5,6}.foo
+
+    INPUT_FILE_PATTERN="*.foo *.bar"
+
+    run git_auto_commit
+
+    assert_success
+}
+
+@test "detects and commits changed files based on pattern in root and subfolders" {
+    # Add some .neon files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.neon
+    mkdir foo;
+    touch "${FAKE_LOCAL_REPOSITORY}"/foo/new-file-2.neon
+
+    INPUT_FILE_PATTERN="**/*.neon *.neon"
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "new-file-1.neon"
+    assert_line --partial "foo/new-file-2.neon"
+}
+
+@test "throws error if tries to force add ignored files which do not have any changes" {
+    # Create 2 files which will later will be added to .gitignore
+    touch "${FAKE_LOCAL_REPOSITORY}"/ignored-file.txt
+    touch "${FAKE_LOCAL_REPOSITORY}"/another-ignored-file.txt
+
+    # Commit the 2 new files
+    run git_auto_commit
+
+    # Add our txt files to gitignore
+    echo "ignored-file.txt" >> "${FAKE_LOCAL_REPOSITORY}"/.gitignore
+    echo "another-ignored-file.txt" >> "${FAKE_LOCAL_REPOSITORY}"/.gitignore
+
+    # Commit & push .gitignore changes
+    run git_auto_commit
+
+    # Sanity check that txt files are ignored
+    run cat "${FAKE_LOCAL_REPOSITORY}"/.gitignore
+    assert_output --partial "ignored-file.txt"
+    assert_output --partial "another-ignored-file.txt";
+
+    # Configure git-auto-commit
+    INPUT_SKIP_DIRTY_CHECK=true
+    INPUT_ADD_OPTIONS="-f"
+    INPUT_FILE_PATTERN="ignored-file.txt another-ignored-file.txt"
+
+    # Run git-auto-commit with special configuration
+    run git_auto_commit
+
+    assert_output --partial "nothing to commit, working tree clean";
+
+    assert_failure;
+}
