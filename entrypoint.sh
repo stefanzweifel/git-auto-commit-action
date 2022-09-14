@@ -41,10 +41,10 @@ _git_is_dirty() {
     echo "::debug::Apply status options ${INPUT_STATUS_OPTIONS}";
 
     echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
-    INPUT_FILE_PATTERN_ARRAY=( ${INPUT_FILE_PATTERN} )
+    read -a INPUT_FILE_PATTERN_EXPANDED <<< "$INPUT_FILE_PATTERN";
 
     # shellcheck disable=SC2086
-    [ -n "$(git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN:+${INPUT_FILE_PATTERN_ARRAY[@]}})" ]
+    [ -n "$(git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN_EXPANDED:+${INPUT_FILE_PATTERN_EXPANDED[@]}})" ]
 }
 
 _switch_to_branch() {
@@ -78,10 +78,10 @@ _add_files() {
     echo "::debug::Apply add options ${INPUT_ADD_OPTIONS}";
 
     echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
-    INPUT_FILE_PATTERN_ARRAY=( ${INPUT_FILE_PATTERN} )
+    read -a INPUT_FILE_PATTERN_EXPANDED <<< "$INPUT_FILE_PATTERN";
 
     # shellcheck disable=SC2086
-    git add ${INPUT_ADD_OPTIONS} ${INPUT_FILE_PATTERN:+"${INPUT_FILE_PATTERN_ARRAY[@]}"};
+    git add ${INPUT_ADD_OPTIONS} ${INPUT_FILE_PATTERN:+"${INPUT_FILE_PATTERN_EXPANDED[@]}"};
 }
 
 _local_commit() {
