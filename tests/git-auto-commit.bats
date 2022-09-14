@@ -164,7 +164,6 @@ git_auto_commit() {
 }
 
 @test "It applies INPUT_ADD_OPTIONS when adding files" {
-    INPUT_FILE_PATTERN=""
     INPUT_STATUS_OPTIONS="--untracked-files=no"
     INPUT_ADD_OPTIONS="-u"
 
@@ -177,7 +176,6 @@ git_auto_commit() {
 
     assert_line "INPUT_STATUS_OPTIONS: --untracked-files=no"
     assert_line "INPUT_ADD_OPTIONS: -u"
-    assert_line "INPUT_FILE_PATTERN: "
     assert_line "::debug::Push commit to remote branch master"
 
     # Assert that PHP files have not been added.
@@ -888,7 +886,6 @@ git_auto_commit() {
 
     assert_line --partial "new-file-1.md"
     assert_line --partial "subdirectory/new-file-2.md"
-    # refute_line --partial "subdirectory/new-file-2.md"
     assert_line --partial "new-file-3.bar"
 }
 
