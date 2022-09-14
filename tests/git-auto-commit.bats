@@ -872,3 +872,21 @@ git_auto_commit() {
 
     assert_failure;
 }
+
+@test "expands file patterns correctly and commits all changed files" {
+    # Add more .foo files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.foo
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/subdirectory/new-file-2.foo
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-3.bar
+
+    INPUT_FILE_PATTERN="*.foo *.bar"
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "new-file-1.foo"
+    assert_line --partial "subdirectory/new-file-2.foo"
+    assert_line --partial "new-file-3.bar"
+}
