@@ -909,15 +909,19 @@ git_auto_commit() {
 }
 
 @test "expands file patterns correctly and commits all changed files if dirty files are only in subdirectory" {
-    # Add more .md files
+    # Add more .txt files
     mkdir "${FAKE_LOCAL_REPOSITORY}"/subdirectory/
-    touch "${FAKE_LOCAL_REPOSITORY}"/subdirectory/new-file-2.md
+    touch "${FAKE_LOCAL_REPOSITORY}"/subdirectory/new-file-2.txt
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/another-subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/another-subdirectory/new-file-3.txt
 
-    INPUT_FILE_PATTERN="*.md"
+    INPUT_FILE_PATTERN="*.txt"
+    INPUT_DISABLE_GLOBBING=true
 
     run git_auto_commit
 
     assert_success
 
-    assert_line --partial "subdirectory/new-file-2.md"
+    assert_line --partial "subdirectory/new-file-2.txt"
+    assert_line --partial "another-subdirectory/new-file-3.txt"
 }
