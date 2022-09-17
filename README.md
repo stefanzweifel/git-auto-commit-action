@@ -29,12 +29,13 @@ The following is an extended example with all available options.
   with:
     # Optional. Commit message for the created commit.
     # Defaults to "Apply automatic changes"
-    commit_message: Automated Change
+    commit_message: 'Automated Change'
 
     # Optional. Local and remote branch name where commit is going to be pushed
     #  to. Defaults to the current branch.
     #  You might need to set `create_branch: true` if the branch does not exist.
     branch: feature-123
+
 
     # Optional. Options used by `git-commit`.
     # See https://git-scm.com/docs/git-commit#_options
@@ -45,7 +46,7 @@ The following is an extended example with all available options.
     # See the `pathspec`-documentation for git
     # - https://git-scm.com/docs/git-add#Documentation/git-add.txt-ltpathspecgt82308203
     # - https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec
-    file_pattern: src/*.js tests/*.js *.php
+    file_pattern: '*.php src/*.js tests/*.js'
 
     # Optional. Local file path to the repository.
     # Defaults to the root of the repository.
