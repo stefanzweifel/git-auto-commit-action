@@ -25,7 +25,7 @@ inputs:
     required: false
     default: ''
   file_pattern:
-    description: File pattern used for `git add`. For example `src/\*.js`
+    description: File pattern used for `git add`. For example `src/*.js`
     required: false
     default: '.'
   repository:
@@ -35,11 +35,11 @@ inputs:
   commit_user_name:
     description: Name used for the commit user
     required: false
-    default: GitHub Actions
+    default: github-actions[bot]
   commit_user_email:
     description: Email address used for the commit user
     required: false
-    default: actions@github.com
+    default: github-actions[bot]@users.noreply.github.com
   commit_author:
     description: Value used for the commit author. Defaults to the username of whoever triggered this workflow run.
     required: false
@@ -60,8 +60,15 @@ inputs:
     description: Skip the call to git-fetch.
     required: false
     default: false
+  skip_checkout:
+    description: Skip the call to git-checkout.
+    required: false
+    default: false
   disable_globbing:
     description: Stop the shell from expanding filenames (https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
+    default: false
+  create_branch:
+    description: Create new branch with the name of `branch`-input in local and remote repository, if it doesn't exist yet.
     default: false
 
 outputs:

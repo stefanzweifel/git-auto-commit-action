@@ -40,24 +40,37 @@ _git_is_dirty() {
     echo "INPUT_STATUS_OPTIONS: ${INPUT_STATUS_OPTIONS}";
     echo "::debug::Apply status options ${INPUT_STATUS_OPTIONS}";
 
+    echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
+    read -r -a INPUT_FILE_PATTERN_EXPANDED <<< "$INPUT_FILE_PATTERN";
+
     # shellcheck disable=SC2086
-    [ -n "$(git status -s $INPUT_STATUS_OPTIONS -- $INPUT_FILE_PATTERN)" ]
+    [ -n "$(git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN_EXPANDED:+${INPUT_FILE_PATTERN_EXPANDED[@]}})" ]
 }
 
 _switch_to_branch() {
     echo "INPUT_BRANCH value: $INPUT_BRANCH";
 
-    # Fetch remote to make sure that repo can be switched to the right branch.
-
+    # Fetch remote to make sure that repo can be switched to the right branch.
     if "$INPUT_SKIP_FETCH"; then
         echo "::debug::git-fetch has not been executed";
     else
         git fetch --depth=1;
     fi
 
-    # Switch to branch from current Workflow run
-    # shellcheck disable=SC2086
-    git checkout $INPUT_BRANCH;
+    # If `skip_checkout`-input is true, skip the entire checkout step.
+    if "$INPUT_SKIP_CHECKOUT"; then
+        echo "::debug::git-checkout has not been executed";
+    else
+        # Create new local branch if `create_branch`-input is true
+        if "$INPUT_CREATE_BRANCH"; then
+            # shellcheck disable=SC2086
+            git checkout -B $INPUT_BRANCH --;
+        else
+            # Switch to branch from current Workflow run
+            # shellcheck disable=SC2086
+            git checkout $INPUT_BRANCH --;
+        fi
+    fi
 }
 
 _add_files() {
@@ -65,9 +78,10 @@ _add_files() {
     echo "::debug::Apply add options ${INPUT_ADD_OPTIONS}";
 
     echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
+    read -r -a INPUT_FILE_PATTERN_EXPANDED <<< "$INPUT_FILE_PATTERN";
 
     # shellcheck disable=SC2086
-    git add ${INPUT_ADD_OPTIONS} ${INPUT_FILE_PATTERN};
+    git add ${INPUT_ADD_OPTIONS} ${INPUT_FILE_PATTERN:+"${INPUT_FILE_PATTERN_EXPANDED[@]}"};
 }
 
 _local_commit() {

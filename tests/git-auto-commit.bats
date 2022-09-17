@@ -24,7 +24,9 @@ setup() {
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
     export INPUT_SKIP_FETCH=false
+    export INPUT_SKIP_CHECKOUT=false
     export INPUT_DISABLE_GLOBBING=false
+    export INPUT_CREATE_BRANCH=false
 
     # Configure Git
     if [[ -z $(git config user.name) ]]; then
@@ -162,7 +164,6 @@ git_auto_commit() {
 }
 
 @test "It applies INPUT_ADD_OPTIONS when adding files" {
-    INPUT_FILE_PATTERN=""
     INPUT_STATUS_OPTIONS="--untracked-files=no"
     INPUT_ADD_OPTIONS="-u"
 
@@ -175,7 +176,6 @@ git_auto_commit() {
 
     assert_line "INPUT_STATUS_OPTIONS: --untracked-files=no"
     assert_line "INPUT_ADD_OPTIONS: -u"
-    assert_line "INPUT_FILE_PATTERN: "
     assert_line "::debug::Push commit to remote branch master"
 
     # Assert that PHP files have not been added.
@@ -184,7 +184,10 @@ git_auto_commit() {
 }
 
 @test "It applies INPUT_FILE_PATTERN when creating commit" {
-    INPUT_FILE_PATTERN="*.txt *.html"
+    INPUT_FILE_PATTERN="src/*.js *.txt *.html"
+
+    mkdir src;
+    touch src/new-file-{1,2}.js;
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2}.php
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2}.html
@@ -193,7 +196,7 @@ git_auto_commit() {
 
     assert_success
 
-    assert_line "INPUT_FILE_PATTERN: *.txt *.html"
+    assert_line "INPUT_FILE_PATTERN: src/*.js *.txt *.html"
     assert_line "::debug::Push commit to remote branch master"
 
     # Assert that PHP files have not been added.
@@ -381,6 +384,19 @@ git_auto_commit() {
     assert_line "::debug::git-fetch has not been executed"
 }
 
+@test "If SKIP_CHECKOUT is true git-checkout will not be called" {
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    INPUT_SKIP_CHECKOUT=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "::debug::git-checkout has not been executed"
+}
+
 @test "It pushes generated commit and tag to remote and actually updates the commit shas" {
     INPUT_BRANCH=""
     INPUT_TAGGING_MESSAGE="v2.0.0"
@@ -492,4 +508,420 @@ git_auto_commit() {
 
     run git status
     assert_output --partial 'nothing to commit, working tree clean'
+}
+
+@test "It does not throw an error if branch is checked out with same name as a file or folder in the repo" {
+
+    # Add File called dev and commit/push
+    echo "Create dev file";
+    cd "${FAKE_LOCAL_REPOSITORY}";
+    echo this is a file named dev > dev
+    git add dev
+    git commit -m 'add file named dev'
+    git update-ref refs/remotes/origin/master master
+    git update-ref refs/remotes/origin/dev master
+
+    # ---
+
+    INPUT_BRANCH=dev
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{4,5,6}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line "::debug::Push commit to remote branch dev"
+}
+
+@test "script fails to push commit to new branch that does not exist yet" {
+    INPUT_BRANCH="not-existend-branch"
+    INPUT_CREATE_BRANCH=false
+
+    run git branch
+    refute_line --partial "not-existend-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_failure
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line "INPUT_BRANCH value: not-existend-branch"
+    assert_line "fatal: invalid reference: not-existend-branch"
+
+    run git branch
+    refute_line --partial "not-existend-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-branch"
+}
+
+@test "It creates new local branch and pushes the new branch to remote" {
+    INPUT_BRANCH="not-existend-branch"
+    INPUT_CREATE_BRANCH=true
+
+    run git branch
+    refute_line --partial "not-existend-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line "INPUT_BRANCH value: not-existend-branch"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch not-existend-branch"
+
+    run git branch
+    assert_line --partial "not-existend-branch"
+
+    run git branch -r
+    assert_line --partial "origin/not-existend-branch"
+}
+
+@test "it does not create new local branch if local branch already exists" {
+
+    git checkout -b not-existend-remote-branch
+    git checkout master
+
+    INPUT_BRANCH="not-existend-remote-branch"
+    INPUT_CREATE_BRANCH=true
+
+    run git branch
+    assert_line --partial "not-existend-remote-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-remote-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line "INPUT_BRANCH value: not-existend-remote-branch"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch not-existend-remote-branch"
+
+    run git branch
+    assert_line --partial "not-existend-remote-branch"
+
+    run git branch -r
+    assert_line --partial "origin/not-existend-remote-branch"
+}
+
+@test "it creates new local branch and pushes branch to remote even if the remote branch already exists" {
+
+    # Create `existing-remote-branch` on remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY;
+    git checkout -b "existing-remote-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+    git commit -m "Add additional file";
+    git push origin existing-remote-branch;
+
+    run git branch;
+    assert_line --partial "existing-remote-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY;
+
+    INPUT_BRANCH="existing-remote-branch"
+    INPUT_CREATE_BRANCH=true
+
+    run git branch
+    refute_line --partial "existing-remote-branch"
+
+    run git fetch --all;
+    run git pull origin existing-remote-branch;
+    run git branch -r;
+    assert_line --partial "origin/existing-remote-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "::set-output name=changes_detected::true"
+    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line "INPUT_BRANCH value: existing-remote-branch"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch existing-remote-branch"
+
+    run git branch
+    assert_line --partial "existing-remote-branch"
+
+    run git branch -r
+    assert_line --partial "origin/existing-remote-branch"
+
+    # Assert that branch "existing-remote-branch" was updated on remote
+    current_sha="$(git rev-parse --verify --short existing-remote-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/existing-remote-branch)"
+
+    assert_equal $current_sha $remote_sha;
+}
+
+@test "script fails if new local branch is checked out and push fails as remote has newer commits than local" {
+    # Create `existing-remote-branch` on remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY;
+    git checkout -b "existing-remote-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+    git commit -m "Add additional file";
+    git push origin existing-remote-branch;
+
+    run git branch;
+    assert_line --partial "existing-remote-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY;
+
+    INPUT_BRANCH="existing-remote-branch"
+    INPUT_CREATE_BRANCH=true
+
+    run git branch
+    refute_line --partial "existing-remote-branch"
+
+    run git fetch --all;
+    run git branch -r;
+    assert_line --partial "origin/existing-remote-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_failure
+
+    assert_line "hint: Updates were rejected because the tip of your current branch is behind"
+
+    # Assert that branch exists locally and on remote
+    run git branch
+    assert_line --partial "existing-remote-branch"
+
+    run git branch -r
+    assert_line --partial "origin/existing-remote-branch"
+
+    # Assert that branch "existing-remote-branch" was not updated on remote
+    current_sha="$(git rev-parse --verify --short existing-remote-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/existing-remote-branch)"
+
+    refute [assert_equal $current_sha $remote_sha];
+}
+
+@test "It pushes commit to remote if branch already exists and local repo is behind its remote counterpart" {
+    # Create `new-branch` on remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY;
+
+    git checkout -b "new-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+
+    git commit --quiet -m "Add additional file";
+    git push origin new-branch;
+
+    run git branch -r
+    assert_line --partial "origin/new-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY;
+
+    INPUT_BRANCH="new-branch"
+
+    # Assert that local remote does not know have "new-branch" locally nor does
+    # know about the remote branch.
+    run git branch
+    refute_line --partial "new-branch"
+
+    run git branch -r
+    refute_line --partial "origin/new-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_BRANCH value: new-branch"
+    assert_line --partial "::debug::Push commit to remote branch new-branch"
+
+    # Assert that branch "new-branch" was updated on remote
+    current_sha="$(git rev-parse --verify --short new-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/new-branch)"
+
+    assert_equal $current_sha $remote_sha;
+}
+
+@test "throws fatal error if file pattern includes files that do not exist" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.foo
+
+    INPUT_FILE_PATTERN="*.foo *.bar"
+
+    run git_auto_commit
+
+    assert_failure
+    assert_line --partial "fatal: pathspec '*.bar' did not match any files"
+}
+
+@test "does not throw fatal error if files for file pattern exist but only one is dirty" {
+    # Add some .foo and .bar files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.foo
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.bar
+
+    INPUT_FILE_PATTERN="*.foo *.bar"
+
+    run git_auto_commit
+
+    # Add more .foo files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{4,5,6}.foo
+
+    INPUT_FILE_PATTERN="*.foo *.bar"
+
+    run git_auto_commit
+
+    assert_success
+}
+
+@test "detects and commits changed files based on pattern in root and subfolders" {
+    # Add some .neon files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.neon
+    mkdir foo;
+    touch "${FAKE_LOCAL_REPOSITORY}"/foo/new-file-2.neon
+
+    INPUT_FILE_PATTERN="**/*.neon *.neon"
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "new-file-1.neon"
+    assert_line --partial "foo/new-file-2.neon"
+}
+
+@test "throws error if tries to force add ignored files which do not have any changes" {
+    # Create 2 files which will later will be added to .gitignore
+    touch "${FAKE_LOCAL_REPOSITORY}"/ignored-file.txt
+    touch "${FAKE_LOCAL_REPOSITORY}"/another-ignored-file.txt
+
+    # Commit the 2 new files
+    run git_auto_commit
+
+    # Add our txt files to gitignore
+    echo "ignored-file.txt" >> "${FAKE_LOCAL_REPOSITORY}"/.gitignore
+    echo "another-ignored-file.txt" >> "${FAKE_LOCAL_REPOSITORY}"/.gitignore
+
+    # Commit & push .gitignore changes
+    run git_auto_commit
+
+    # Sanity check that txt files are ignored
+    run cat "${FAKE_LOCAL_REPOSITORY}"/.gitignore
+    assert_output --partial "ignored-file.txt"
+    assert_output --partial "another-ignored-file.txt";
+
+    # Configure git-auto-commit
+    INPUT_SKIP_DIRTY_CHECK=true
+    INPUT_ADD_OPTIONS="-f"
+    INPUT_FILE_PATTERN="ignored-file.txt another-ignored-file.txt"
+
+    # Run git-auto-commit with special configuration
+    run git_auto_commit
+
+    assert_output --partial "nothing to commit, working tree clean";
+
+    assert_failure;
+}
+
+@test "expands file patterns correctly and commits all changed files" {
+    # Add more .txt files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/subdirectory/new-file-2.txt
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-3.bar
+
+    INPUT_FILE_PATTERN="*.txt *.bar"
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "new-file-1.txt"
+    assert_line --partial "subdirectory/new-file-2.txt"
+    assert_line --partial "new-file-3.bar"
+}
+
+@test "expands file patterns correctly and commits all changed files when globbing is disabled" {
+    # Add more .txt files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/subdirectory/new-file-2.txt
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-3.bar
+
+    INPUT_FILE_PATTERN="*.txt *.bar"
+    INPUT_DISABLE_GLOBBING=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "new-file-1.txt"
+    assert_line --partial "subdirectory/new-file-2.txt"
+    assert_line --partial "new-file-3.bar"
+}
+
+@test "expands file patterns correctly and commits all changed files if dirty files are only in subdirectory" {
+    # Add more .txt files
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/subdirectory/new-file-2.txt
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/another-subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/another-subdirectory/new-file-3.txt
+
+    INPUT_FILE_PATTERN="*.txt"
+    INPUT_DISABLE_GLOBBING=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "subdirectory/new-file-2.txt"
+    assert_line --partial "another-subdirectory/new-file-3.txt"
 }
