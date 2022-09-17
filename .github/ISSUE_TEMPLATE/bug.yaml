@@ -1,0 +1,63 @@
+name: Bug Report
+description: If you've already asked for help with a problem and confirmed something is broken with git-auto-commit itself, create a bug report.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a bug report, please search for the behaviour in the existing issues. 
+        
+        ---
+        
+        Thank you for taking the time to file a bug report!
+  - type: input
+    id: git-auto-commit-version
+    attributes:
+      label: git-auto-commit Version
+      description: "Which exact version of git-auto-commit are you using in your Workflow?"
+      placeholder: "v4.14.0"
+    validations:
+      required: true  
+  - type: dropdown
+    id: machine
+    attributes:
+      label: Machine Type
+      description: On which type of machine is your workflow running?
+      options:
+        - Ubuntu (eg. ubuntu-latest)
+        - macOS (eg. macos-latest)
+        - Windows (Not supported!)
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug description
+      description: What exactly happened?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Which steps do we need to take to reproduce this error?
+    validations:
+      required: true
+  - type: textarea
+    id: tried-solutions
+    attributes:
+      label: Tried solutions
+      description: Have you tried solving the issue by adapting your Workflow? What steps did you take?
+  - type: textarea
+    id: example-workflow
+    attributes:
+      label: Example Workflow
+      description: Please share your GitHub Actions workflow which causes the bug. We use this to reproduce the error. No need for backticks here.
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: If applicable, provide relevant log output. No need for backticks here.
+      render: shell
