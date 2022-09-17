@@ -889,6 +889,25 @@ git_auto_commit() {
     assert_line --partial "new-file-3.bar"
 }
 
+@test "expands file patterns correctly and commits all changed files when globbing is disabled" {
+    # Add more .md files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.md
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/subdirectory/new-file-2.md
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-3.bar
+
+    INPUT_FILE_PATTERN="*.md *.bar"
+    INPUT_DISABLE_GLOBBING=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "new-file-1.md"
+    assert_line --partial "subdirectory/new-file-2.md"
+    assert_line --partial "new-file-3.bar"
+}
+
 @test "expands file patterns correctly and commits all changed files if dirty files are only in subdirectory" {
     # Add more .md files
     mkdir "${FAKE_LOCAL_REPOSITORY}"/subdirectory/
