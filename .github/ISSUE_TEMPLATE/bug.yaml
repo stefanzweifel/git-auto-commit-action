@@ -1,5 +1,6 @@
 name: Bug Report
 description: If you've already asked for help with a problem and confirmed something is broken with git-auto-commit itself, create a bug report.
+labels: ["bug"]
 body:
   - type: markdown
     attributes:
