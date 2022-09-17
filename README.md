@@ -29,13 +29,12 @@ The following is an extended example with all available options.
   with:
     # Optional. Commit message for the created commit.
     # Defaults to "Apply automatic changes"
-    commit_message: 'Automated Change'
+    commit_message: Automated Change
 
     # Optional. Local and remote branch name where commit is going to be pushed
     #  to. Defaults to the current branch.
     #  You might need to set `create_branch: true` if the branch does not exist.
     branch: feature-123
-
 
     # Optional. Options used by `git-commit`.
     # See https://git-scm.com/docs/git-commit#_options
