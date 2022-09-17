@@ -164,7 +164,6 @@ git_auto_commit() {
 }
 
 @test "It applies INPUT_ADD_OPTIONS when adding files" {
-    INPUT_FILE_PATTERN=""
     INPUT_STATUS_OPTIONS="--untracked-files=no"
     INPUT_ADD_OPTIONS="-u"
 
@@ -177,7 +176,6 @@ git_auto_commit() {
 
     assert_line "INPUT_STATUS_OPTIONS: --untracked-files=no"
     assert_line "INPUT_ADD_OPTIONS: -u"
-    assert_line "INPUT_FILE_PATTERN: "
     assert_line "::debug::Push commit to remote branch master"
 
     # Assert that PHP files have not been added.
@@ -871,4 +869,59 @@ git_auto_commit() {
     assert_output --partial "nothing to commit, working tree clean";
 
     assert_failure;
+}
+
+@test "expands file patterns correctly and commits all changed files" {
+    # Add more .txt files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/subdirectory/new-file-2.txt
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-3.bar
+
+    INPUT_FILE_PATTERN="*.txt *.bar"
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "new-file-1.txt"
+    assert_line --partial "subdirectory/new-file-2.txt"
+    assert_line --partial "new-file-3.bar"
+}
+
+@test "expands file patterns correctly and commits all changed files when globbing is disabled" {
+    # Add more .txt files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/subdirectory/new-file-2.txt
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-3.bar
+
+    INPUT_FILE_PATTERN="*.txt *.bar"
+    INPUT_DISABLE_GLOBBING=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "new-file-1.txt"
+    assert_line --partial "subdirectory/new-file-2.txt"
+    assert_line --partial "new-file-3.bar"
+}
+
+@test "expands file patterns correctly and commits all changed files if dirty files are only in subdirectory" {
+    # Add more .txt files
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/subdirectory/new-file-2.txt
+    mkdir "${FAKE_LOCAL_REPOSITORY}"/another-subdirectory/
+    touch "${FAKE_LOCAL_REPOSITORY}"/another-subdirectory/new-file-3.txt
+
+    INPUT_FILE_PATTERN="*.txt"
+    INPUT_DISABLE_GLOBBING=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line --partial "subdirectory/new-file-2.txt"
+    assert_line --partial "another-subdirectory/new-file-3.txt"
 }
