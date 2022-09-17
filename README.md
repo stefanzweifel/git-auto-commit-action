@@ -407,6 +407,26 @@ If you're using the Action with a custom `file_pattern` and the Action throws a 
 
 See [Issue #227](https://github.com/stefanzweifel/git-auto-commit-action/issues/227) for details.
 
+### Custom `file_pattern`, changed files but seeing "Working tree clean. Nothing to commit." in the logs
+
+If you're using a custom `file_pattern` and the Action does not detect the changes made in your worfklow, you're probably running into a globbing issue.
+
+Let's imagine you use `file_pattern: '*.md'` to detect and commit changes to all Markdown files in your repository.
+If your Workflow now only updates `.md`-files in a subdirectory, but you have an untouched `.md`-file in the root of the repository, the git-auto-commit Action will display "Working tree clean. Nothing to commit." in the Workflow log.
+
+This is due to the fact, that the `*.md`-glob is expanded before sending it to `git-status`. `git-status` will receive the filename of your untouched `.md`-file in the root of the repository and won't detect any changes; and therefore the Action does nothing.
+
+To fix this add `disable_globbing: true` to your Workflow.
+
+```yaml
+- uses: stefanzweifel/git-auto-commit-action@v4
+  with:
+    file_pattern: '*.md'
+    disable_globbing: true
+```
+
+See [Issue #239](https://github.com/stefanzweifel/git-auto-commit-action/issues/239) for details.
+
 ## Running the tests
 
 The Action has tests written in [bats](https://github.com/bats-core/bats-core). Before you can run the test suite locally, you have to install the dependencies with `npm` or `yarn`.
