@@ -5,9 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.14.1...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.0...HEAD)
 
 > TBD
+
+## [v4.15.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.14.1...v4.15.0) - 2022-09-24
+
+### Changed
+
+- Expand `file_pattern`-input to an array ([#205](https://github.com/stefanzweifel/git-auto-commit-action/pull/205)) [@stefanzweifel](https://github.com/@stefanzweifel)
+
+### Fixed
+
+- String values in README.md extended example are now correct ([#196](https://github.com/stefanzweifel/git-auto-commit-action/pull/196)) [@karolswdev](https://github.com/@karolswdev)
+- Fix Typos and grammer Errors in README ([#235](https://github.com/stefanzweifel/git-auto-commit-action/pull/235)) [@derrickleemy](https://github.com/@derrickleemy)
+- Fix Typo in README ([#230](https://github.com/stefanzweifel/git-auto-commit-action/pull/230)) [@fty4](https://github.com/@fty4)
+- Add missing links in the CHANGELOG ([#223](https://github.com/stefanzweifel/git-auto-commit-action/pull/223)) [@ericcornelissen](https://github.com/@ericcornelissen)
 
 ## [v4.14.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.14.0...v4.14.1) - 2022-04-12
 
