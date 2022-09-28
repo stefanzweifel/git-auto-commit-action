@@ -925,3 +925,34 @@ git_auto_commit() {
     assert_line --partial "subdirectory/new-file-2.txt"
     assert_line --partial "another-subdirectory/new-file-3.txt"
 }
+
+@test "fails to detect crlf change in files and does not detect change or commit changes" {
+    # Set autocrlf to true
+    cd "${FAKE_LOCAL_REPOSITORY}";
+    git config core.autocrlf true
+    run git config --get-all core.autocrlf
+    assert_line "true"
+
+    # Add more .txt files
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-2.txt
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-3.txt
+
+    # Run git-auto-commit to add new files to repository
+    run git_auto_commit
+
+    # Change control characters in files
+    sed 's/^M$//' "${FAKE_LOCAL_REPOSITORY}"/new-file-2.txt
+    sed 's/$/^M/' "${FAKE_LOCAL_REPOSITORY}"/new-file-3.txt
+
+    # Run git-auto-commit to commit the 2 changes files
+    run git_auto_commit
+
+    assert_success
+
+    # Changes are not detected
+    assert_line --partial "Working tree clean. Nothing to commit."
+
+    refute_line --partial "new-file-2.txt"
+    refute_line --partial "new-file-3.txt"
+}
+
