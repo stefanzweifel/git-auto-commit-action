@@ -78,7 +78,7 @@ outputs:
     description: Full hash of the created commit. Only present if the "changes_detected" output is "true".
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'index.js'
 
 branding:
