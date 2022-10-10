@@ -5,9 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.1...HEAD)
 
 > TBD
+
+## [v4.15.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.0...v4.15.1) - 2022-10-10
+
+### Fixed
+
+- Run Action on Node16 ([#247](https://github.com/stefanzweifel/git-auto-commit-action/pull/247)) [@stefanzweifel](https://github.com/@stefanzweifel)
 
 ## [v4.15.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.14.1...v4.15.0) - 2022-09-24
 
