@@ -345,7 +345,7 @@ The steps in your workflow might look like this:
 - name: Get last commit message
   id: last-commit-message
   run: |
-    echo "::set-output name=msg::$(git log -1 --pretty=%s)"
+    echo "msg=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
 
 - uses: stefanzweifel/git-auto-commit-action@v4
   with:
