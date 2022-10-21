@@ -87,8 +87,8 @@ git_auto_commit() {
     assert_success
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::true"
-    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line '"changes_detected=true" >> $GITHUB_OUTPUT'
+    assert_line -e '"commit_hash=[0-9a-f]{40}$" >> $GITHUB_OUTPUT'
     assert_line "INPUT_BRANCH value: master"
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
@@ -108,8 +108,8 @@ git_auto_commit() {
     assert_success
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::true"
-    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line '"changes_detected=true" >> $GITHUB_OUTPUT'
+    assert_line -e '"commit_hash=[0-9a-f]{40}$" >> $GITHUB_OUTPUT'
     assert_line "INPUT_BRANCH value: master"
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
@@ -131,8 +131,8 @@ git_auto_commit() {
     assert_success
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::false"
-    refute_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line '"changes_detected=false" >> $GITHUB_OUTPUT'
+    refute_line -e '"commit_hash=[0-9a-f]{40}$" >> $GITHUB_OUTPUT'
     assert_line "Working tree clean. Nothing to commit."
 }
 
@@ -142,8 +142,8 @@ git_auto_commit() {
     assert_success
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::false"
-    refute_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line '"changes_detected=false" >> $GITHUB_OUTPUT'
+    refute_line -e '"commit_hash=[0-9a-f]{40}$" >> $GITHUB_OUTPUT'
     assert_line "Working tree clean. Nothing to commit."
 }
 
@@ -155,8 +155,8 @@ git_auto_commit() {
     assert_failure
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::true"
-    refute_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line '"changes_detected=true" >> $GITHUB_OUTPUT'
+    refute_line -e '"commit_hash=[0-9a-f]{40}$" >> $GITHUB_OUTPUT'
     assert_line "INPUT_BRANCH value: master"
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
@@ -504,7 +504,7 @@ git_auto_commit() {
     assert_success
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::false"
+    assert_line '"changes_detected=false" >> $GITHUB_OUTPUT'
 
     run git status
     assert_output --partial 'nothing to commit, working tree clean'
@@ -532,7 +532,7 @@ git_auto_commit() {
     assert_success
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::true"
+    assert_line '"changes_detected=true" >> $GITHUB_OUTPUT'
     assert_line "::debug::Push commit to remote branch dev"
 }
 
@@ -553,7 +553,7 @@ git_auto_commit() {
     assert_failure
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::true"
+    assert_line '"changes_detected=true" >> $GITHUB_OUTPUT'
     assert_line "INPUT_BRANCH value: not-existend-branch"
     assert_line "fatal: invalid reference: not-existend-branch"
 
@@ -581,8 +581,8 @@ git_auto_commit() {
     assert_success
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::true"
-    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line '"changes_detected=true" >> $GITHUB_OUTPUT'
+    assert_line -e '"commit_hash=[0-9a-f]{40}$" >> $GITHUB_OUTPUT'
     assert_line "INPUT_BRANCH value: not-existend-branch"
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
@@ -621,8 +621,8 @@ git_auto_commit() {
     assert_success
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::true"
-    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line '"changes_detected=true" >> $GITHUB_OUTPUT'
+    assert_line -e '"commit_hash=[0-9a-f]{40}$" >> $GITHUB_OUTPUT'
     assert_line "INPUT_BRANCH value: not-existend-remote-branch"
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
@@ -675,8 +675,8 @@ git_auto_commit() {
     assert_success
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "::set-output name=changes_detected::true"
-    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+    assert_line '"changes_detected=true" >> $GITHUB_OUTPUT'
+    assert_line -e '"commit_hash=[0-9a-f]{40}$" >> $GITHUB_OUTPUT'
     assert_line "INPUT_BRANCH value: existing-remote-branch"
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
