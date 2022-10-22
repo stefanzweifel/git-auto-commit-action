@@ -11,7 +11,7 @@ _main() {
 
     if _git_is_dirty || "$INPUT_SKIP_DIRTY_CHECK"; then
 
-        echo "::set-output name=changes_detected::true";
+        echo "changes_detected=true" >> $GITHUB_OUTPUT;
 
         _switch_to_branch
 
@@ -24,7 +24,7 @@ _main() {
         _push_to_github
     else
 
-        echo "::set-output name=changes_detected::false";
+        echo "changes_detected=false" >> $GITHUB_OUTPUT;
 
         echo "Working tree clean. Nothing to commit.";
     fi
@@ -101,7 +101,7 @@ _local_commit() {
         --author="$INPUT_COMMIT_AUTHOR" \
         ${INPUT_COMMIT_OPTIONS:+"${INPUT_COMMIT_OPTIONS_ARRAY[@]}"};
 
-    echo "::set-output name=commit_hash::$(git rev-parse HEAD)";
+    echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT;
 }
 
 _tag_commit() {
