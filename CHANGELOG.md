@@ -5,9 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.1...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.2...HEAD)
 
 > TBD
+
+## [v4.15.2](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.1...v4.15.2) - 2022-10-22
+
+### Changed
+
+- Replace set-output usage with GITHUB_OUTPUT ([#252](https://github.com/stefanzweifel/git-auto-commit-action/pull/252)) [@amonshiz](https://github.com/amonshiz)
 
 ## [v4.15.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.0...v4.15.1) - 2022-10-10
 
