@@ -4,13 +4,13 @@
 
 bats-assert@ztombol/bats-assert:
   version "0.3.0"
-  resolved "git+ssh://git@github.com/ztombol/bats-assert.git#9f88b4207da750093baabc4e3f41bf68f0dd3630"
+  resolved "https://codeload.github.com/ztombol/bats-assert/tar.gz/9f88b4207da750093baabc4e3f41bf68f0dd3630"
 
 bats-support@ztombol/bats-support:
   version "0.3.0"
-  resolved "git+ssh://git@github.com/ztombol/bats-support.git#004e707638eedd62e0481e8cdc9223ad471f12ee"
+  resolved "https://codeload.github.com/ztombol/bats-support/tar.gz/004e707638eedd62e0481e8cdc9223ad471f12ee"
 
 bats@^1.1.0:
   version "1.7.0"
-  resolved "https://registry.npmjs.org/bats/-/bats-1.7.0.tgz"
+  resolved "https://registry.yarnpkg.com/bats/-/bats-1.7.0.tgz#caae958b1d211eda6b1322ac7792515de40165a2"
   integrity sha512-pt5zjJQUB4+JI8Si+z/IAWc8yhMyhdZs6IXMCKgzF768dUIyW5xyBstWtDI5uGSa80v7UQOhh+w0GA4p4+01Bg==
