@@ -57,7 +57,12 @@ teardown() {
     rm -rf "${FAKE_LOCAL_REPOSITORY}"
     rm -rf "${FAKE_REMOTE}"
     rm -rf "${FAKE_TEMP_LOCAL_REPOSITORY}"
-    rm "${GITHUB_OUTPUT}"
+
+    if [ -z ${GITHUB_OUTPUT+x} ]; then
+        echo "GITHUB_OUTPUT is not set"
+    else
+        rm "${GITHUB_OUTPUT}"
+    fi
 }
 
 # Create a fake remote repository which tests can push against
@@ -996,4 +1001,43 @@ cat_github_output() {
 
     refute_line --partial "new-file-2.txt"
     refute_line --partial "new-file-3.txt"
+}
+
+
+@test "It uses old set-output syntax if GITHUB_OUTPUT environment is not available when changes are committed" {
+    unset GITHUB_OUTPUT
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "INPUT_BRANCH value: ${FAKE_DEFAULT_BRANCH}"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch ${FAKE_DEFAULT_BRANCH}"
+
+    assert_line "::set-output name=changes_detected::true"
+    assert_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+}
+
+@test "It uses old set-output syntax if GITHUB_OUTPUT environment is not available when no changes have been detected" {
+    unset GITHUB_OUTPUT
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "Working tree clean. Nothing to commit."
+
+    assert_line "::set-output name=changes_detected::false"
+    refute_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
 }
