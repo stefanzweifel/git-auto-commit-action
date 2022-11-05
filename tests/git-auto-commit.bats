@@ -37,6 +37,7 @@ setup() {
     export INPUT_SKIP_CHECKOUT=false
     export INPUT_DISABLE_GLOBBING=false
     export INPUT_CREATE_BRANCH=false
+    export INPUT_INTERNAL_GIT_BINARY=git
 
     # Set GitHub environment variables used by the GitHub Action
     temp_github_output_file=$(mktemp -t github_output_test.XXXXX)
@@ -1040,4 +1041,14 @@ cat_github_output() {
 
     assert_line "::set-output name=changes_detected::false"
     refute_line -e "::set-output name=commit_hash::[0-9a-f]{40}$"
+}
+
+@test "It fails hard if git is not available" {
+    INPUT_INTERNAL_GIT_BINARY=binary-does-not-exist
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_failure;
 }
