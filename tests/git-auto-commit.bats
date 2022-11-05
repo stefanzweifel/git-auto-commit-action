@@ -1051,5 +1051,5 @@ cat_github_output() {
     run git_auto_commit
 
     assert_failure;
-    assert_line "::error ::git not found. git-auto-commit requires git to be available."
+    assert_line "::error ::git-auto-commit could not find git binary. Please make sure git is available."
 }

@@ -46,10 +46,9 @@ _main() {
 
 _check_if_git_is_available() {
     if hash -- "$INPUT_INTERNAL_GIT_BINARY" 2> /dev/null; then
-        echo "git found";
-        echo "::debug::git binary found";
+        echo "::debug::git binary found.";
     else
-        echo "::error ::git not found. git-auto-commit requires git to be available."
+        echo "::error ::git-auto-commit could not find git binary. Please make sure git is available."
         exit 1;
     fi
 }
