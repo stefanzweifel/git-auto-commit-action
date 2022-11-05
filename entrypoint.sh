@@ -7,6 +7,8 @@ if "$INPUT_DISABLE_GLOBBING"; then
 fi
 
 _main() {
+    _check_if_git_is_available
+
     _switch_to_repository
 
     if _git_is_dirty || "$INPUT_SKIP_DIRTY_CHECK"; then
@@ -42,6 +44,11 @@ _main() {
     fi
 }
 
+_check_if_git_is_available() {
+    PATH_TO_GIT=$(which $INPUT_INTERNAL_GIT_BINARY);
+
+    echo "::debug::Path to git binary ${PATH_TO_GIT}";
+}
 
 _switch_to_repository() {
     echo "INPUT_REPOSITORY value: $INPUT_REPOSITORY";

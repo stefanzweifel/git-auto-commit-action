@@ -70,6 +70,9 @@ inputs:
   create_branch:
     description: Create new branch with the name of `branch`-input in local and remote repository, if it doesn't exist yet.
     default: false
+  internal_git_binary:
+    description: Internal use only. Path git binary that should be used.
+    default: git
 
 outputs:
   changes_detected:
