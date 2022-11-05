@@ -5,9 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.3...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.4...HEAD)
 
 > TBD
+
+## [v4.15.4](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.3...v4.15.4) - 2022-11-05
+
+### Fixed
+
+- Let Action fail if git binary can't be located ([#261](https://github.com/stefanzweifel/git-auto-commit-action/pull/261)) [@stefanzweifel](https://github.com/@stefanzweifel)
+
+### Dependency Updates
+
+- Bump github/super-linter from 3 to 4 ([#258](https://github.com/stefanzweifel/git-auto-commit-action/pull/258)) [@dependabot](https://github.com/@dependabot)
+- Bump bats from 1.7.0 to 1.8.2 ([#259](https://github.com/stefanzweifel/git-auto-commit-action/pull/259)) [@dependabot](https://github.com/@dependabot)
+- Bump actions/checkout from 2 to 3 ([#257](https://github.com/stefanzweifel/git-auto-commit-action/pull/257)) [@dependabot](https://github.com/@dependabot)
 
 ## [v4.15.3](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.2...v4.15.3) - 2022-10-26
 
