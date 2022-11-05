@@ -1051,4 +1051,5 @@ cat_github_output() {
     run git_auto_commit
 
     assert_failure;
+    assert_line "git not found. git-auto-commit requires git to be available."
 }

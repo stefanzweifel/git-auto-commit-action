@@ -45,9 +45,13 @@ _main() {
 }
 
 _check_if_git_is_available() {
-    PATH_TO_GIT=$(which $INPUT_INTERNAL_GIT_BINARY);
-
-    echo "::debug::Path to git binary ${PATH_TO_GIT}";
+    if hash -- "$INPUT_INTERNAL_GIT_BINARY" 2> /dev/null; then
+        echo "git found";
+        echo "::debug::git binary found";
+    else
+        echo "git not found. git-auto-commit requires git to be available." >&2
+        exit 1
+    fi
 }
 
 _switch_to_repository() {
