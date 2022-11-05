@@ -50,8 +50,7 @@ _check_if_git_is_available() {
         echo "::debug::git binary found";
     else
         echo "::error ::git not found. git-auto-commit requires git to be available."
-        echo "git not found. git-auto-commit requires git to be available." >&2
-        exit 1
+        exit 1;
     fi
 }
 
