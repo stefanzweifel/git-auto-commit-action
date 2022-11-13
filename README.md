@@ -399,7 +399,7 @@ If you go the "force pushes" route, you have to enable force pushes to a protect
 
 ### No new workflows are triggered by the commit of this action
 
-This is due to limitations set up by GitHub, [commits of this Action do not trigger new Workflow runs](#commits-of-this-action-do-not-trigger-new-workflow-runs).
+This is due to limitations set up by GitHub, [commits made by this Action do not trigger new Workflow runs](#commits-made-by-this-action-do-not-trigger-new-workflow-runs).
 
 ### Pathspec 'x' did not match any files
 
