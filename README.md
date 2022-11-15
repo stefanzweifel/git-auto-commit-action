@@ -53,7 +53,7 @@ The following is an extended example with all available options.
 
     # Optional commit user and author settings
     commit_user_name: My GitHub Actions Bot # defaults to "github-actions[bot]"
-    commit_user_email: my-github-actions-bot@example.org # defaults to "github-actions[bot]@users.noreply.github.com"
+    commit_user_email: my-github-actions-bot@example.org # defaults to "41898282+github-actions[bot]@users.noreply.github.com"
     commit_author: Author <actions@github.com> # defaults to author of the commit that triggered the run
 
     # Optional. Tag name being created in the local repository and 
