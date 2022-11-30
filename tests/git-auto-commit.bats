@@ -974,7 +974,7 @@ cat_github_output() {
     assert_line --partial "another-subdirectory/new-file-3.txt"
 }
 
-@test "fails to detect crlf change in files and does not detect change or commit changes" {
+@test "detects if crlf in files change and does not create commit" {
     # Set autocrlf to true
     cd "${FAKE_LOCAL_REPOSITORY}"
     git config core.autocrlf true
@@ -996,6 +996,13 @@ cat_github_output() {
     run git_auto_commit
 
     assert_success
+
+    refute_line --partial "2 files changed, 2 insertions(+), 2 deletions(-)"
+    assert_line --partial "warning: in the working copy of 'new-file-2.txt', LF will be replaced by CRLF the next time Git touches it"
+
+    assert_line --partial "Working tree clean. Nothing to commit."
+    assert_line --partial "new-file-2.txt"
+    assert_line --partial "new-file-3.txt"
 
     # Changes are not detected
     run cat_github_output
