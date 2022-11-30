@@ -25,7 +25,7 @@ _main() {
 
         _add_files
 
-        if [ -n "$(git diff --staged)" ]; then
+        if [ -n "$(git diff --staged)" ] || "$INPUT_SKIP_DIRTY_CHECK"; then
             _local_commit
 
             _tag_commit
