@@ -982,15 +982,15 @@ cat_github_output() {
     assert_line "true"
 
     # Add more .txt files
-    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-2.txt
-    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-3.txt
+    echo -ne "crlf test1\r\n" > "${FAKE_LOCAL_REPOSITORY}"/new-file-2.txt
+    echo -ne "crlf test1\n" > "${FAKE_LOCAL_REPOSITORY}"/new-file-3.txt
 
     # Run git-auto-commit to add new files to repository
     run git_auto_commit
 
     # Change control characters in files
-    sed 's/^M$//' "${FAKE_LOCAL_REPOSITORY}"/new-file-2.txt
-    sed 's/$/^M/' "${FAKE_LOCAL_REPOSITORY}"/new-file-3.txt
+    echo -ne "crlf test1\n" > "${FAKE_LOCAL_REPOSITORY}"/new-file-2.txt
+    echo -ne "crlf test1\r\n" > "${FAKE_LOCAL_REPOSITORY}"/new-file-3.txt
 
     # Run git-auto-commit to commit the 2 changes files
     run git_auto_commit
@@ -998,10 +998,8 @@ cat_github_output() {
     assert_success
 
     # Changes are not detected
-    assert_line --partial "Working tree clean. Nothing to commit."
-
-    refute_line --partial "new-file-2.txt"
-    refute_line --partial "new-file-3.txt"
+    run cat_github_output
+    assert_line "changes_detected=false"
 }
 
 
