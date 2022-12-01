@@ -25,11 +25,28 @@ _main() {
 
         _add_files
 
-        _local_commit
+        # Check dirty state of repo again using git-diff.
+        # (git-diff detects beter if CRLF of files changes and does NOT
+        # proceed, if only CRLF changes are detected. See #241 and #265
+        # for more details.)
+        if [ -n "$(git diff --staged)" ] || "$INPUT_SKIP_DIRTY_CHECK"; then
+            _local_commit
 
-        _tag_commit
+            _tag_commit
 
-        _push_to_github
+            _push_to_github
+        else
+
+            # Check if $GITHUB_OUTPUT is available
+            # (Feature detection will be removed in late December 2022)
+            if [ -z ${GITHUB_OUTPUT+x} ]; then
+                echo "::set-output name=changes_detected::false";
+            else
+                echo "changes_detected=false" >> $GITHUB_OUTPUT;
+            fi
+
+            echo "Working tree clean. Nothing to commit.";
+        fi
     else
 
         # Check if $GITHUB_OUTPUT is available
