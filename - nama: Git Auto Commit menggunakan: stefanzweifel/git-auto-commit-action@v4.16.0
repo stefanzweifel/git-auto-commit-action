@@ -1,0 +1,2 @@
+- nama: Git Auto Commit
+  menggunakan: stefanzweifel/git-auto-commit-action@v4.16.0
