@@ -91,14 +91,14 @@ _switch_to_branch() {
 
     # Fetch remote to make sure that repo can be switched to the right branch.
     if "$INPUT_SKIP_FETCH"; then
-        _log "debug" "git-fetch has not been executed.";
+        _log "debug" "git-fetch will not be executed.";
     else
         git fetch --depth=1;
     fi
 
     # If `skip_checkout`-input is true, skip the entire checkout step.
     if "$INPUT_SKIP_CHECKOUT"; then
-        _log "debug" "git-checkout has not been executed.";
+        _log "debug" "git-checkout will not be executed.";
     else
         # Create new local branch if `create_branch`-input is true
         if "$INPUT_CREATE_BRANCH"; then
