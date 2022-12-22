@@ -11,7 +11,7 @@ _set_github_output() {
     local value=${2}
 
     # Check if $GITHUB_OUTPUT is available
-    # (Feature detection will be removed in late December 2022)
+    # (Feature detection will be removed in spring 2023)
     if [ -z ${GITHUB_OUTPUT+x} ]; then
         echo "::set-output name=$name::$value";
     else
