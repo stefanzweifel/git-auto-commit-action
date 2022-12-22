@@ -19,6 +19,13 @@ _set_github_output() {
     fi
 }
 
+_log() {
+    local level=${1}
+    local message=${2}
+
+    echo "::$level::$message";
+}
+
 _main() {
     _check_if_git_is_available
 
