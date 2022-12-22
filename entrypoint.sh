@@ -6,6 +6,26 @@ if "$INPUT_DISABLE_GLOBBING"; then
     set -o noglob;
 fi
 
+_set_github_output() {
+    local name=${1}
+    local value=${2}
+
+    # Check if $GITHUB_OUTPUT is available
+    # (Feature detection will be removed in spring 2023)
+    if [ -z ${GITHUB_OUTPUT+x} ]; then
+        echo "::set-output name=$name::$value";
+    else
+        echo "$name=$value" >> $GITHUB_OUTPUT;
+    fi
+}
+
+_log() {
+    local level=${1}
+    local message=${2}
+
+    echo "::$level::$message";
+}
+
 _main() {
     _check_if_git_is_available
 
@@ -13,13 +33,7 @@ _main() {
 
     if _git_is_dirty || "$INPUT_SKIP_DIRTY_CHECK"; then
 
-        # Check if $GITHUB_OUTPUT is available
-        # (Feature detection will be removed in late December 2022)
-        if [ -z ${GITHUB_OUTPUT+x} ]; then
-            echo "::set-output name=changes_detected::true";
-        else
-            echo "changes_detected=true" >> $GITHUB_OUTPUT;
-        fi
+        _set_github_output "changes_detected" "true"
 
         _switch_to_branch
 
@@ -36,26 +50,12 @@ _main() {
 
             _push_to_github
         else
-
-            # Check if $GITHUB_OUTPUT is available
-            # (Feature detection will be removed in late December 2022)
-            if [ -z ${GITHUB_OUTPUT+x} ]; then
-                echo "::set-output name=changes_detected::false";
-            else
-                echo "changes_detected=false" >> $GITHUB_OUTPUT;
-            fi
+            _set_github_output "changes_detected" "false"
 
             echo "Working tree clean. Nothing to commit.";
         fi
     else
-
-        # Check if $GITHUB_OUTPUT is available
-        # (Feature detection will be removed in late December 2022)
-        if [ -z ${GITHUB_OUTPUT+x} ]; then
-            echo "::set-output name=changes_detected::false";
-        else
-            echo "changes_detected=false" >> $GITHUB_OUTPUT;
-        fi
+        _set_github_output "changes_detected" "false"
 
         echo "Working tree clean. Nothing to commit.";
     fi
@@ -63,9 +63,9 @@ _main() {
 
 _check_if_git_is_available() {
     if hash -- "$INPUT_INTERNAL_GIT_BINARY" 2> /dev/null; then
-        echo "::debug::git binary found.";
+        _log "debug" "git binary found.";
     else
-        echo "::error ::git-auto-commit could not find git binary. Please make sure git is available."
+        _log "error" "git-auto-commit could not find git binary. Please make sure git is available."
         exit 1;
     fi
 }
@@ -77,7 +77,7 @@ _switch_to_repository() {
 
 _git_is_dirty() {
     echo "INPUT_STATUS_OPTIONS: ${INPUT_STATUS_OPTIONS}";
-    echo "::debug::Apply status options ${INPUT_STATUS_OPTIONS}";
+    _log "debug" "Apply status options ${INPUT_STATUS_OPTIONS}";
 
     echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
     read -r -a INPUT_FILE_PATTERN_EXPANDED <<< "$INPUT_FILE_PATTERN";
@@ -91,14 +91,14 @@ _switch_to_branch() {
 
     # Fetch remote to make sure that repo can be switched to the right branch.
     if "$INPUT_SKIP_FETCH"; then
-        echo "::debug::git-fetch has not been executed";
+        _log "debug" "git-fetch will not be executed.";
     else
         git fetch --depth=1;
     fi
 
     # If `skip_checkout`-input is true, skip the entire checkout step.
     if "$INPUT_SKIP_CHECKOUT"; then
-        echo "::debug::git-checkout has not been executed";
+        _log "debug" "git-checkout will not be executed.";
     else
         # Create new local branch if `create_branch`-input is true
         if "$INPUT_CREATE_BRANCH"; then
@@ -114,7 +114,7 @@ _switch_to_branch() {
 
 _add_files() {
     echo "INPUT_ADD_OPTIONS: ${INPUT_ADD_OPTIONS}";
-    echo "::debug::Apply add options ${INPUT_ADD_OPTIONS}";
+    _log "debug" "Apply add options ${INPUT_ADD_OPTIONS}";
 
     echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
     read -r -a INPUT_FILE_PATTERN_EXPANDED <<< "$INPUT_FILE_PATTERN";
@@ -125,7 +125,7 @@ _add_files() {
 
 _local_commit() {
     echo "INPUT_COMMIT_OPTIONS: ${INPUT_COMMIT_OPTIONS}";
-    echo "::debug::Apply commit options ${INPUT_COMMIT_OPTIONS}";
+    _log "debug" "Apply commit options ${INPUT_COMMIT_OPTIONS}";
 
     # shellcheck disable=SC2206
     INPUT_COMMIT_OPTIONS_ARRAY=( $INPUT_COMMIT_OPTIONS );
@@ -140,14 +140,7 @@ _local_commit() {
         --author="$INPUT_COMMIT_AUTHOR" \
         ${INPUT_COMMIT_OPTIONS:+"${INPUT_COMMIT_OPTIONS_ARRAY[@]}"};
 
-
-    # Check if $GITHUB_OUTPUT is available
-    # (Feature detection will be removed in late December 2022)
-    if [ -z ${GITHUB_OUTPUT+x} ]; then
-        echo "::set-output name=commit_hash::$(git rev-parse HEAD)";
-    else
-        echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT;
-    fi
+    _set_github_output "commit_hash" $(git rev-parse HEAD)
 }
 
 _tag_commit() {
@@ -155,7 +148,7 @@ _tag_commit() {
 
     if [ -n "$INPUT_TAGGING_MESSAGE" ]
     then
-        echo "::debug::Create tag $INPUT_TAGGING_MESSAGE";
+        _log "debug" "Create tag $INPUT_TAGGING_MESSAGE";
         git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" tag -a "$INPUT_TAGGING_MESSAGE" -m "$INPUT_TAGGING_MESSAGE";
     else
         echo "No tagging message supplied. No tag will be added.";
@@ -165,7 +158,7 @@ _tag_commit() {
 _push_to_github() {
 
     echo "INPUT_PUSH_OPTIONS: ${INPUT_PUSH_OPTIONS}";
-    echo "::debug::Apply push options ${INPUT_PUSH_OPTIONS}";
+    _log "debug" "Apply push options ${INPUT_PUSH_OPTIONS}";
 
     # shellcheck disable=SC2206
     INPUT_PUSH_OPTIONS_ARRAY=( $INPUT_PUSH_OPTIONS );
@@ -175,15 +168,15 @@ _push_to_github() {
         # Only add `--tags` option, if `$INPUT_TAGGING_MESSAGE` is set
         if [ -n "$INPUT_TAGGING_MESSAGE" ]
         then
-            echo "::debug::git push origin --tags";
+            _log "debug" "git push origin --tags";
             git push origin --follow-tags --atomic ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
         else
-            echo "::debug::git push origin";
+            _log "debug" "git push origin";
             git push origin ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
         fi
 
     else
-        echo "::debug::Push commit to remote branch $INPUT_BRANCH";
+        _log "debug" "Push commit to remote branch $INPUT_BRANCH";
         git push --set-upstream origin "HEAD:$INPUT_BRANCH" --follow-tags --atomic ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
     fi
 }
