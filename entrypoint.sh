@@ -6,6 +6,19 @@ if "$INPUT_DISABLE_GLOBBING"; then
     set -o noglob;
 fi
 
+_set_github_output() {
+    local name=${1}
+    local value=${2}
+
+    # Check if $GITHUB_OUTPUT is available
+    # (Feature detection will be removed in late December 2022)
+    if [ -z ${GITHUB_OUTPUT+x} ]; then
+        echo "::set-output name=$name::$value";
+    else
+        echo "$name=$value" >> $GITHUB_OUTPUT;
+    fi
+}
+
 _main() {
     _check_if_git_is_available
 
