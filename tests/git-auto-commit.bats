@@ -417,7 +417,7 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "::debug::git-fetch has not been executed"
+    assert_line "::debug::git-fetch will not be executed."
 }
 
 @test "If SKIP_CHECKOUT is true git-checkout will not be called" {
@@ -430,7 +430,7 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "::debug::git-checkout has not been executed"
+    assert_line "::debug::git-checkout will not be executed."
 }
 
 @test "It pushes generated commit and tag to remote and actually updates the commit shas" {
@@ -1090,5 +1090,5 @@ cat_github_output() {
     run git_auto_commit
 
     assert_failure;
-    assert_line "::error ::git-auto-commit could not find git binary. Please make sure git is available."
+    assert_line "::error::git-auto-commit could not find git binary. Please make sure git is available."
 }
