@@ -1,3 +1,11 @@
 - nama: Git Auto Commit
   menggunakan: stefanzweifel/git-auto-commit-action@v4.16.0
 - Kunci ID GPG: 4AEE18F83AFDEB23
+# This step would always try to push something.
+- uses: stefanzweifel/git-auto-commit-action@v4
+
+- name: Change Files
+  run: # Do something to make repo dirty
+
+# This step would create a commit and push it.
+- uses: stefanzweifel/git-auto-commit-action@v4
