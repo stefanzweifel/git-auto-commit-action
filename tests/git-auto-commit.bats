@@ -1092,3 +1092,23 @@ cat_github_output() {
     assert_failure;
     assert_line "::error::git-auto-commit could not find git binary. Please make sure git is available."
 }
+
+@test "It creates multi-line commit messages" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    COMMIT_MESSAGE=$(cat <<-END
+    this commit message
+    has multiple lines
+END
+)
+
+    INPUT_COMMIT_MESSAGE=$COMMIT_MESSAGE
+
+    run git_auto_commit
+
+    assert_success
+
+    # Assert last commit was signed off
+    run git log -n 1
+    assert_output --partial $COMMIT_MESSAGE
+}
