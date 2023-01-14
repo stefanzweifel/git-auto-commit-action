@@ -198,17 +198,61 @@ If you work in an organization and don't want to create a PAT from your personal
 
 ### Change to file is not detected
 
-Does your workflow change a file but "git-auto-commit" does not detect the change? Check the `.gitignore` that applies to the respective file. You might have accidentally marked the file to be ignored by git.
+Does your workflow change a file, but "git-auto-commit" does not detect the change? Check the `.gitignore` that applies to the respective file. You might have accidentally marked the file to be ignored by git.
 
 ## Advanced Uses
 
+### Multiline Commit Messages
+
+If your commit message should span multiple lines, you have to create a separate step to generate the string. 
+
+The example below can be used as a starting point to generate a multiline commit meesage. Learn more how multiline strings in GitHub Actions work in the [GitHub documentation](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings).
+
+```yaml
+    # Building a multiline commit message
+    # Adjust to your liking
+    - run: echo "Commit Message 1" >> commitmessage.txt
+    - run: echo "Commit Message 2" >> commitmessage.txt
+    - run: echo "Commit Message 3" >> commitmessage.txt
+
+    # Create a multiline string to be used by the git-auto-commit Action
+    - name: Set commit message
+      id: commit_message_step
+      run: |
+        echo 'commit_message<<EOF' >> $GITHUB_OUTPUT
+        cat commitmessage.txt >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
+
+    # Quick and dirty step to get rid of the temporary file holding the commit message
+    - run: rm -rf commitmessage.txt
+
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      id: commit
+      with:
+        commit_message: ${{ steps.commit_message_step.outputs.commit_message }}
+```  
+
+### Signing Commits & Other Git Command Line Options
+
+Using command lines options needs to be done manually for each workflow which you require the option enabled. So for example signing commits requires you to import the gpg signature each and every time. The following list of actions are worth checking out if you need to automate these tasks regularly.
+
+- [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
+
+### Push to forks from private repositories
+
+By default, GitHub Actions doesn't run Workflows on forks from private repositories. To enable Actions for **private** repositories enable "Run workflows from pull requests" in your repository settings.
+
+See [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/) or the [GitHub docs](https://docs.github.com/en/github/administering-a-repository/disabling-or-limiting-github-actions-for-a-repository#enabling-workflows-for-private-repository-forks) for details.
+
+
+### Use in forks from public repositories
+
 <details>
-<summary>Use in forks from public repositories</summary>
+<summary>Expand to learn more</summary>
 
-**☝️ Important Notice**: This Action technically works with forks. However, please note that the combination of triggers and their options can cause issues. Please read [the documentation](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows) on which triggers GitHub Actions support.\
-If you use this Action in combination with a linter/fixer, it's easier if you run the Action on `push` on your `main`-branch.
-
----
+> **Note**
+> This Action technically works with forks. However, please note that the combination of triggers and their options can cause issues. Please read [the documentation](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows) on which triggers GitHub Actions support.\
+> If you use this Action in combination with a linter/fixer, it's easier if you run the Action on `push` on your `main`-branch.
 
 By default, this Action will not run on Pull Requests which have been opened by forks. (This is a limitation by GitHub, not by us.)   
 However, there are a couple of ways to use this Actions in Workflows that should be triggered by forked repositories.
@@ -295,37 +339,15 @@ For more information about running Actions on forks, see [this announcement from
 
 </details>
 
-<details>
-<summary>Push to forks from private repositories</summary>
-
-By default, GitHub Actions doesn't run Workflows on forks from private repositories. To enable Actions for **private** repositories enable "Run workflows from pull requests" in your repository settings.
-
-See [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/) or the [GitHub docs](https://docs.github.com/en/github/administering-a-repository/disabling-or-limiting-github-actions-for-a-repository#enabling-workflows-for-private-repository-forks) for details.
-
-</details>
+### Using `--amend` and `--no-edit` as commit options
 
 <details>
-<summary>
-  Signing Commits & Other Git Command Line Options
-</summary>
-
-Using command lines options needs to be done manually for each workflow which you require the option enabled. So for example signing commits requires you to import the gpg signature each and every time. The following list of actions are worth checking out if you need to automate these tasks regularly.
-
-- [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
-
-</details>
-
-<details>
-<summary>
-  Using `--amend` and `--no-edit` as commit options
-</summary>
-
-
-
+<summary>Expand to learn more</summary>
 
 If you would like to use this Action to create a commit using [`--amend`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---amend) and [`--no-edit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---no-edit) you need to make some adjustments.
 
-**☝️ Important Notice:** You should understand the implications of rewriting history if you amend a commit that has already been published. [See rebasing](https://git-scm.com/docs/git-rebase#_recovering_from_upstream_rebase)
+> **Warning**
+> You should understand the implications of rewriting history if you amend a commit that has already been published. [See rebasing](https://git-scm.com/docs/git-rebase#_recovering_from_upstream_rebase).
 
 First, you need to extract the previous commit message by using `git log -1 --pretty=%s`.
 Then you need to provide this last commit message to the Action through the `commit_message` input option.
@@ -385,7 +407,8 @@ store the token as a secret in your repository and pass the new token to the [`a
 ```
 You can learn more about Personal Access Token in the [GitHub documentation](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
 
-**Note:** If you're working in an organisation, and you don't want to create the PAT from your personal account, we recommend using a bot-account for such tokens.
+> **Note**
+> If you're working in an organisation, and you don't want to create the PAT from your personal account, we recommend using a bot-account for such tokens.
 
 
 If you go the "force pushes" route, you have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like this.
