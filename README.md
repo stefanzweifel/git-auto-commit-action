@@ -252,6 +252,8 @@ See [this announcement from GitHub](https://github.blog/2020-08-03-github-action
 
 > **Note**
 > This Action technically works with forks. However, please note that the combination of triggers and their options can cause issues. Please read [the documentation](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows) on which triggers GitHub Actions support.\
+> Ensure your contributors enable "Allow edits by maintainers" when opening a pull request. ([Learn more](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)) \
+> \
 > If you use this Action in combination with a linter/fixer, it's easier if you run the Action on `push` on your `main`-branch.
 
 By default, this Action will not run on Pull Requests which have been opened by forks. (This is a limitation by GitHub, not by us.)   
