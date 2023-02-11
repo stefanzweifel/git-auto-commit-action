@@ -35,7 +35,7 @@ jobs:
 
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
-      # updated CHANGELOG back to the repository.
+      # added or changed files to the repository.
       contents: write
 
     steps:
