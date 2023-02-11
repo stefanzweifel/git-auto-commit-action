@@ -13,14 +13,42 @@ If you want to learn more how this Action works under the hood, check out [this 
 
 ## Usage
 
-Add the following step at the end of your job, after other steps that might add or change files.
+Adding git-auto-commit to your Workflow only takes a couple lines of code.
+
+1. Set the `contents`-permission of the default GITHUB_TOKEN to `true`. (Required to push new commits to the repository)
+2. Add the following step at the end of your job, after other steps that might add or change files.
 
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v4
 ```
 
-Note that the Action has to be used in a Job that runs on a UNIX system (e.g. `ubuntu-latest`).
-If you don't use the default permission of the GITHUB_TOKEN, give the Job or Workflow at least the `contents: write` permission.
+Your Workflow should look similar to this example.
+
+```yaml
+name: Format
+
+on: push
+
+jobs:
+  format-code:
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # updated CHANGELOG back to the repository.
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Other steps that change files in the repository
+
+      # Commit all changed files back to the repository
+      - uses: stefanzweifel/git-auto-commit-action@v4
+```
+
+> **Note**  
+> The Action has to be used in a Job that runs on a UNIX system (e.g. `ubuntu-latest`).
 
 The following is an extended example with all available options.
 
@@ -111,8 +139,12 @@ jobs:
   php-cs-fixer:
     runs-on: ubuntu-latest
 
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the changed files back to the repository.
+      contents: write
+
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         ref: ${{ github.head_ref }}
 
