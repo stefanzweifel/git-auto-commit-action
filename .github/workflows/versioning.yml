@@ -7,6 +7,13 @@ on:
 jobs:
   actions-tagger:
     runs-on: windows-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # updaetd CHANGELOG back to the repository.
+      # https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/
+      contents: write
+
     steps:
       - uses: Actions-R-Us/actions-tagger@latest
         env:
