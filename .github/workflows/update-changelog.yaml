@@ -10,7 +10,7 @@ jobs:
 
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
-      # updaetd CHANGELOG back to the repository.
+      # updated CHANGELOG back to the repository.
       # https://github.blog/changelog/2023-02-02-github-actions-updating-the-default-github_token-permissions-to-read-only/
       contents: write
 
