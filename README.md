@@ -201,7 +201,7 @@ You must use `action/checkout@v2` or later versions to check out the repository.
 In non-`push` events, such as `pull_request`, make sure to specify the `ref` to check out:
 
 ```yaml
-- uses: actions/checkout@v2
+- uses: actions/checkout@v3
   with:
     ref: ${{ github.head_ref }}
 ```
@@ -219,7 +219,7 @@ You can change this by creating a new [Personal Access Token (PAT)](https://gith
 storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action step.
 
 ```yaml
-- uses: actions/checkout@v2
+- uses: actions/checkout@v3
   with:
     token: ${{ secrets.PAT }}
 ```
@@ -349,7 +349,7 @@ jobs:
   php-cs-fixer:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Run php-cs-fixer
       uses: docker://oskarstark/php-cs-fixer-ga
@@ -435,7 +435,7 @@ First, you have to create a new [Personal Access Token (PAT)](https://github.com
 store the token as a secret in your repository and pass the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action step.
 
 ```yaml
-- uses: actions/checkout@v2
+- uses: actions/checkout@v3
   with:
     token: ${{ secrets.PAT }}
 ```
