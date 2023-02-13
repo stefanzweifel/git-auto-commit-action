@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "bats": "^1.8.2",
+    "bats": "^1.9.0",
     "bats-assert": "ztombol/bats-assert",
     "bats-support": "ztombol/bats-support"
   },
