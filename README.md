@@ -282,11 +282,14 @@ See [this announcement from GitHub](https://github.blog/2020-08-03-github-action
 <details>
 <summary>Expand to learn more</summary>
 
-> **Note**
+> **Note**   
 > This Action technically works with forks. However, please note that the combination of triggers and their options can cause issues. Please read [the documentation](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows) on which triggers GitHub Actions support.\
 > Ensure your contributors enable "Allow edits by maintainers" when opening a pull request. ([Learn more](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)) \
 > \
-> If you use this Action in combination with a linter/fixer, it's easier if you run the Action on `push` on your `main`-branch.
+> **If you use this Action in combination with a linter/fixer, it's easier if you run the Action on `push` on your `main`-branch.**
+
+> **Warning**   
+> Due to limitations of GitHub, this Action currently can't push commits to a base repository, if the fork _lives_ under an organisation. See [github/community#6634](https://github.com/orgs/community/discussions/5634) and [this comment](https://github.com/stefanzweifel/git-auto-commit-action/issues/211#issuecomment-1428849944) for details.
 
 By default, this Action will not run on Pull Requests which have been opened by forks. (This is a limitation by GitHub, not by us.)   
 However, there are a couple of ways to use this Actions in Workflows that should be triggered by forked repositories.
@@ -312,10 +315,19 @@ on:
 jobs:
   php-cs-fixer:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
     - uses: actions/checkout@v3
       with:
+        # Checkout the fork/head-repository and push changes to the fork.
+        # If you skip this, the base repository will be checked out and changes
+        # will be committed to the base repository!
         repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+        # Checkout the branch made in the fork. Will automatically push changes
+        # back to this branch.
         ref: ${{ github.head_ref }}
 
     - name: Run php-cs-fixer
@@ -325,6 +337,11 @@ jobs:
 ```
 
 ### Workflow should run in **forked** repository
+
+> **Warning**   
+> **This part of the documentation is outdated.**   
+> We were not able to configure a GitHub Action workflow for forks, that the workflow would run in the fork / head repository.
+> Please let us know in the [discussions](https://github.com/stefanzweifel/git-auto-commit-action/discussions)-area, if and how you achieved that.
 
 If the workflow should run in the forked repository, follow these steps:
 
@@ -380,7 +397,7 @@ For more information about running Actions on forks, see [this announcement from
 
 If you would like to use this Action to create a commit using [`--amend`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---amend) and [`--no-edit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---no-edit) you need to make some adjustments.
 
-> **Warning**
+> **Warning**   
 > You should understand the implications of rewriting history if you amend a commit that has already been published. [See rebasing](https://git-scm.com/docs/git-rebase#_recovering_from_upstream_rebase).
 
 First, you need to extract the previous commit message by using `git log -1 --pretty=%s`.
