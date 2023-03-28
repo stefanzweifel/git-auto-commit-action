@@ -259,7 +259,7 @@ cat_github_output() {
 }
 
 @test "It applies commit user and author settings" {
-    INPUT_COMMIT_USER_NAME="A Single Test"
+    INPUT_COMMIT_USER_NAME="Custom User Name"
     INPUT_COMMIT_USER_EMAIL="single-test@github.com"
     INPUT_COMMIT_AUTHOR="A Single Test <single@users.noreply.github.com>"
 
@@ -269,7 +269,7 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "INPUT_COMMIT_USER_NAME: A Single Test"
+    assert_line "INPUT_COMMIT_USER_NAME: Custom User Name"
     assert_line "INPUT_COMMIT_USER_EMAIL: single-test@github.com"
     assert_line "INPUT_COMMIT_AUTHOR: A Single Test <single@users.noreply.github.com>"
     assert_line "::debug::Push commit to remote branch ${FAKE_DEFAULT_BRANCH}"
@@ -282,7 +282,7 @@ cat_github_output() {
     assert_output --partial "A Single Test"
 
     run git log -1 --pretty=format:'%cn'
-    assert_output --partial "A Single Test"
+    assert_output --partial "Custom User Name"
 
     run git log -1 --pretty=format:'%ce'
     assert_output --partial "single-test@github.com"
