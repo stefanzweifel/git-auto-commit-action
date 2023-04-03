@@ -12,7 +12,7 @@ categories:
       - 'changelog:changed'
   - title: Deprecated
     labels:
-      - 'changelog:deprecated '
+      - 'changelog:deprecated'
   - title: Removed
     labels:
     - 'changelog:removed'
