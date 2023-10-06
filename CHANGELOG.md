@@ -5,9 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.16.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.0.0...HEAD)
 
 > TBD
+
+## [v5.0.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.16.0...v5.0.0) - 2023-10-06
+
+New major release that bumps the default runtime to Node 20. There are no other breaking changes.
+
+### Changed
+
+- Update node version to node20 ([#300](https://github.com/stefanzweifel/git-auto-commit-action/pull/300)) [@ryudaitakai](https://github.com/@ryudaitakai)
+- Add _log and _set_github_output functions ([#273](https://github.com/stefanzweifel/git-auto-commit-action/pull/273)) [@stefanzweifel](https://github.com/@stefanzweifel)
+
+### Fixed
+
+- Seems like there is an extra space ([#288](https://github.com/stefanzweifel/git-auto-commit-action/pull/288)) [@pedroamador](https://github.com/@pedroamador)
+- Fix git-auto-commit.yml ([#277](https://github.com/stefanzweifel/git-auto-commit-action/pull/277)) [@zcong1993](https://github.com/@zcong1993)
+
+### Dependency Updates
+
+- Bump actions/checkout from 3 to 4 ([#302](https://github.com/stefanzweifel/git-auto-commit-action/pull/302)) [@dependabot](https://github.com/@dependabot)
+- Bump bats from 1.9.0 to 1.10.0 ([#293](https://github.com/stefanzweifel/git-auto-commit-action/pull/293)) [@dependabot](https://github.com/@dependabot)
+- Bump github/super-linter from 4 to 5 ([#289](https://github.com/stefanzweifel/git-auto-commit-action/pull/289)) [@dependabot](https://github.com/@dependabot)
+- Bump bats from 1.8.2 to 1.9.0 ([#282](https://github.com/stefanzweifel/git-auto-commit-action/pull/282)) [@dependabot](https://github.com/@dependabot)
 
 ## [v4.16.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.15.4...v4.16.0) - 2022-12-02
 
