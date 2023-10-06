@@ -40,7 +40,7 @@ _main() {
         _add_files
 
         # Check dirty state of repo again using git-diff.
-        # (git-diff detects beter if CRLF of files changes and does NOT
+        # (git-diff detects better if CRLF of files changes and does NOT
         # proceed, if only CRLF changes are detected. See #241 and #265
         # for more details.)
         if [ -n "$(git diff --staged)" ] || "$INPUT_SKIP_DIRTY_CHECK"; then
