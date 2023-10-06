@@ -39,7 +39,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # Other steps that change files in the repository
 
@@ -144,7 +144,7 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.head_ref }}
 
@@ -201,7 +201,7 @@ You must use `action/checkout@v2` or later versions to check out the repository.
 In non-`push` events, such as `pull_request`, make sure to specify the `ref` to check out:
 
 ```yaml
-- uses: actions/checkout@v3
+- uses: actions/checkout@v4
   with:
     ref: ${{ github.head_ref }}
 ```
@@ -219,7 +219,7 @@ You can change this by creating a new [Personal Access Token (PAT)](https://gith
 storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action step.
 
 ```yaml
-- uses: actions/checkout@v3
+- uses: actions/checkout@v4
   with:
     token: ${{ secrets.PAT }}
 ```
@@ -319,7 +319,7 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         # Checkout the fork/head-repository and push changes to the fork.
         # If you skip this, the base repository will be checked out and changes
@@ -366,7 +366,7 @@ jobs:
   php-cs-fixer:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Run php-cs-fixer
       uses: docker://oskarstark/php-cs-fixer-ga
@@ -408,7 +408,7 @@ Finally, you have to use `push_options: '--force'` to overwrite the git history 
 The steps in your workflow might look like this:
 
 ```yaml
-- uses: actions/checkout@master
+- uses: actions/checkout@4
   with:
     # Fetch the last 2 commits instead of just 1. (Fetching just 1 commit would overwrite the whole history)
     fetch-depth: 2
@@ -452,7 +452,7 @@ First, you have to create a new [Personal Access Token (PAT)](https://github.com
 store the token as a secret in your repository and pass the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action step.
 
 ```yaml
-- uses: actions/checkout@v3
+- uses: actions/checkout@v4
   with:
     token: ${{ secrets.PAT }}
 ```
