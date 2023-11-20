@@ -29,3 +29,6 @@ jobs:
     - name: "changes detected"
       if: steps.auto-commit-action.outputs.changes_detected == 'true'
       run: "echo \"Changes detected\""
+
+
+    - uses: stefanzweifel/git-auto-commit-action@v5
