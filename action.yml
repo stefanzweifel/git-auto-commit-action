@@ -71,7 +71,7 @@ inputs:
     description: Create new branch with the name of `branch`-input in local and remote repository.
     default: false
   internal_git_binary:
-    description: Internal use only! Path to git binary used to check if git is available. (Don't change this!)
+    description: Internal use only! Path to git binary used to check if git is available-- do not change this!
     default: git
 
 outputs:
