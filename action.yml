@@ -1,7 +1,7 @@
-name: Git Auto Commit
-description: 'Automatically commits files which have been changed during the workflow run and push changes back to remote repository.'
+## name: Git Auto Commit
+## description: 'Automatically commits files which have been changed during the workflow run and push changes back to remote repository.'
 
-author: Stefan Zweifel <stefan@stefanzweifel.dev>
+## author: Stefan Zweifel <stefan@stefanzweifel.dev>
 
 inputs:
   commit_message:
