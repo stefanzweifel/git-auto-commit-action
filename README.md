@@ -270,9 +270,9 @@ Using command lines options needs to be done manually for each workflow which yo
 
 - [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
 
-### Push to forks from private repositories
+### Use in forks from private repositories
 
-By default, GitHub Actions doesn't run Workflows on forks from private repositories. To enable Actions for **private** repositories enable "Run workflows from pull requests" in your repository settings.
+By default, GitHub Actions doesn't run Workflows on forks from **private** repositories. To enable Actions for **private** repositories enable "Run workflows from pull requests" in your repository settings.
 
 See [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/) or the [GitHub docs](https://docs.github.com/en/github/administering-a-repository/disabling-or-limiting-github-actions-for-a-repository#enabling-workflows-for-private-repository-forks) for details.
 
@@ -461,8 +461,7 @@ You can learn more about Personal Access Token in the [GitHub documentation](htt
 > [!TIP] 
 > If you're working in an organisation, and you don't want to create the PAT from your personal account, we recommend using a bot-account for such tokens.
 
-
-If you go the "force pushes" route, you have to enable force pushes to a protected branch (See [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like this.
+If you go the "force pushes" route, you have to enable force pushes to a protected branch (see [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like this.
 
 ```yaml
     - uses: stefanzweifel/git-auto-commit-action@v5
@@ -477,7 +476,7 @@ This is due to limitations set up by GitHub, [commits made by this Action do not
 
 ### Pathspec 'x' did not match any files
 
-If you're using the Action with a custom `file_pattern` and the Action throws a fatal error with the message "Pathspec 'file-pattern' did not match any files", the problem is probably that no file for the pattern exists in the repository.
+If you're using the Action with a custom `file_pattern` and the Action throws a fatal error with the message "Pathspec 'file-pattern' did not match any files", the problem is probably that no file for the pattern **exists** in the repository.
 
 `file_pattern` is used both for `git-status` and `git-add` in this Action. `git-add` will throw a fatal error, if for example, you use a file pattern like `*.js *.ts` but no `*.ts` files exist in your projects' repository.
 
