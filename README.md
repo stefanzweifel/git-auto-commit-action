@@ -279,9 +279,6 @@ See [this announcement from GitHub](https://github.blog/2020-08-03-github-action
 
 ### Use in forks from public repositories
 
-<details>
-<summary>Expand to learn more</summary>
-
 > [!NOTE] 
 > This Action technically works with forks. However, please note that the combination of triggers and their options can cause issues. Please read [the documentation](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows) on which triggers GitHub Actions support.\
 > Ensure your contributors enable "Allow edits by maintainers" when opening a pull request. ([Learn more](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)) \
@@ -297,11 +294,11 @@ However, there are a couple of ways to use this Actions in Workflows that should
 ### Workflow should run in **base** repository
 
 > [!CAUTION]
-> The following section explains how you can use git-auto-commit in combination with the `pull_request_target` trigger.
-> **Using `pull_request_target` in your workflows can lead to repository compromise as [mentioned](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/) by GitHub's own security team. This means, that a bad actor could potentially leak/steal your GitHub Actions repository secrets.**
+> The following section explains how you can use git-auto-commit in combination with the `pull_request_target` trigger.   
+> **Using `pull_request_target` in your workflows can lead to repository compromise as [mentioned](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/) by GitHub's own security team. This means, that a bad actor could potentially leak/steal your GitHub Actions repository secrets.**   
 > Please be aware of this risk when using `pull_request_target` in your workflows.
 > 
-> If your workflow runs code-fixing tools, consider running the workflow on your default branch by listening to the `push` event or use a third-party tool like [autofix.ci](https://autofix.ci/).
+> If your workflow runs code-fixing tools, consider running the workflow on your default branch by listening to the `push` event or use a third-party tool like [autofix.ci](https://autofix.ci/).   
 > We keep this documentation around, as many questions came in over the years, on how to use this action for public forks.
 
 The workflow below runs whenever a commit is pushed to the `main`-branch or when activity on a pull request happens, by listening to the [`pull_request_target`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target) event.
@@ -344,64 +341,9 @@ jobs:
     - uses: stefanzweifel/git-auto-commit-action@v5
 ```
 
-### Workflow should run in **forked** repository
-
-> [!WARNING] 
-> **This part of the documentation is outdated.**   
-> We were not able to configure a GitHub Action workflow for forks, that the workflow would run in the fork / head repository.
-> Please let us know in the [discussions](https://github.com/stefanzweifel/git-auto-commit-action/discussions)-area, if and how you achieved that.
-
-If the workflow should run in the forked repository, follow these steps:
-
-1. In addition to listening to the `pull_request` event in your Workflow triggers, you have to add an additional event: `pull_request_target`. You can learn more about this event in [the GitHub docs](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target).
-2. GitHub Action has to be enabled on the forked repository. \
-For security reasons, GitHub does not automatically enable GitHub Actions on forks. The user has to explicitly enable GitHub Actions in the "Actions"-tab of the forked repository. (Mention this in your projects README or CONTRIBUTING.md!)
-
-After you have added the `pull_request_target` to your desired Workflow and the forked repository has enabled Actions and a new Pull Request is opened, the Workflow will run **on the forked repository**.
-
-Due to the fact that the Workflow is not run on the repository the Pull Request is opened in, you won't see any status indicators inside the Pull Request.
-
-#### Example
-
-The following workflow runs `php-cs-fixer` (a code linter and fixer for PHP) when a `pull_request` is opened. We've added the `pull_request_target`-trigger too, to make it work for forks.
-
-```yaml
-name: Format PHP
-
-on: [push, pull_request, pull_request_target]
-
-jobs:
-  php-cs-fixer:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Run php-cs-fixer
-      uses: docker://oskarstark/php-cs-fixer-ga
-
-    - uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: Apply php-cs-fixer changes
-```
-
-Next time a user forks your project **and** enabled GitHub Actions **and** opened a Pull Request, the Workflow will run on the **forked** repository and will push commits to the same branch.
-
-Here's how the Pull Request will look like:
-
-![Screenshot of a Pull Request from a Fork](https://user-images.githubusercontent.com/1080923/90955964-9c74c080-e482-11ea-8097-aa7f5161f50e.png)
-
-
-As you can see, your contributors have to go through hoops to make this work. **For Workflows which run linters and fixers (like the example above) we recommend running them when a push happens on the `main`-branch.**
-
-
 For more information about running Actions on forks, see [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/).
 
-</details>
-
 ### Using `--amend` and `--no-edit` as commit options
-
-<details>
-<summary>Expand to learn more</summary>
 
 If you would like to use this Action to create a commit using [`--amend`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---amend) and [`--no-edit`](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---no-edit) you need to make some adjustments.
 
@@ -437,8 +379,6 @@ The steps in your workflow might look like this:
 ```
 
 See discussion in [#159](https://github.com/stefanzweifel/git-auto-commit-action/issues/159#issuecomment-845347950) for details.
-
-</details>
 
 ## Troubleshooting
 ### Action does not push commit to repository
