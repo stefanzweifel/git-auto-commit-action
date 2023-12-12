@@ -296,7 +296,15 @@ However, there are a couple of ways to use this Actions in Workflows that should
 
 ### Workflow should run in **base** repository
 
-The workflow below runs whenever a commit is pushed to the `main`-branch or when activity on a pull request happens, by listening to the  [`pull_request_target`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target) event.
+> [!CAUTION]
+> The following section explains how you can use git-auto-commit in combination with the `pull_request_target` trigger.
+> **Using `pull_request_target` in your workflows can lead to repository compromise as [mentioned](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/) by GitHub's own security team. This means, that a bad actor could potentially leak/steal your GitHub Actions repository secrets.**
+> Please be aware of this risk when using `pull_request_target` in your workflows.
+> 
+> If your workflow runs code-fixing tools, consider running the workflow on your default branch by listening to the `push` event or use a third-party tool like [autofix.ci](https://autofix.ci/).
+> We keep this documentation around, as many questions came in over the years, on how to use this action for public forks.
+
+The workflow below runs whenever a commit is pushed to the `main`-branch or when activity on a pull request happens, by listening to the [`pull_request_target`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target) event.
 
 If the workflow is triggered by the `pull_request_target`-event, the workflow will run in the context of the base of the pull request, rather than in the context of the merge commit, as the `pull_request` event does.
 In other words, this will allow your workflow to be run in the repository where the pull request is opened to and will push changes back to the fork.
