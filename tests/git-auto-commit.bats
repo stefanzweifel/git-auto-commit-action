@@ -463,10 +463,6 @@ cat_github_output() {
 }
 
 @test "It pushes generated commit and tag to remote branch and updates commit sha" {
-    # Create "a-new-branch"-branch and then immediately switch back to ${FAKE_DEFAULT_BRANCH}
-    git checkout -b a-new-branch
-    git checkout ${FAKE_DEFAULT_BRANCH}
-
     INPUT_BRANCH="a-new-branch"
     INPUT_TAGGING_MESSAGE="v2.0.0"
 
@@ -489,7 +485,7 @@ cat_github_output() {
     assert_output --partial refs/tags/v2.0.0
 
     # Assert that branch "a-new-branch" was updated on remote
-    current_sha="$(git rev-parse --verify --short a-new-branch)"
+    current_sha="$(git rev-parse --verify --short ${FAKE_DEFAULT_BRANCH})"
     remote_sha="$(git rev-parse --verify --short origin/a-new-branch)"
 
     assert_equal $current_sha $remote_sha
