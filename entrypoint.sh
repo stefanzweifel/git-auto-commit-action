@@ -90,26 +90,26 @@ _switch_to_branch() {
     echo "INPUT_BRANCH value: $INPUT_BRANCH";
 
     # Fetch remote to make sure that repo can be switched to the right branch.
-    if "$INPUT_SKIP_FETCH"; then
-        _log "debug" "git-fetch will not be executed.";
-    else
-        git fetch --depth=1;
-    fi
+    # if "$INPUT_SKIP_FETCH"; then
+    #     _log "debug" "git-fetch will not be executed.";
+    # else
+    #     git fetch --depth=1;
+    # fi
 
-    # If `skip_checkout`-input is true, skip the entire checkout step.
-    if "$INPUT_SKIP_CHECKOUT"; then
-        _log "debug" "git-checkout will not be executed.";
-    else
-        # Create new local branch if `create_branch`-input is true
-        if "$INPUT_CREATE_BRANCH"; then
-            # shellcheck disable=SC2086
-            git checkout -B $INPUT_BRANCH --;
-        else
-            # Switch to branch from current Workflow run
-            # shellcheck disable=SC2086
-            git checkout $INPUT_BRANCH --;
-        fi
-    fi
+    # # If `skip_checkout`-input is true, skip the entire checkout step.
+    # if "$INPUT_SKIP_CHECKOUT"; then
+    #     _log "debug" "git-checkout will not be executed.";
+    # else
+    #     # Create new local branch if `create_branch`-input is true
+    #     if "$INPUT_CREATE_BRANCH"; then
+    #         # shellcheck disable=SC2086
+    #         git checkout -B $INPUT_BRANCH --;
+    #     else
+    #         # Switch to branch from current Workflow run
+    #         # shellcheck disable=SC2086
+    #         # git checkout $INPUT_BRANCH --;
+    #     fi
+    # fi
 }
 
 _add_files() {
