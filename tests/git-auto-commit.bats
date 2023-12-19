@@ -687,8 +687,7 @@ cat_github_output() {
     assert_line -e "commit_hash=[0-9a-f]{40}$"
 }
 
-@test "it creates new local branch and pushes branch to remote even if the remote branch already exists" {
-
+@test "It creates new local branch and pushes branch to remote even if the remote branch already exists" {
     # Create `existing-remote-branch` on remote with changes the local repository does not yet have
     cd $FAKE_TEMP_LOCAL_REPOSITORY
     git checkout -b "existing-remote-branch"
@@ -705,7 +704,6 @@ cat_github_output() {
     cd $FAKE_LOCAL_REPOSITORY
 
     INPUT_BRANCH="existing-remote-branch"
-    INPUT_CREATE_BRANCH=true
 
     run git branch
     refute_line --partial "existing-remote-branch"
@@ -733,13 +731,14 @@ cat_github_output() {
     assert_line "::debug::Push commit to remote branch existing-remote-branch"
 
     run git branch
-    assert_line --partial "existing-remote-branch"
+    assert_line --partial ${FAKE_DEFAULT_BRANCH}
+    refute_line --partial "existing-remote-branch"
 
     run git branch -r
     assert_line --partial "origin/existing-remote-branch"
 
     # Assert that branch "existing-remote-branch" was updated on remote
-    current_sha="$(git rev-parse --verify --short existing-remote-branch)"
+    current_sha="$(git rev-parse --verify --short ${FAKE_DEFAULT_BRANCH})"
     remote_sha="$(git rev-parse --verify --short origin/existing-remote-branch)"
 
     assert_equal $current_sha $remote_sha
@@ -749,7 +748,7 @@ cat_github_output() {
     assert_line -e "commit_hash=[0-9a-f]{40}$"
 }
 
-@test "script fails if new local branch is checked out and push fails as remote has newer commits than local" {
+@test "It fails if local branch is behind remote and when remote has newer commits" {
     # Create `existing-remote-branch` on remote with changes the local repository does not yet have
     cd $FAKE_TEMP_LOCAL_REPOSITORY
     git checkout -b "existing-remote-branch"
@@ -766,7 +765,6 @@ cat_github_output() {
     cd $FAKE_LOCAL_REPOSITORY
 
     INPUT_BRANCH="existing-remote-branch"
-    INPUT_CREATE_BRANCH=true
 
     run git branch
     refute_line --partial "existing-remote-branch"
@@ -781,17 +779,18 @@ cat_github_output() {
 
     assert_failure
 
-    assert_line "hint: Updates were rejected because the tip of your current branch is behind"
+    assert_line "hint: Updates were rejected because a pushed branch tip is behind its remote"
 
     # Assert that branch exists locally and on remote
     run git branch
-    assert_line --partial "existing-remote-branch"
+    assert_line --partial ${FAKE_DEFAULT_BRANCH}
+    refute_line --partial "existing-remote-branch"
 
     run git branch -r
     assert_line --partial "origin/existing-remote-branch"
 
     # Assert that branch "existing-remote-branch" was not updated on remote
-    current_sha="$(git rev-parse --verify --short existing-remote-branch)"
+    current_sha="$(git rev-parse --verify --short ${FAKE_DEFAULT_BRANCH})"
     remote_sha="$(git rev-parse --verify --short origin/existing-remote-branch)"
 
     refute [assert_equal $current_sha $remote_sha]
