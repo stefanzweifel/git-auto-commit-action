@@ -572,9 +572,8 @@ cat_github_output() {
     assert_line "changes_detected=true"
 }
 
-@test "script fails to push commit to new branch that does not exist yet" {
+@test "It pushes commit to new branch that does not exist yet" {
     INPUT_BRANCH="not-existend-branch"
-    INPUT_CREATE_BRANCH=false
 
     run git branch
     refute_line --partial "not-existend-branch"
@@ -586,25 +585,24 @@ cat_github_output() {
 
     run git_auto_commit
 
-    assert_failure
+    assert_success
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
     assert_line "INPUT_BRANCH value: not-existend-branch"
-    assert_line "fatal: invalid reference: not-existend-branch"
 
     run git branch
+    assert_line --partial ${FAKE_DEFAULT_BRANCH}
     refute_line --partial "not-existend-branch"
 
     run git branch -r
-    refute_line --partial "origin/not-existend-branch"
+    assert_line --partial "origin/not-existend-branch"
 
     run cat_github_output
     assert_line "changes_detected=true"
 }
 
-@test "It creates new local branch and pushes the new branch to remote" {
+@test "It does not create new local branch and pushes the commit to a new branch on remote" {
     INPUT_BRANCH="not-existend-branch"
-    INPUT_CREATE_BRANCH=true
 
     run git branch
     refute_line --partial "not-existend-branch"
@@ -629,9 +627,12 @@ cat_github_output() {
     assert_line "::debug::Apply push options "
     assert_line "::debug::Push commit to remote branch not-existend-branch"
 
+    # Assert that local repo is still on default branch and not on new branch.
     run git branch
-    assert_line --partial "not-existend-branch"
+    assert_line --partial ${FAKE_DEFAULT_BRANCH}
+    refute_line --partial "not-existend-branch"
 
+    # Assert branch has been created on remote
     run git branch -r
     assert_line --partial "origin/not-existend-branch"
 
@@ -640,8 +641,7 @@ cat_github_output() {
     assert_line -e "commit_hash=[0-9a-f]{40}$"
 }
 
-@test "it does not create new local branch if local branch already exists" {
-
+@test "It does not create new local branch if local branch already exists" {
     git checkout -b not-existend-remote-branch
     git checkout ${FAKE_DEFAULT_BRANCH}
 
@@ -670,6 +670,11 @@ cat_github_output() {
     assert_line "INPUT_PUSH_OPTIONS: "
     assert_line "::debug::Apply push options "
     assert_line "::debug::Push commit to remote branch not-existend-remote-branch"
+
+    # Assert checked out branch is still the same.
+    run git rev-parse --abbrev-ref HEAD
+    assert_line --partial ${FAKE_DEFAULT_BRANCH}
+    refute_line --partial "not-existend-remote-branch"
 
     run git branch
     assert_line --partial "not-existend-remote-branch"
