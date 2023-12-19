@@ -796,7 +796,7 @@ cat_github_output() {
     refute [assert_equal $current_sha $remote_sha]
 }
 
-@test "It pushes commit to remote if branch already exists and local repo is behind its remote counterpart" {
+@test "It fails to push commit to remote if branch already exists and local repo is behind its remote counterpart" {
     # Create `new-branch` on remote with changes the local repository does not yet have
     cd $FAKE_TEMP_LOCAL_REPOSITORY
 
@@ -816,7 +816,7 @@ cat_github_output() {
 
     INPUT_BRANCH="new-branch"
 
-    # Assert that local remote does not know have "new-branch" locally nor does
+    # Assert that local remote does not have a "new-branch"-branch nor does
     # know about the remote branch.
     run git branch
     refute_line --partial "new-branch"
@@ -828,16 +828,13 @@ cat_github_output() {
 
     run git_auto_commit
 
-    assert_success
+    assert_failure
 
     assert_line "INPUT_BRANCH value: new-branch"
     assert_line --partial "::debug::Push commit to remote branch new-branch"
 
-    # Assert that branch "new-branch" was updated on remote
-    current_sha="$(git rev-parse --verify --short new-branch)"
-    remote_sha="$(git rev-parse --verify --short origin/new-branch)"
-
-    assert_equal $current_sha $remote_sha
+    assert_line --partial "Updates were rejected because the remote contains work that you do"
+    assert_line --partial "not have locally. This is usually caused by another repository pushing"
 }
 
 @test "throws fatal error if file pattern includes files that do not exist" {
