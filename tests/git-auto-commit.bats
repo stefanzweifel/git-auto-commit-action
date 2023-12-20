@@ -33,10 +33,7 @@ setup() {
     export INPUT_TAGGING_MESSAGE=""
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
-    export INPUT_SKIP_FETCH=false
-    export INPUT_SKIP_CHECKOUT=false
     export INPUT_DISABLE_GLOBBING=false
-    export INPUT_CREATE_BRANCH=false
     export INPUT_INTERNAL_GIT_BINARY=git
 
     # Set GitHub environment variables used by the GitHub Action
@@ -190,7 +187,6 @@ cat_github_output() {
     assert_failure
 
     assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "INPUT_BRANCH value: ${FAKE_DEFAULT_BRANCH}"
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
@@ -503,7 +499,6 @@ cat_github_output() {
 @test "it does not throw an error if not changes are detected and SKIP_DIRTY_CHECK is false" {
     INPUT_FILE_PATTERN="."
     INPUT_SKIP_DIRTY_CHECK=false
-    INPUT_SKIP_FETCH=false
 
     run git_auto_commit
 
@@ -620,7 +615,6 @@ cat_github_output() {
     git checkout ${FAKE_DEFAULT_BRANCH}
 
     INPUT_BRANCH="not-existend-remote-branch"
-    INPUT_CREATE_BRANCH=true
 
     run git branch
     assert_line --partial "not-existend-remote-branch"
