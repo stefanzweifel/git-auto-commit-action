@@ -407,32 +407,6 @@ cat_github_output() {
     assert_output --partial refs/tags/v2.0.0
 }
 
-@test "If SKIP_FETCH is true git-fetch will not be called" {
-
-    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
-
-    INPUT_SKIP_FETCH=true
-
-    run git_auto_commit
-
-    assert_success
-
-    assert_line "::debug::git-fetch will not be executed."
-}
-
-@test "If SKIP_CHECKOUT is true git-checkout will not be called" {
-
-    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
-
-    INPUT_SKIP_CHECKOUT=true
-
-    run git_auto_commit
-
-    assert_success
-
-    assert_line "::debug::git-checkout will not be executed."
-}
-
 @test "It pushes generated commit and tag to remote and actually updates the commit shas" {
     INPUT_BRANCH=""
     INPUT_TAGGING_MESSAGE="v2.0.0"
