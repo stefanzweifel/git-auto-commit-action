@@ -802,7 +802,7 @@ cat_github_output() {
     assert_line --partial "::debug::Push commit to remote branch new-branch"
 
     assert_line --partial "Updates were rejected because the remote contains work that you do"
-    assert_line --partial "not have locally. This is usually caused by another repository pushing"
+    assert_line --partial "This is usually caused by another repository pushing"
 }
 
 @test "throws fatal error if file pattern includes files that do not exist" {
