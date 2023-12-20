@@ -59,9 +59,8 @@ The following is an extended example with all available options.
     # Defaults to "Apply automatic changes"
     commit_message: Automated Change
 
-    # Optional. Local and remote branch name where commit is going to be pushed
-    #  to. Defaults to the current branch.
-    #  You might need to set `create_branch: true` if the branch does not exist.
+    # Optional. Remote branch name where commit is going to be pushed to. 
+    # Defaults to the current branch.
     branch: feature-123
 
     # Optional. Options used by `git-commit`.
@@ -102,19 +101,10 @@ The following is an extended example with all available options.
     
     # Optional. Disable dirty check and always try to create a commit and push
     skip_dirty_check: true    
-    
-    # Optional. Skip internal call to `git fetch`
-    skip_fetch: true    
-    
-    # Optional. Skip internal call to `git checkout`
-    skip_checkout: true
 
     # Optional. Prevents the shell from expanding filenames. 
     # Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
     disable_globbing: true
-
-    # Optional. Create given branch name in local and remote repository.
-    create_branch: true
 ```
 
 Please note that the Action depends on `bash`. If you're using the Action in a job in combination with a custom Docker container, make sure that `bash` is installed.
@@ -375,7 +365,6 @@ The steps in your workflow might look like this:
     commit_message: ${{ steps.last-commit-message.outputs.msg }}
     commit_options: '--amend --no-edit'
     push_options: '--force'
-    skip_fetch: true
 ```
 
 See discussion in [#159](https://github.com/stefanzweifel/git-auto-commit-action/issues/159#issuecomment-845347950) for details.
