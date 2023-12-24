@@ -82,7 +82,7 @@ The following is an extended example with all available options.
     # Optional commit user and author settings
     commit_user_name: My GitHub Actions Bot # defaults to "github-actions[bot]"
     commit_user_email: my-github-actions-bot@example.org # defaults to "41898282+github-actions[bot]@users.noreply.github.com"
-    commit_author: Author <actions@github.com> # defaults to author of the commit that triggered the run
+    commit_author: Author <actions@github.com> # defaults to "username <username@users.noreply.github.com>", where "username" belongs to the author of the commit that triggered the run
 
     # Optional. Tag name being created in the local repository and 
     # pushed to remote repository and defined branch.
@@ -353,6 +353,8 @@ If you would like to use this Action to create a commit using [`--amend`](https:
 First, you need to extract the previous commit message by using `git log -1 --pretty=%s`.
 Then you need to provide this last commit message to the Action through the `commit_message` input option.
 
+By default, the commit author is changed to `username <username@users.noreply.github.com>`, where `username` is the name of the user who triggered the workflow (`github.actor`). If you want to preserve the name and email of the original author, you must extract them from the last commit and provide them to the Action through the `commit_author` input option.
+
 Finally, you have to use `push_options: '--force'` to overwrite the git history on the GitHub remote repository. (git-auto-commit will not do a `git-rebase` for you!)
 
 The steps in your workflow might look like this:
@@ -366,13 +368,15 @@ The steps in your workflow might look like this:
 # Other steps in your workflow to trigger a changed file
 
 - name: Get last commit message
-  id: last-commit-message
+  id: last-commit
   run: |
-    echo "msg=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
+    echo "message=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
+    echo "author=$(git log -1 --pretty=\"%an <%ae>\")" >> $GITHUB_OUTPUT
 
 - uses: stefanzweifel/git-auto-commit-action@v5
   with:
-    commit_message: ${{ steps.last-commit-message.outputs.msg }}
+    commit_author: ${{ steps.last-commit.outputs.author }}
+    commit_message: ${{ steps.last-commit.outputs.message }}
     commit_options: '--amend --no-edit'
     push_options: '--force'
     skip_fetch: true
