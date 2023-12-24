@@ -353,7 +353,7 @@ If you would like to use this Action to create a commit using [`--amend`](https:
 First, you need to extract the previous commit message by using `git log -1 --pretty=%s`.
 Then you need to provide this last commit message to the Action through the `commit_message` input option.
 
-By default, the commit author is changed to `username <username@users.noreply.github.com>`, where `username` is the name of the user who triggered the workflow (`github.actor`). If you want to preserve the name and email of the original author, you must extract them from the last commit and provide them to the Action through the `commit_author` input option.
+By default, the commit author is changed to `username <username@users.noreply.github.com>`, where `username` is the name of the user who triggered the workflow (The [`github.actor`](https://docs.github.com/en/actions/learn-github-actions/contexts#github-context) context is used here). If you want to preserve the name and email of the original author, you must extract them from the last commit and provide them to the Action through the `commit_author` input option.
 
 Finally, you have to use `push_options: '--force'` to overwrite the git history on the GitHub remote repository. (git-auto-commit will not do a `git-rebase` for you!)
 
