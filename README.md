@@ -48,7 +48,7 @@ jobs:
 ```
 
 > [!NOTE]
-> The Action has to be used in a Job that runs on a UNIX system (e.g. `ubuntu-latest`).
+> The Action has to be used in a Job that runs on a UNIX-like system (e.g. `ubuntu-latest`).
 
 The following is an extended example with all available options.
 
