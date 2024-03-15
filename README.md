@@ -167,9 +167,16 @@ You can use these outputs to trigger other Actions in your Workflow run based on
 - `changes_detected`: Returns either "true" or "false" if the repository was dirty and files have changed.
 - `commit_hash`: Returns the full hash of the commit if one was created.
 
+**⚠️ When using outputs, the step needs to be given an id. See example below.**
+
 ### Example
 
 ```yaml
+  - uses: stefanzweifel/git-auto-commit-action@v5
+    id: auto-commit-action #mandatory for the output to show up in ${{ steps }}
+    with:
+      commit_message: Apply php-cs-fixer changes
+
   - name: "Run if changes have been detected"
     if: steps.auto-commit-action.outputs.changes_detected == 'true'
     run: echo "Changes!"
