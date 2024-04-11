@@ -82,8 +82,15 @@ _git_is_dirty() {
     echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
     read -r -a INPUT_FILE_PATTERN_EXPANDED <<< "$INPUT_FILE_PATTERN";
 
+    # capture stderr
+    gitStatusMessage="$((git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN_EXPANDED:+${INPUT_FILE_PATTERN_EXPANDED[@]}} >/dev/null ) 2>&1)";
     # shellcheck disable=SC2086
-    [ -n "$(git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN_EXPANDED:+${INPUT_FILE_PATTERN_EXPANDED[@]}})" ]
+    gitStatus="$(git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN_EXPANDED:+${INPUT_FILE_PATTERN_EXPANDED[@]}})";
+    if [ $? -ne 0 ]; then
+        _log "error" "git-status failed with:<$gitStatusMessage>";
+        exit 1;
+    fi
+    [ -n "$gitStatus" ]
 }
 
 _switch_to_branch() {

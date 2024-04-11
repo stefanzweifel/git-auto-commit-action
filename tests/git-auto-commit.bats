@@ -8,6 +8,7 @@ setup() {
     export FAKE_LOCAL_REPOSITORY="${BATS_TEST_DIRNAME}/tests_local_repository"
     export FAKE_REMOTE="${BATS_TEST_DIRNAME}/tests_remote_repository"
     export FAKE_TEMP_LOCAL_REPOSITORY="${BATS_TEST_DIRNAME}/tests_clone_of_remote_repository"
+    export FAKE_FOLDER_WITHOUT_GIT_REPO="/tmp/tests_folder_without_git_repo"
 
     # While it is likely the GitHub hosted runners will use master as the default branch,
     # locally anyone may change that. So for tests lets grab whatever is currently set
@@ -58,6 +59,7 @@ teardown() {
     rm -rf "${FAKE_LOCAL_REPOSITORY}"
     rm -rf "${FAKE_REMOTE}"
     rm -rf "${FAKE_TEMP_LOCAL_REPOSITORY}"
+    rm -rf "${INPUT_REPOSITORY}"
 
     if [ -z ${GITHUB_OUTPUT+x} ]; then
         echo "GITHUB_OUTPUT is not set"
@@ -1111,4 +1113,15 @@ END
     # Assert last commit was signed off
     run git log -n 1
     assert_output --partial $COMMIT_MESSAGE
+}
+
+@test "It exits with error message if entrypoint.sh is being run not in a git repository" {
+    INPUT_REPOSITORY="${FAKE_FOLDER_WITHOUT_GIT_REPO}"
+
+    mkdir "${INPUT_REPOSITORY}"
+
+    run git_auto_commit
+
+    assert_failure;
+    assert_line "::error::git-status failed with:<fatal: not a git repository (or any of the parent directories): .git>"
 }
