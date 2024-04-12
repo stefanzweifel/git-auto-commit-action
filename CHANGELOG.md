@@ -5,9 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.0.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.0.1...HEAD)
 
 > TBD
+
+## [v5.0.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.0.0...v5.0.1) - 2024-04-12
+
+### Fixed
+
+- Fail if attempting to execute git commands in a directory that is not a git-repo. ([#326](https://github.com/stefanzweifel/git-auto-commit-action/pull/326)) [@ccomendant](https://github.com/@ccomendant)
+
+### Dependency Updates
+
+- Bump bats from 1.10.0 to 1.11.0 ([#325](https://github.com/stefanzweifel/git-auto-commit-action/pull/325)) [@dependabot](https://github.com/@dependabot)
+- Bump release-drafter/release-drafter from 5 to 6 ([#319](https://github.com/stefanzweifel/git-auto-commit-action/pull/319)) [@dependabot](https://github.com/@dependabot)
+
+### Misc
+
+- Clarify `commit_author` input option ([#315](https://github.com/stefanzweifel/git-auto-commit-action/pull/315)) [@npanuhin](https://github.com/@npanuhin)
+- Add step id explanation for output in README.md ([#324](https://github.com/stefanzweifel/git-auto-commit-action/pull/324)) [@ChristianVermeulen](https://github.com/@ChristianVermeulen)
+- Linux is not UNIX ([#321](https://github.com/stefanzweifel/git-auto-commit-action/pull/321)) [@couling](https://github.com/@couling)
 
 ## [v5.0.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v4.16.0...v5.0.0) - 2023-10-06
 
