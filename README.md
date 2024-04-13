@@ -40,8 +40,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
-      # Other steps that change files in the repository
+      # Other steps that change files in the repository go here
+      # …
 
       # Commit all changed files back to the repository
       - uses: stefanzweifel/git-auto-commit-action@v5
