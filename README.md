@@ -274,11 +274,32 @@ The example below can be used as a starting point to generate a multiline commit
         commit_message: ${{ steps.commit_message_step.outputs.commit_message }}
 ```  
 
-### Signing Commits & Other Git Command Line Options
+### Signing Commits
 
-Using command lines options needs to be done manually for each workflow which you require the option enabled. So for example signing commits requires you to import the gpg signature each and every time. The following list of actions are worth checking out if you need to automate these tasks regularly.
+If you would like to sign your commits using a GPG key, you will need to use an additional action. 
+You can use the [crazy-max/ghaction-import-gpg](https://github.com/crazy-max/ghaction-import-gpg) action and follow its setup instructions.
 
-- [Import GPG Signature](https://github.com/crazy-max/ghaction-import-gpg) (Suggested by [TGTGamer](https://github.com/tgtgamer))
+As git-auto-commit by default does not use **your** username and email when creating a commit, you have to override these values in your workflow.
+
+```yml
+- name: "Import GPG key"
+  id: import-gpg
+  uses: crazy-max/ghaction-import-gpg@v6
+  with:
+    gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+    passphrase: ${{ secrets.GPG_PASSPHRASE }}
+    git_user_signingkey: true
+    git_commit_gpgsign: true
+
+- name: "Commit and push changes"
+  uses: stefanzweifel/git-auto-commit-action@v5
+  with:
+     commit_author: "${{ steps.import-gpg.outputs.name }} <${{ steps.import-gpg.outputs.email }}>"
+     commit_user_name: ${{ steps.import-gpg.outputs.name }}
+     commit_user_email: ${{ steps.import-gpg.outputs.email }}
+```
+
+See discussion [#334](https://github.com/stefanzweifel/git-auto-commit-action/discussions/334) for details.
 
 ### Use in forks from private repositories
 
