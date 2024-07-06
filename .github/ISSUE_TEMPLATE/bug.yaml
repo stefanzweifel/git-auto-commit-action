@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Before opening a bug report, please search for the behaviour in the existing issues. 
+        Before opening a bug report, please search for the behaviour in existing issues or discussions. 
         
         ---
         
@@ -17,7 +17,7 @@ body:
       description: "Which exact version of git-auto-commit are you using in your Workflow?"
       placeholder: "v4.14.0"
     validations:
-      required: true  
+      required: true
   - type: dropdown
     id: machine
     attributes:
@@ -33,7 +33,7 @@ body:
     id: bug-description
     attributes:
       label: Bug description
-      description: What exactly happened?
+      description: What exactly happened? Please describe your problem in detail.
     validations:
       required: true
   - type: textarea
@@ -52,7 +52,7 @@ body:
     id: example-workflow
     attributes:
       label: Example Workflow
-      description: Please share your GitHub Actions workflow which causes the bug. We use this to reproduce the error. No need for backticks here.
+      description: Please share the YAML-code of your GitHub Actions workflow which causes the bug. We use this to reproduce the error. If the workflow is in a private repostory, please provide a minimal example. (No need for backticks here, the pasted code will be correctly formatted.)
       render: yaml
     validations:
       required: true
@@ -60,5 +60,10 @@ body:
     id: logs
     attributes:
       label: Relevant log output
-      description: If applicable, provide relevant log output. No need for backticks here.
+      description: If applicable, provide relevant log output. Please copy and paste the output here, and make sure to remove any sensitive information. (No need for backticks here, the pasted code will be correctly formatted.)
       render: shell
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: If applicable, please provide the repository where the bug occurred.
