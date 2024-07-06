@@ -238,6 +238,12 @@ If you create a personal access token, apply the `repo` and `workflow` scopes.
 
 If you work in an organization and don't want to create a PAT from your personal account, we recommend using a [robot account](https://docs.github.com/en/github/getting-started-with-github/types-of-github-accounts) for the token.
 
+### Prevent Infinite Loop when using a Personal Access Token
+
+If you're using a Personal Access Token (PAT) to push commits to GitHub repository, the resulting commit or push can trigger other GitHub Actions workflows. This can result in an infinite loop.
+
+If you would like to prevent this, you can add `skip-checks:true` to the commit message. See [Skipping workflow runs](https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs) for details.
+
 ### Change to file is not detected
 
 Does your workflow change a file, but "git-auto-commit" does not detect the change? Check the `.gitignore` that applies to the respective file. You might have accidentally marked the file to be ignored by git.
