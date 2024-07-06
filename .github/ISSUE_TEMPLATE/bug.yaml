@@ -63,7 +63,7 @@ body:
       description: If applicable, provide relevant log output. Please copy and paste the output here, and make sure to remove any sensitive information. (No need for backticks here, the pasted code will be correctly formatted.)
       render: shell
   - type: input
-    id: repository
+    id: repository-url
     attributes:
       label: Repository
       description: If applicable, please provide the repository where the bug occurred.
