@@ -427,6 +427,15 @@ please update your Workflow configuration and usage of [`actions/checkout`](http
 
 Updating the `token` value with a Personal Access Token should fix your issues.
 
+### git-auto-commit fails to push commit that creates or udpates files in `.github/workflows/`
+
+The default `GITHUB_TOKEN` issued by GitHub Action does not have permission to make changes to workflow files located in `.github/workflows/`.
+To fix this, please create a personal access token (PAT) and pass the token to the `actions/checkout`-step in your workflow. (Similar to [how to push to protected branches](https://github.com/stefanzweifel/git-auto-commit-action?tab=readme-ov-file#push-to-protected-branches)).
+
+If a PAT does not work for you, you could also create a new GitHub app and use it's token in your workflows. See [this comment in #87](https://github.com/stefanzweifel/git-auto-commit-action/issues/87#issuecomment-1939138661) for details.
+
+See [#322](https://github.com/stefanzweifel/git-auto-commit-action/issues/322) for details and discussions around this topic.
+
 ### Push to protected branches
 
 If your repository uses [protected branches](https://help.github.com/en/github/administering-a-repository/configuring-protected-branches) you have to make some changes to your Workflow for the Action to work properly: You need a Personal Access Token and you either have to allow force pushes or the Personal Access Token needs to belong to an Administrator.
