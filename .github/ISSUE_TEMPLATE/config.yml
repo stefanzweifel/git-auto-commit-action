@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/stefanzweifel/git-auto-commit-action/discussions/new?category=help
     about: If you can't get something to work the way you expect, open a question in our discussion forums.
   - name: Feature Request
-    url: https://github.com/tailwindlabs/tailwindcss/discussions/new?category=ideas
+    url: https://github.com/stefanzweifel/git-auto-commit-action/discussions/new?category=ideas
     about: 'Suggest any ideas you have using our discussion forums.'
