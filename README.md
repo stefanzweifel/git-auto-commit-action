@@ -234,7 +234,8 @@ storing the token as a secret in your repository and then passing the new token 
     token: ${{ secrets.PAT }}
 ```
 
-If you create a personal access token, apply the `repo` and `workflow` scopes.
+If you create a personal access token (classic), apply the `repo` and `workflow` scopes.
+If you create a fine-grained personal access token, apply the `Contents`-permissions.
 
 If you work in an organization and don't want to create a PAT from your personal account, we recommend using a [robot account](https://docs.github.com/en/github/getting-started-with-github/types-of-github-accounts) for the token.
 
@@ -448,6 +449,9 @@ If your repository uses [protected branches](https://docs.github.com/en/reposito
 
 First, you have to create a new [Personal Access Token (PAT)](https://github.com/settings/tokens/new),
 store the token as a secret in your repository and pass the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action step.
+
+If you create a personal access token (classic), apply the `repo` and `workflow` scopes.
+If you create a fine-grained personal access token, apply the `Contents`-permissions.
 
 ```yaml
 - uses: actions/checkout@v4
