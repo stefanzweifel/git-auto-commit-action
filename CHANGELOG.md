@@ -5,9 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.0.1...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.1.0...HEAD)
 
 > TBD
+
+## [v5.1.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.0.1...v5.1.0) - 2025-01-11
+
+### Changed
+
+- Include `github.actor_id` in default `commit_author` ([#354](https://github.com/stefanzweifel/git-auto-commit-action/pull/354)) [@parkerbxyz](https://github.com/@parkerbxyz)
+
+### Fixed
+
+- docs(README): fix broken protected branch docs link ([#346](https://github.com/stefanzweifel/git-auto-commit-action/pull/346)) [@scarf005](https://github.com/@scarf005)
+- Update README.md ([#343](https://github.com/stefanzweifel/git-auto-commit-action/pull/343)) [@Kludex](https://github.com/@Kludex)
+
+### Dependency Updates
+
+- Bump bats from 1.11.0 to 1.11.1 ([#353](https://github.com/stefanzweifel/git-auto-commit-action/pull/353)) [@dependabot](https://github.com/@dependabot)
+- Bump github/super-linter from 6 to 7 ([#342](https://github.com/stefanzweifel/git-auto-commit-action/pull/342)) [@dependabot](https://github.com/@dependabot)
+- Bump github/super-linter from 5 to 6 ([#335](https://github.com/stefanzweifel/git-auto-commit-action/pull/335)) [@dependabot](https://github.com/@dependabot)
 
 ## [v5.0.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.0.0...v5.0.1) - 2024-04-12
 
