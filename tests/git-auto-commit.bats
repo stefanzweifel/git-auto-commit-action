@@ -1088,5 +1088,24 @@ END
     run git_auto_commit
 
     assert_failure;
-    assert_line "::error::git-status failed with:<fatal: not a git repository (or any of the parent directories): .git>"
+    assert_line "::error::Not a git repository. Please make sure to run this action in a git repository. Adjust the `repository` input if necessary."
+}
+
+@test "It detects if the repository is in a detached state and exits with an error" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    # Bring local repository into a detached state
+    prev_commit=$(git rev-parse HEAD~1);
+    git checkout "$prev_commit";
+
+    touch "${FAKE_TEMP_LOCAL_REPOSITORY}"/remote-files{4,5,6}.txt
+
+    run git_auto_commit
+
+    assert_failure;
+    assert_line "::error::Repository is in detached HEAD state. Please make sure you check out a branch. Adjust the `ref` input accordingly."
 }
