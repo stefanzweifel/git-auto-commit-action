@@ -103,7 +103,7 @@ _check_if_is_git_repository() {
 _check_if_repository_is_in_detached_state() {
     if [ -z "$(git symbolic-ref HEAD)" ]
     then
-        _log "error" "Repository is in detached HEAD state. Please checkout a branch before committing.";
+        _log "error" "Repository is in detached HEAD state. Please make sure you check out a branch. Adjust the `ref` input accordingly.";
         exit 1;
     else
         _log "debug" "Repository is on a branch.";

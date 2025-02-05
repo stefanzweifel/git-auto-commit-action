@@ -1107,5 +1107,5 @@ END
     run git_auto_commit
 
     assert_failure;
-    assert_line "::error::Repository is in detached HEAD state. Please checkout a branch before committing."
+    assert_line "::error::Repository is in detached HEAD state. Please make sure you check out a branch. Adjust the `ref` input accordingly."
 }
