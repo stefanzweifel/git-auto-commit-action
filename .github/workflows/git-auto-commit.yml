@@ -17,12 +17,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
 
     - name: Use git-auto-commit-action
       id: "auto-commit-action"
       uses: ./
-      with:
-        ref: ${{ github.head_ref }}
 
     - name: "no changes detected"
       if: steps.auto-commit-action.outputs.changes_detected == 'false'
