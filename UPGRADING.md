@@ -6,5 +6,5 @@ The following options have been removed from git-auto-commit and can be removed 
 
 - `create_branch` (git-auto-commit no longer switches branches locally during a workflow run)
 - `skip_fetch`
-- `skipt_checkout`
+- `skip_checkout`
 
