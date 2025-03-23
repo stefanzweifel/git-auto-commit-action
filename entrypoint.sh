@@ -30,7 +30,7 @@ _main() {
     _check_if_git_is_available
 
     _switch_to_repository
-    if _git_tag_only; then
+    if "$INPUT_GIT_TAG_ONLY"; then
         _log "debug" "git tag only.";
         _set_github_output "git_tag_only" "true"
         _tag_commit
