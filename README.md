@@ -58,10 +58,6 @@ The following is an extended example with all available options.
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v5
   with:
-    # Perform a clean git tag and push, without commiting anything
-    # Default to false
-    git_tag_only: false
-
     # Optional. Commit message for the created commit.
     # Defaults to "Apply automatic changes"
     commit_message: Automated Change
@@ -122,6 +118,10 @@ The following is an extended example with all available options.
 
     # Optional. Create given branch name in local and remote repository.
     create_branch: true
+
+    # Perform a clean git tag and push, without commiting anything
+    # Default to false
+    create_git_tag_only: false
 ```
 
 Please note that the Action depends on `bash`. If you're using the Action in a job in combination with a custom Docker container, make sure that `bash` is installed.
