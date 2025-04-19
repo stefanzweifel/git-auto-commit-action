@@ -4,6 +4,10 @@ description: 'Automatically commits files which have been changed during the wor
 author: Stefan Zweifel <stefan@stefanzweifel.dev>
 
 inputs:
+  git_tag_only:
+    description: Perform a clean git tag and push, without commiting anything
+    required: false
+    default: false
   commit_message:
     description: Commit message
     required: false

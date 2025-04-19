@@ -21,6 +21,7 @@ setup() {
     export FAKE_DEFAULT_BRANCH=$(git config init.defaultBranch)
 
     # Set default INPUT variables used by the GitHub Action
+    export INPUT_GIT_TAG_ONLY=false
     export INPUT_REPOSITORY="${FAKE_LOCAL_REPOSITORY}"
     export INPUT_COMMIT_MESSAGE="Commit Message"
     export INPUT_BRANCH="${FAKE_DEFAULT_BRANCH}"
