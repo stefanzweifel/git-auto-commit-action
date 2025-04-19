@@ -21,7 +21,7 @@ setup() {
     export FAKE_DEFAULT_BRANCH=$(git config init.defaultBranch)
 
     # Set default INPUT variables used by the GitHub Action
-    export INPUT_GIT_TAG_ONLY=false
+    export INPUT_CREATE_GIT_TAG_ONLY=false
     export INPUT_REPOSITORY="${FAKE_LOCAL_REPOSITORY}"
     export INPUT_COMMIT_MESSAGE="Commit Message"
     export INPUT_BRANCH="${FAKE_DEFAULT_BRANCH}"
@@ -1125,4 +1125,55 @@ END
 
     assert_failure;
     assert_line "::error::git-status failed with:<fatal: not a git repository (or any of the parent directories): .git>"
+}
+
+@test "it creates a tag if create_git_tag_only is set to true and a message has been supplied" {
+    INPUT_CREATE_GIT_TAG_ONLY=true
+    INPUT_TAGGING_MESSAGE=v1.0.0
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "::debug::Create git tag only"
+
+    assert_line "::debug::Create tag v1.0.0"
+    refute_line "No tagging message supplied. No tag will be added."
+
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch ${FAKE_DEFAULT_BRANCH}"
+
+    run cat_github_output
+    assert_line "create_git_tag_only=true"
+    refute_line "changes_detected=false"
+    refute_line -e "commit_hash=[0-9a-f]{40}$"
+
+    # Assert a tag v1.0.0 has been created
+    run git tag
+    assert_output v1.0.0
+
+    run git ls-remote --tags --refs
+    assert_output --partial refs/tags/v1.0.0
+}
+
+@test "it output no tagging message supplied if no tagging message is set but create_git_tag_only is set to true" {
+    INPUT_CREATE_GIT_TAG_ONLY=true
+    INPUT_TAGGING_MESSAGE=""
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "::debug::Create git tag only"
+
+    run cat_github_output
+    assert_line "create_git_tag_only=true"
+    refute_line "changes_detected=false"
+    refute_line -e "commit_hash=[0-9a-f]{40}$"
+
+    # Assert no tag has been created
+    run git tag
+    assert_output ""
 }

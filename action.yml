@@ -4,10 +4,6 @@ description: 'Automatically commits files which have been changed during the wor
 author: Stefan Zweifel <stefan@stefanzweifel.dev>
 
 inputs:
-  git_tag_only:
-    description: Perform a clean git tag and push, without commiting anything
-    required: false
-    default: false
   commit_message:
     description: Commit message
     required: false
@@ -74,6 +70,10 @@ inputs:
   create_branch:
     description: Create new branch with the name of `branch`-input in local and remote repository, if it doesn't exist yet.
     default: false
+  create_git_tag_only:
+    description: Perform a clean git tag and push, without commiting anything
+    required: false
+    default: false
   internal_git_binary:
     description: Internal use only! Path to git binary used to check if git is available. (Don't change this!)
     default: git
@@ -83,6 +83,8 @@ outputs:
     description: Value is "true", if the repository was dirty and file changes have been detected. Value is "false", if no changes have been detected.
   commit_hash:
     description: Full hash of the created commit. Only present if the "changes_detected" output is "true".
+  create_git_tag_only:
+    description: Value is "true", if a git tag was created using the `create_git_tag_only`-input.
 
 runs:
   using: 'node20'
