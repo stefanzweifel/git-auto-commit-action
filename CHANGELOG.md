@@ -5,9 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.1.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.2.0...HEAD)
 
 > TBD
+
+## [v5.2.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.1.0...v5.2.0) - 2025-04-19
+
+### Added
+
+- Add `create_git_tag_only` option to skip commiting and always create a git-tag. ([#364](https://github.com/stefanzweifel/git-auto-commit-action/pull/364)) [@zMynxx](https://github.com/@zMynxx)
+- Add Test for `create_git_tag_only` feature ([#367](https://github.com/stefanzweifel/git-auto-commit-action/pull/367)) [@stefanzweifel](https://github.com/@stefanzweifel)
+
+### Fixed
+
+- docs: Update README.md per #354 ([#361](https://github.com/stefanzweifel/git-auto-commit-action/pull/361)) [@rasa](https://github.com/@rasa)
 
 ## [v5.1.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.0.1...v5.1.0) - 2025-01-11
 
