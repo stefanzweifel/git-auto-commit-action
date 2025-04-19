@@ -84,7 +84,7 @@ outputs:
   commit_hash:
     description: Full hash of the created commit. Only present if the "changes_detected" output is "true".
   create_git_tag_only:
-    description:
+    description: Value is "true", if a git tag was created using the `create_git_tag_only`-input.
 
 runs:
   using: 'node20'

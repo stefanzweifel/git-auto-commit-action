@@ -119,8 +119,8 @@ The following is an extended example with all available options.
     # Optional. Create given branch name in local and remote repository.
     create_branch: true
 
-    # Perform a clean git tag and push, without commiting anything
-    # Default to false
+    # Optional. Creates a new tag and pushes it to remote without creating a commit. 
+    # Skips dirty check and changed files. Must be used with `tagging_message`.
     create_git_tag_only: false
 ```
 
@@ -173,6 +173,7 @@ You can use these outputs to trigger other Actions in your Workflow run based on
 
 - `changes_detected`: Returns either "true" or "false" if the repository was dirty and files have changed.
 - `commit_hash`: Returns the full hash of the commit if one was created.
+- `create_git_tag_only`: Returns either "true" or "false" if a tag was created, when `create_git_tag_only` was used.
 
 **⚠️ When using outputs, the step needs to be given an id. See example below.**
 
