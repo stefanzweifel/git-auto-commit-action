@@ -1176,7 +1176,7 @@ END
 
     assert_success
 
-    assert_line "::warning::skip_fetch has been removed in v6. It does not have any effect anymore."
-    assert_line "::warning::skip_checkout has been removed in v6. It does not have any effect anymore."
-    assert_line "::warning::create_branch has been removed in v6. It does not have any effect anymore."
+    assert_line "::warning::git-auto-commit: skip_fetch has been removed in v6. It does not have any effect anymore."
+    assert_line "::warning::git-auto-commit: skip_checkout has been removed in v6. It does not have any effect anymore."
+    assert_line "::warning::git-auto-commit: create_branch has been removed in v6. It does not have any effect anymore."
 }
