@@ -38,6 +38,11 @@ setup() {
     export INPUT_DISABLE_GLOBBING=false
     export INPUT_INTERNAL_GIT_BINARY=git
 
+    # Deprecated variables. Will be removed in future versions
+    export INPUT_CREATE_BRANCH=false
+    export INPUT_SKIP_FETCH=false
+    export INPUT_SKIP_CHECKOUT=false
+
     # Set GitHub environment variables used by the GitHub Action
     temp_github_output_file=$(mktemp -t github_output_test.XXXXX)
     export GITHUB_OUTPUT="${temp_github_output_file}"
@@ -1160,4 +1165,18 @@ END
     # Assert no tag has been created
     run git tag
     assert_output ""
+}
+
+@test "it shows warning message if any deprecated options are used" {
+    INPUT_SKIP_FETCH=true
+    INPUT_SKIP_CHECKOUT=true
+    INPUT_CREATE_BRANCH=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "::warning::skip_fetch has been removed in v6. It does not have any effect anymore."
+    assert_line "::warning::skip_checkout has been removed in v6. It does not have any effect anymore."
+    assert_line "::warning::create_branch has been removed in v6. It does not have any effect anymore."
 }
