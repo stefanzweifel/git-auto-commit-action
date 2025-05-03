@@ -84,7 +84,7 @@ The following is an extended example with all available options.
     # Optional commit user and author settings
     commit_user_name: My GitHub Actions Bot # defaults to "github-actions[bot]"
     commit_user_email: my-github-actions-bot@example.org # defaults to "41898282+github-actions[bot]@users.noreply.github.com"
-    commit_author: Author <actions@github.com> # defaults to "username <username@users.noreply.github.com>", where "username" belongs to the author of the commit that triggered the run
+    commit_author: Author <actions@github.com> # defaults to "username <numeric_id+username@users.noreply.github.com>", where "numeric_id" and "username" belong to the author of the commit that triggered the run
 
     # Optional. Tag name being created in the local repository and 
     # pushed to remote repository and defined branch.
@@ -108,6 +108,10 @@ The following is an extended example with all available options.
     # Optional. Prevents the shell from expanding filenames. 
     # Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
     disable_globbing: true
+
+    # Optional. Creates a new tag and pushes it to remote without creating a commit. 
+    # Skips dirty check and changed files. Must be used with `tagging_message`.
+    create_git_tag_only: false
 ```
 
 Please note that the Action depends on `bash`. If you're using the Action in a job in combination with a custom Docker container, make sure that `bash` is installed.
@@ -159,6 +163,7 @@ You can use these outputs to trigger other Actions in your Workflow run based on
 
 - `changes_detected`: Returns either "true" or "false" if the repository was dirty and files have changed.
 - `commit_hash`: Returns the full hash of the commit if one was created.
+- `create_git_tag_only`: Returns either "true" or "false" if a tag was created, when `create_git_tag_only` was used.
 
 **⚠️ When using outputs, the step needs to be given an id. See example below.**
 

@@ -35,7 +35,12 @@ _main() {
 
     _check_if_repository_is_in_detached_state
 
-    if _git_is_dirty || "$INPUT_SKIP_DIRTY_CHECK"; then
+    if "$INPUT_CREATE_GIT_TAG_ONLY"; then
+        _log "debug" "Create git tag only";
+        _set_github_output "create_git_tag_only" "true"
+        _tag_commit
+        _push_to_github
+    elif _git_is_dirty || "$INPUT_SKIP_DIRTY_CHECK"; then
 
         _set_github_output "changes_detected" "true"
 
