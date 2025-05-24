@@ -27,9 +27,26 @@ _log() {
 }
 
 _main() {
+    if "$INPUT_SKIP_FETCH"; then
+        _log "warning" "git-auto-commit: skip_fetch has been removed in v6. It does not have any effect anymore.";
+    fi
+
+    if "$INPUT_SKIP_CHECKOUT"; then
+        _log "warning" "git-auto-commit: skip_checkout has been removed in v6. It does not have any effect anymore.";
+    fi
+
+    if "$INPUT_CREATE_BRANCH"; then
+        _log "warning" "git-auto-commit: create_branch has been removed in v6. It does not have any effect anymore.";
+    fi
+
     _check_if_git_is_available
 
     _switch_to_repository
+
+    _check_if_is_git_repository
+
+    _check_if_repository_is_in_detached_state
+
     if "$INPUT_CREATE_GIT_TAG_ONLY"; then
         _log "debug" "Create git tag only";
         _set_github_output "create_git_tag_only" "true"
@@ -38,8 +55,6 @@ _main() {
     elif _git_is_dirty || "$INPUT_SKIP_DIRTY_CHECK"; then
 
         _set_github_output "changes_detected" "true"
-
-        _switch_to_branch
 
         _add_files
 
@@ -90,36 +105,25 @@ _git_is_dirty() {
     gitStatusMessage="$((git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN_EXPANDED:+${INPUT_FILE_PATTERN_EXPANDED[@]}} >/dev/null ) 2>&1)";
     # shellcheck disable=SC2086
     gitStatus="$(git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN_EXPANDED:+${INPUT_FILE_PATTERN_EXPANDED[@]}})";
-    if [ $? -ne 0 ]; then
-        _log "error" "git-status failed with:<$gitStatusMessage>";
-        exit 1;
-    fi
     [ -n "$gitStatus" ]
 }
 
-_switch_to_branch() {
-    echo "INPUT_BRANCH value: $INPUT_BRANCH";
-
-    # Fetch remote to make sure that repo can be switched to the right branch.
-    if "$INPUT_SKIP_FETCH"; then
-        _log "debug" "git-fetch will not be executed.";
+_check_if_is_git_repository() {
+    if [ -d ".git" ]; then
+        _log "debug" "Repository found.";
     else
-        git fetch --depth=1;
+        _log "error" "Not a git repository. Please make sure to run this action in a git repository. Adjust the `repository` input if necessary.";
+        exit 1;
     fi
+}
 
-    # If `skip_checkout`-input is true, skip the entire checkout step.
-    if "$INPUT_SKIP_CHECKOUT"; then
-        _log "debug" "git-checkout will not be executed.";
+_check_if_repository_is_in_detached_state() {
+    if [ -z "$(git symbolic-ref HEAD)" ]
+    then
+        _log "error" "Repository is in detached HEAD state. Please make sure you check out a branch. Adjust the `ref` input accordingly.";
+        exit 1;
     else
-        # Create new local branch if `create_branch`-input is true
-        if "$INPUT_CREATE_BRANCH"; then
-            # shellcheck disable=SC2086
-            git checkout -B $INPUT_BRANCH --;
-        else
-            # Switch to branch from current Workflow run
-            # shellcheck disable=SC2086
-            git checkout $INPUT_BRANCH --;
-        fi
+        _log "debug" "Repository is on a branch.";
     fi
 }
 
@@ -167,6 +171,8 @@ _tag_commit() {
 }
 
 _push_to_github() {
+
+    echo "INPUT_BRANCH value: $INPUT_BRANCH";
 
     echo "INPUT_PUSH_OPTIONS: ${INPUT_PUSH_OPTIONS}";
     _log "debug" "Apply push options ${INPUT_PUSH_OPTIONS}";
