@@ -66,6 +66,18 @@ inputs:
   internal_git_binary:
     description: Internal use only! Path to git binary used to check if git is available. (Don't change this!)
     default: git
+  skip_fetch:
+    description: "Deprecated: skip_fetch has been removed in v6. It does not have any effect anymore."
+    required: false
+    default: false
+  skip_checkout:
+    description: "Deprecated: skip_checkout has been removed in v6. It does not have any effect anymore."
+    required: false
+    default: false
+  create_branch:
+    description: "Deprecated: create_branch has been removed in v6. It does not have any effect anymore."
+    default: false
+
 
 outputs:
   changes_detected:
