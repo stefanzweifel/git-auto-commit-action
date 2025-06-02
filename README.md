@@ -461,9 +461,11 @@ If you create a fine-grained personal access token, apply the `Contents`-permiss
 ```yaml
 - uses: actions/checkout@v4
   with:
-    token: ${{ secrets.PAT }}
+    # We pass the "PAT" secret to the checkout action; if no PAT secret is available to the workflow runner (eg. Dependabot) we fall back to the default "GITHUB_TOKEN".
+    token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
 ```
 You can learn more about Personal Access Token in the [GitHub documentation](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
+
 
 > [!TIP] 
 > If you're working in an organisation, and you don't want to create the PAT from your personal account, we recommend using a bot-account for such tokens.
