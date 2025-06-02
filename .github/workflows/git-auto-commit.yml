@@ -17,6 +17,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
 
     - name: Use git-auto-commit-action
       id: "auto-commit-action"
