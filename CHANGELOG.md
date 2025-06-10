@@ -5,9 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.2.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v6.0.0...HEAD)
 
 > TBD
+
+## [v6.0.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.2.0...v6.0.0) - 2025-06-10
+
+### Added
+
+- Throw error early if repository is in a detached state ([#357](https://github.com/stefanzweifel/git-auto-commit-action/pull/357))
+
+### Fixed
+
+- Fix PAT instructions with Dependabot ([#376](https://github.com/stefanzweifel/git-auto-commit-action/pull/376)) [@Dreamsorcerer](https://github.com/@Dreamsorcerer)
+
+### Removed
+
+- Remove support for `create_branch`, `skip_checkout`, `skip_Fetch` ([#314](https://github.com/stefanzweifel/git-auto-commit-action/pull/314))
 
 ## [v5.2.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v5.1.0...v5.2.0) - 2025-04-19
 
