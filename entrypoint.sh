@@ -45,7 +45,7 @@ _main() {
 
     _check_if_is_git_repository
 
-    _check_if_repository_is_in_detached_state
+    # _check_if_repository_is_in_detached_state
 
     if "$INPUT_CREATE_GIT_TAG_ONLY"; then
         _log "debug" "Create git tag only";
