@@ -38,6 +38,12 @@ setup() {
     export INPUT_DISABLE_GLOBBING=false
     export INPUT_INTERNAL_GIT_BINARY=git
 
+    # Hook variables
+    export INPUT_PRE_STATUS_HOOK=""
+    export INPUT_PRE_COMMIT_HOOK=""
+    export INPUT_PRE_PUSH_HOOK=""
+    export INPUT_POST_PUSH_HOOK=""
+
     # Deprecated variables. Will be removed in future versions
     export INPUT_CREATE_BRANCH=false
     export INPUT_SKIP_FETCH=false
@@ -1180,4 +1186,236 @@ END
     assert_line "::warning::git-auto-commit: skip_fetch has been removed in v6. It does not have any effect anymore."
     assert_line "::warning::git-auto-commit: skip_checkout has been removed in v6. It does not have any effect anymore."
     assert_line "::warning::git-auto-commit: create_branch has been removed in v6. It does not have any effect anymore."
+}
+
+@test "it executes pre_status_hook when provided" {
+    # Create a dummy file and setup the hook to create a marker file
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-created-by-hook.txt
+
+    INPUT_PRE_STATUS_HOOK="echo 'pre-status-hook-executed' > hook-marker.txt"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Executing pre_status hook"
+    assert_line "::debug::pre_status hook completed successfully"
+
+    # Verify the hook actually executed
+    assert [ -f "${FAKE_LOCAL_REPOSITORY}/hook-marker.txt" ]
+    run cat "${FAKE_LOCAL_REPOSITORY}/hook-marker.txt"
+    assert_output "pre-status-hook-executed"
+}
+
+@test "it executes pre_commit_hook when changes are detected" {
+    # Create a dummy file to trigger commit process
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-created-by-hook.txt
+
+    INPUT_PRE_COMMIT_HOOK="echo 'pre-commit-hook-executed' > pre-commit-marker.txt"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Executing pre_commit hook"
+    assert_line "::debug::pre_commit hook completed successfully"
+
+    # Verify the hook actually executed
+    assert [ -f "${FAKE_LOCAL_REPOSITORY}/pre-commit-marker.txt" ]
+    run cat "${FAKE_LOCAL_REPOSITORY}/pre-commit-marker.txt"
+    assert_output "pre-commit-hook-executed"
+}
+
+@test "it executes pre_push_hook when changes are detected" {
+    # Create a dummy file to trigger commit process
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file.txt
+
+    INPUT_PRE_PUSH_HOOK="echo 'pre-push-hook-executed' > pre-push-marker.txt"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Executing pre_push hook"
+    assert_line "::debug::pre_push hook completed successfully"
+
+    # Verify the hook actually executed
+    assert [ -f "${FAKE_LOCAL_REPOSITORY}/pre-push-marker.txt" ]
+    run cat "${FAKE_LOCAL_REPOSITORY}/pre-push-marker.txt"
+    assert_output "pre-push-hook-executed"
+}
+
+@test "it executes post_push_hook when changes are detected" {
+    # Create a dummy file to trigger commit process
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file.txt
+
+    INPUT_POST_PUSH_HOOK="echo 'post-push-hook-executed' > post-push-marker.txt"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Executing post_push hook"
+    assert_line "::debug::post_push hook completed successfully"
+
+    # Verify the hook actually executed
+    assert [ -f "${FAKE_LOCAL_REPOSITORY}/post-push-marker.txt" ]
+    run cat "${FAKE_LOCAL_REPOSITORY}/post-push-marker.txt"
+    assert_output "post-push-hook-executed"
+}
+
+@test "it executes all hooks in correct order when changes are detected" {
+    # Create a dummy file to trigger commit process
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file.txt
+
+    INPUT_PRE_STATUS_HOOK="echo '1' > execution-order.txt"
+    INPUT_PRE_COMMIT_HOOK="echo '2' >> execution-order.txt"
+    INPUT_PRE_PUSH_HOOK="echo '3' >> execution-order.txt"
+    INPUT_POST_PUSH_HOOK="echo '4' >> execution-order.txt"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Executing pre_status hook"
+    assert_line "::debug::Executing pre_commit hook"
+    assert_line "::debug::Executing pre_push hook"
+    assert_line "::debug::Executing post_push hook"
+
+    # Verify all hooks executed in the correct order
+    run cat "${FAKE_LOCAL_REPOSITORY}/execution-order.txt"
+    assert_line --index 0 "1"
+    assert_line --index 1 "2"
+    assert_line --index 2 "3"
+    assert_line --index 3 "4"
+}
+
+@test "it executes pre_status_hook even when no changes are detected" {
+    INPUT_PRE_STATUS_HOOK="echo 'pre-status-hook-executed' > /tmp/hook-marker.txt"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Executing pre_status hook"
+    assert_line "Working tree clean. Nothing to commit."
+
+    # Verify the hook actually executed
+    assert [ -f "/tmp/hook-marker.txt" ]
+    run cat "/tmp/hook-marker.txt"
+    assert_output "pre-status-hook-executed"
+    rm -f "/tmp/hook-marker.txt"
+}
+
+@test "it does not execute commit/push hooks when no changes are detected" {
+    INPUT_PRE_COMMIT_HOOK="echo 'should-not-execute' > pre-commit-marker.txt"
+    INPUT_PRE_PUSH_HOOK="echo 'should-not-execute' > pre-push-marker.txt"
+    INPUT_POST_PUSH_HOOK="echo 'should-not-execute' > post-push-marker.txt"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "Working tree clean. Nothing to commit."
+
+    # Verify the hooks did not execute
+    assert [ ! -f "${FAKE_LOCAL_REPOSITORY}/pre-commit-marker.txt" ]
+    assert [ ! -f "${FAKE_LOCAL_REPOSITORY}/pre-push-marker.txt" ]
+    assert [ ! -f "${FAKE_LOCAL_REPOSITORY}/post-push-marker.txt" ]
+}
+
+@test "it executes hooks in tag-only mode" {
+    INPUT_CREATE_GIT_TAG_ONLY=true
+    INPUT_TAGGING_MESSAGE="v1.0.0"
+    INPUT_PRE_STATUS_HOOK="echo 'pre-status-tag-only' > pre-status-marker.txt"
+    INPUT_PRE_PUSH_HOOK="echo 'pre-push-tag-only' > pre-push-marker.txt"
+    INPUT_POST_PUSH_HOOK="echo 'post-push-tag-only' > post-push-marker.txt"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Executing pre_status hook"
+    assert_line "::debug::Executing pre_push hook"
+    assert_line "::debug::Executing post_push hook"
+
+    # Verify hooks executed
+    assert [ -f "${FAKE_LOCAL_REPOSITORY}/pre-status-marker.txt" ]
+    assert [ -f "${FAKE_LOCAL_REPOSITORY}/pre-push-marker.txt" ]
+    assert [ -f "${FAKE_LOCAL_REPOSITORY}/post-push-marker.txt" ]
+}
+
+@test "it fails when pre_status_hook fails" {
+    INPUT_PRE_STATUS_HOOK="false"
+
+    run git_auto_commit
+
+    assert_failure
+    assert_line "::debug::Executing pre_status hook"
+    assert_line "::error::pre_status hook failed with exit code 1"
+}
+
+@test "it fails when pre_commit_hook fails" {
+    # Create a dummy file to trigger commit process
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file.txt
+
+    INPUT_PRE_COMMIT_HOOK="false"
+
+    run git_auto_commit
+
+    assert_failure
+    assert_line "::debug::Executing pre_commit hook"
+    assert_line "::error::pre_commit hook failed with exit code 1"
+}
+
+@test "it fails when pre_push_hook fails" {
+    # Create a dummy file to trigger commit process
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file.txt
+
+    INPUT_PRE_PUSH_HOOK="false"
+
+    run git_auto_commit
+
+    assert_failure
+    assert_line "::debug::Executing pre_push hook"
+    assert_line "::error::pre_push hook failed with exit code 1"
+}
+
+@test "it fails when post_push_hook fails" {
+    # Create a dummy file to trigger commit process
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file.txt
+
+    INPUT_POST_PUSH_HOOK="false"
+
+    run git_auto_commit
+
+    assert_failure
+    assert_line "::debug::Executing post_push hook"
+    assert_line "::error::post_push hook failed with exit code 1"
+}
+
+@test "hook can access git commands and repository state" {
+    # Create a dummy file to trigger commit process
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file.txt
+
+    INPUT_PRE_COMMIT_HOOK="git log --oneline | head -1 > git-log-output.txt"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Executing pre_commit hook"
+
+    # Verify the hook could access git commands
+    assert [ -f "${FAKE_LOCAL_REPOSITORY}/git-log-output.txt" ]
+    run cat "${FAKE_LOCAL_REPOSITORY}/git-log-output.txt"
+    assert_line --partial "Init Remote Repository"
+}
+
+@test "hook can modify files that get included in commit" {
+    # Create a dummy file to trigger commit process
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file.txt
+
+    INPUT_PRE_COMMIT_HOOK="echo 'modified by hook' > hook-modified-file.txt"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Executing pre_commit hook"
+
+    # Verify the file created by the hook was committed
+    run git log --name-only -1
+    assert_line "hook-modified-file.txt"
+    assert_line "new-file.txt"
 }

@@ -1,0 +1,242 @@
+name: Hook Examples
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  # Example 1: Use pre_status_hook to unshallow repository
+  unshallow-example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1  # Create shallow clone
+
+    - name: Make some changes
+      run: |
+        echo "$(date): Updated by workflow" >> updates.log
+
+    - name: Commit with unshallow hook
+      uses: ./
+      with:
+        commit_message: "Update logs with unshallow support"
+        pre_status_hook: |
+          echo "Checking if repository is shallow..."
+          if git rev-parse --is-shallow-repository 2>/dev/null | grep -q true; then
+            echo "Repository is shallow, running git fetch --unshallow"
+            git fetch --unshallow
+          else
+            echo "Repository is not shallow"
+          fi
+
+  # Example 2: Use pre_commit_hook for validation
+  validation-example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Make changes to JavaScript files
+      run: |
+        echo "console.log('Hello World');" > example.js
+
+    - name: Commit with validation hook
+      uses: ./
+      with:
+        commit_message: "Add example JavaScript file"
+        pre_commit_hook: |
+          echo "Running pre-commit validation..."
+          # Validate JavaScript syntax
+          find . -name "*.js" -not -path "./node_modules/*" -exec node -c {} \;
+          echo "JavaScript validation passed!"
+
+          # Run tests if they exist
+          if [ -f "package.json" ] && npm run test --if-present; then
+            echo "Tests passed!"
+          fi
+
+  # Example 3: Use pre_commit_hook to generate additional files
+  file-generation-example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Make some changes
+      run: |
+        echo "New feature added" > feature.txt
+
+    - name: Commit with file generation hook
+      uses: ./
+      with:
+        commit_message: "Add feature with generated manifest"
+        pre_commit_hook: |
+          echo "Generating build manifest..."
+
+          # Create build info file
+          cat > build-info.json << EOF
+          {
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "commit": "$GITHUB_SHA",
+            "workflow": "$GITHUB_WORKFLOW",
+            "run_id": "$GITHUB_RUN_ID",
+            "actor": "$GITHUB_ACTOR"
+          }
+          EOF
+
+          echo "Generated build-info.json"
+          cat build-info.json
+
+  # Example 4: Use pre_push_hook for final validation
+  pre-push-validation-example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Make changes
+      run: |
+        echo "Important data: $(date)" > important-file.txt
+
+    - name: Commit with pre-push validation
+      uses: ./
+      with:
+        commit_message: "Add important file with validation"
+        pre_push_hook: |
+          echo "Running final validation before push..."
+
+          # Check if important file exists and has content
+          if [ ! -f "important-file.txt" ] || [ ! -s "important-file.txt" ]; then
+            echo "ERROR: important-file.txt is missing or empty!"
+            exit 1
+          fi
+
+          # Check git log for the commit we're about to push
+          echo "Latest commit details:"
+          git log -1 --oneline
+
+          echo "Pre-push validation passed!"
+
+  # Example 5: Use post_push_hook for notifications
+  notification-example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Update documentation
+      run: |
+        echo "# Documentation Updated" > README.md
+        echo "Last updated: $(date)" >> README.md
+
+    - name: Commit with notification hook
+      uses: ./
+      with:
+        commit_message: "Update documentation"
+        post_push_hook: |
+          echo "Changes successfully pushed!"
+
+          # Get the commit hash that was just pushed
+          COMMIT_HASH=$(git rev-parse HEAD)
+          echo "Pushed commit: $COMMIT_HASH"
+
+          # Create a summary
+          echo "📝 Documentation updated successfully" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: \`$COMMIT_HASH\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Time: $(date)" >> $GITHUB_STEP_SUMMARY
+
+          # In a real scenario, you might send notifications to Slack, Discord, etc.
+          echo "This is where you would send notifications to your team!"
+
+  # Example 6: Multiple hooks working together
+  comprehensive-example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup environment
+      run: |
+        echo "Setting up project..."
+        mkdir -p logs
+
+    - name: Make changes
+      run: |
+        echo "Feature implementation" > feature.txt
+        echo "$(date): Feature added" > logs/changes.log
+
+    - name: Commit with all hooks
+      uses: ./
+      with:
+        commit_message: "Add comprehensive feature"
+        pre_status_hook: |
+          echo "🔍 Pre-status: Preparing repository..."
+          git status --porcelain
+
+        pre_commit_hook: |
+          echo "🛠️  Pre-commit: Generating metadata..."
+
+          # Generate changelog entry
+          echo "## $(date +%Y-%m-%d)" > CHANGELOG_ENTRY.md
+          echo "- Added comprehensive feature" >> CHANGELOG_ENTRY.md
+
+          # Update version file
+          echo "1.0.$(date +%s)" > VERSION
+
+        pre_push_hook: |
+          echo "✅ Pre-push: Final validation..."
+
+          # Validate all required files exist
+          required_files=("feature.txt" "logs/changes.log" "CHANGELOG_ENTRY.md" "VERSION")
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "ERROR: Required file $file is missing!"
+              exit 1
+            fi
+          done
+
+          echo "All validations passed!"
+
+        post_push_hook: |
+          echo "🎉 Post-push: Cleanup and notification..."
+
+          # Clean up temporary files if any
+          rm -f /tmp/build-*
+
+          # Log success
+          echo "Deployment completed at $(date)" >> logs/deployment.log
+
+          echo "Comprehensive feature deployment completed!"
+
+  # Example 7: Error handling demonstration
+  error-handling-example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Make changes
+      run: |
+        echo "Some changes" > test-file.txt
+
+    - name: Demonstrate hook failure (this will fail)
+      uses: ./
+      continue-on-error: true
+      with:
+        commit_message: "This commit should fail"
+        pre_commit_hook: |
+          echo "Running validation that will fail..."
+
+          # This will cause the hook to fail
+          if [ "$(cat test-file.txt)" = "Some changes" ]; then
+            echo "ERROR: File content not allowed!"
+            exit 1
+          fi
+
+    - name: Show that workflow continues after failure
+      run: |
+        echo "This step runs even if the previous step failed due to continue-on-error: true"

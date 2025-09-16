@@ -244,6 +244,165 @@ If you would like to prevent this, you can add `skip-checks:true` to the commit 
 
 Does your workflow change a file, but "git-auto-commit" does not detect the change? Check the `.gitignore` that applies to the respective file. You might have accidentally marked the file to be ignored by git.
 
+## Hooks
+
+The action supports custom bash scripts that can be executed at various points during the git workflow. This allows for custom preparation, validation, or post-processing steps.
+
+### Available Hooks
+
+- **`pre_status_hook`** - Executed before checking git status. Useful for repository preparation like `git fetch --unshallow`.
+- **`pre_commit_hook`** - Executed after detecting changes but before adding files. Allows modification of files that will be included in the commit.
+- **`pre_push_hook`** - Executed after committing but before pushing to remote. Useful for final validation.
+- **`post_push_hook`** - Executed after successfully pushing changes. Useful for notifications or cleanup.
+
+### Hook Examples
+
+#### Unshallow Repository Before Checking Status
+
+This example addresses the common issue where workflows use shallow checkouts (`fetch-depth: 1`) for performance, but need to unshallow before merging or when full history is required for certain operations.
+
+```yaml
+name: Update Submodules
+on: [push]
+
+jobs:
+  update-submodules:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1  # Shallow checkout for performance
+        submodules: recursive
+
+    - name: Update submodule to latest
+      run: |
+        git submodule update --remote
+        
+    - name: Commit submodule updates
+      uses: stefanzweifel/git-auto-commit-action@v6
+      with:
+        file_pattern: .gitmodules *
+        commit_message: "Update submodules to latest versions"
+        pre_status_hook: |
+          # Only unshallow if we have changes and need to merge
+          if git status --porcelain | grep -q .; then
+            echo "Changes detected, checking if repository is shallow..."
+            if git rev-parse --is-shallow-repository 2>/dev/null | grep -q true; then
+              echo "Repository is shallow, running git fetch --unshallow"
+              git fetch --unshallow
+            fi
+          fi
+```
+
+#### Addressing "refusing to merge unrelated histories" Error
+
+This specific example addresses the use case discussed in [GitHub Issue #365](https://github.com/stefanzweifel/git-auto-commit-action/discussions/365), where shallow repositories can cause merge conflicts:
+
+```yaml
+name: Update Dependencies with Unshallow
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly updates
+  workflow_dispatch:
+
+jobs:
+  update-deps:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1  # Start with shallow clone for performance
+        
+    - name: Update dependencies
+      run: |
+        # Your dependency update commands here
+        npm update
+        # or pip install -r requirements.txt --upgrade
+        # or bundle update
+        
+    - name: Commit dependency updates
+      uses: stefanzweifel/git-auto-commit-action@v6
+      with:
+        file_pattern: 'package*.json yarn.lock requirements.txt Gemfile.lock'
+        commit_message: 'Update dependencies'
+        pre_status_hook: |
+          # Check if repository is shallow and unshallow if changes are detected
+          if git status --porcelain | grep -q .; then
+            echo "Dependencies have been updated, checking repository depth..."
+            if git rev-parse --is-shallow-repository 2>/dev/null | grep -q true; then
+              echo "Repository is shallow ($(git rev-list --count HEAD) commits), running git fetch --unshallow"
+              git fetch --unshallow
+              echo "Repository unshallowed successfully"
+            else
+              echo "Repository is not shallow ($(git rev-list --count HEAD) commits)"
+            fi
+          else
+            echo "No dependency changes detected, skipping unshallow"
+          fi
+```
+
+#### Validate Files Before Committing
+
+```yaml
+- name: Commit with validation
+  uses: stefanzweifel/git-auto-commit-action@v6
+  with:
+    commit_message: Apply automatic changes
+    pre_commit_hook: |
+      echo "Running validation..."
+      npm run lint
+      npm run test
+```
+
+#### Generate Additional Files in Pre-Commit Hook
+
+```yaml
+- name: Commit with file generation
+  uses: stefanzweifel/git-auto-commit-action@v6
+  with:
+    commit_message: Update files and manifest
+    pre_commit_hook: |
+      echo "Generating manifest..."
+      echo "Build timestamp: $(date)" > build-info.txt
+      echo "Commit: $GITHUB_SHA" >> build-info.txt
+```
+
+#### Notify After Successful Push
+
+```yaml
+- name: Commit and notify
+  uses: stefanzweifel/git-auto-commit-action@v6
+  with:
+    commit_message: Apply automatic changes
+    post_push_hook: |
+      echo "Changes successfully pushed!"
+      curl -X POST -H 'Content-type: application/json' \
+        --data '{"text":"Code changes have been committed and pushed"}' \
+        "$SLACK_WEBHOOK_URL"
+```
+
+### Hook Error Handling
+
+If any hook fails (exits with non-zero status), the entire action will fail and stop execution. This ensures that validation hooks can prevent commits/pushes when issues are detected.
+
+```yaml
+- name: Commit with strict validation
+  uses: stefanzweifel/git-auto-commit-action@v6
+  with:
+    commit_message: Apply automatic changes
+    pre_commit_hook: |
+      # This will fail the action if any .js files have syntax errors
+      find . -name "*.js" -exec node -c {} \;
+```
+
+### Hook Execution Context
+
+- Hooks are executed in the repository directory
+- Hooks have access to all git commands and repository state
+- Hooks can access GitHub Actions environment variables
+- Files created/modified by `pre_commit_hook` will be included in the commit
+- Hooks run in bash and support multi-line scripts
+
 ## Advanced Uses
 
 ### Multiline Commit Messages

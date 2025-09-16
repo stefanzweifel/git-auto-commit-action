@@ -1,5 +1,5 @@
 name: Git Auto Commit
-description: 'Automatically commits files which have been changed during the workflow run and push changes back to remote repository.'
+description: "Automatically commits files which have been changed during the workflow run and push changes back to remote repository."
 
 author: Stefan Zweifel <stefan@stefanzweifel.dev>
 
@@ -15,23 +15,23 @@ inputs:
   commit_options:
     description: Commit options (eg. --no-verify)
     required: false
-    default: ''
+    default: ""
   add_options:
     description: Add options (eg. -u)
     required: false
-    default: ''
+    default: ""
   status_options:
     description: Status options (eg. --untracked-files=no)
     required: false
-    default: ''
+    default: ""
   file_pattern:
     description: File pattern used for `git add`. For example `src/*.js`
     required: false
-    default: '.'
+    default: "."
   repository:
     description: Local file path to the git repository. Defaults to the current directory (`.`)
     required: false
-    default: '.'
+    default: "."
   commit_user_name:
     description: Name used for the commit user
     required: false
@@ -47,11 +47,11 @@ inputs:
   tagging_message:
     description: Message used to create a new git tag with the commit. Keep this empty, if no tag should be created.
     required: false
-    default: ''
+    default: ""
   push_options:
     description: Push options (eg. --force)
     required: false
-    default: ''
+    default: ""
   skip_dirty_check:
     description: Skip the check if the git repository is dirty and always try to create a commit.
     required: false
@@ -66,6 +66,22 @@ inputs:
   internal_git_binary:
     description: Internal use only! Path to git binary used to check if git is available. (Don't change this!)
     default: git
+  pre_status_hook:
+    description: Bash script to execute before checking git status. Useful for git fetch --unshallow or other repository preparation.
+    required: false
+    default: ""
+  pre_commit_hook:
+    description: Bash script to execute before committing changes. Useful for validation or last-minute file modifications.
+    required: false
+    default: ""
+  pre_push_hook:
+    description: Bash script to execute before pushing changes to remote. Useful for final validation.
+    required: false
+    default: ""
+  post_push_hook:
+    description: Bash script to execute after successfully pushing changes. Useful for notifications or cleanup.
+    required: false
+    default: ""
   skip_fetch:
     description: "Deprecated: skip_fetch has been removed in v6. It does not have any effect anymore."
     required: false
@@ -78,7 +94,6 @@ inputs:
     description: "Deprecated: create_branch has been removed in v6. It does not have any effect anymore."
     default: false
 
-
 outputs:
   changes_detected:
     description: Value is "true", if the repository was dirty and file changes have been detected. Value is "false", if no changes have been detected.
@@ -88,9 +103,9 @@ outputs:
     description: Value is "true", if a git tag was created using the `create_git_tag_only`-input.
 
 runs:
-  using: 'node20'
-  main: 'index.js'
+  using: "node20"
+  main: "index.js"
 
 branding:
-  icon: 'git-commit'
+  icon: "git-commit"
   color: orange

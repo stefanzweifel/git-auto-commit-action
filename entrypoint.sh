@@ -19,6 +19,32 @@ _set_github_output() {
     fi
 }
 
+_execute_hook() {
+    local hook_name=${1}
+    local hook_script=${2}
+
+    if [ -n "$hook_script" ]; then
+        _log "debug" "Executing $hook_name hook";
+        echo "::group::$hook_name hook"
+
+        # Execute the hook script and capture exit code
+        # Temporarily disable errexit to handle hook failures gracefully
+        set +e
+        eval "$hook_script"
+        local exit_code=$?
+        set -e
+
+        echo "::endgroup::"
+
+        if [ $exit_code -ne 0 ]; then
+            _log "error" "$hook_name hook failed with exit code $exit_code";
+            exit 1;
+        fi
+
+        _log "debug" "$hook_name hook completed successfully";
+    fi
+}
+
 _log() {
     local level=${1}
     local message=${2}
@@ -47,14 +73,27 @@ _main() {
 
     # _check_if_repository_is_in_detached_state
 
+    # Execute pre-status hook before checking repository state
+    _execute_hook "pre_status" "$INPUT_PRE_STATUS_HOOK"
+
     if "$INPUT_CREATE_GIT_TAG_ONLY"; then
         _log "debug" "Create git tag only";
         _set_github_output "create_git_tag_only" "true"
         _tag_commit
+
+        # Execute pre-push hook before pushing (tag-only mode)
+        _execute_hook "pre_push" "$INPUT_PRE_PUSH_HOOK"
+
         _push_to_github
+
+        # Execute post-push hook after successful push (tag-only mode)
+        _execute_hook "post_push" "$INPUT_POST_PUSH_HOOK"
     elif _git_is_dirty || "$INPUT_SKIP_DIRTY_CHECK"; then
 
         _set_github_output "changes_detected" "true"
+
+        # Execute pre-commit hook before adding files so hook can modify files
+        _execute_hook "pre_commit" "$INPUT_PRE_COMMIT_HOOK"
 
         _add_files
 
@@ -67,7 +106,13 @@ _main() {
 
             _tag_commit
 
+            # Execute pre-push hook before pushing
+            _execute_hook "pre_push" "$INPUT_PRE_PUSH_HOOK"
+
             _push_to_github
+
+            # Execute post-push hook after successful push
+            _execute_hook "post_push" "$INPUT_POST_PUSH_HOOK"
         else
             _set_github_output "changes_detected" "false"
 
