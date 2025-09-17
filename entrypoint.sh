@@ -27,18 +27,6 @@ _log() {
 }
 
 _main() {
-    if "$INPUT_SKIP_FETCH"; then
-        _log "warning" "git-auto-commit: skip_fetch has been removed in v6. It does not have any effect anymore.";
-    fi
-
-    if "$INPUT_SKIP_CHECKOUT"; then
-        _log "warning" "git-auto-commit: skip_checkout has been removed in v6. It does not have any effect anymore.";
-    fi
-
-    if "$INPUT_CREATE_BRANCH"; then
-        _log "warning" "git-auto-commit: create_branch has been removed in v6. It does not have any effect anymore.";
-    fi
-
     _check_if_git_is_available
 
     _switch_to_repository
