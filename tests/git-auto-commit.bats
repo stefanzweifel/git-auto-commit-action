@@ -35,13 +35,11 @@ setup() {
     export INPUT_TAGGING_MESSAGE=""
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
-    export INPUT_DISABLE_GLOBBING=false
-    export INPUT_INTERNAL_GIT_BINARY=git
-
-    # Deprecated variables. Will be removed in future versions
-    export INPUT_CREATE_BRANCH=false
     export INPUT_SKIP_FETCH=false
     export INPUT_SKIP_CHECKOUT=false
+    export INPUT_DISABLE_GLOBBING=false
+    export INPUT_CREATE_BRANCH=false
+    export INPUT_INTERNAL_GIT_BINARY=git
 
     # Set GitHub environment variables used by the GitHub Action
     temp_github_output_file=$(mktemp -t github_output_test.XXXXX)
@@ -411,6 +409,32 @@ cat_github_output() {
     assert_output --partial refs/tags/v2.0.0
 }
 
+@test "If SKIP_FETCH is true git-fetch will not be called" {
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    INPUT_SKIP_FETCH=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "::debug::git-fetch will not be executed."
+}
+
+@test "If SKIP_CHECKOUT is true git-checkout will not be called" {
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    INPUT_SKIP_CHECKOUT=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "::debug::git-checkout will not be executed."
+}
+
 @test "It pushes generated commit and tag to remote and actually updates the commit shas" {
     INPUT_BRANCH=""
     INPUT_TAGGING_MESSAGE="v2.0.0"
@@ -441,6 +465,10 @@ cat_github_output() {
 }
 
 @test "It pushes generated commit and tag to remote branch and updates commit sha" {
+    # Create "a-new-branch"-branch and then immediately switch back to ${FAKE_DEFAULT_BRANCH}
+    git checkout -b a-new-branch
+    git checkout ${FAKE_DEFAULT_BRANCH}
+
     INPUT_BRANCH="a-new-branch"
     INPUT_TAGGING_MESSAGE="v2.0.0"
 
@@ -463,7 +491,7 @@ cat_github_output() {
     assert_output --partial refs/tags/v2.0.0
 
     # Assert that branch "a-new-branch" was updated on remote
-    current_sha="$(git rev-parse --verify --short ${FAKE_DEFAULT_BRANCH})"
+    current_sha="$(git rev-parse --verify --short a-new-branch)"
     remote_sha="$(git rev-parse --verify --short origin/a-new-branch)"
 
     assert_equal $current_sha $remote_sha
@@ -507,6 +535,7 @@ cat_github_output() {
 @test "it does not throw an error if not changes are detected and SKIP_DIRTY_CHECK is false" {
     INPUT_FILE_PATTERN="."
     INPUT_SKIP_DIRTY_CHECK=false
+    INPUT_SKIP_FETCH=false
 
     run git_auto_commit
 
