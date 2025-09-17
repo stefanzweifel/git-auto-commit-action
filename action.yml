@@ -56,8 +56,19 @@ inputs:
     description: Skip the check if the git repository is dirty and always try to create a commit.
     required: false
     default: false
+  skip_fetch:
+    description: Skip the call to git-fetch.
+    required: false
+    default: false
+  skip_checkout:
+    description: Skip the call to git-checkout.
+    required: false
+    default: false
   disable_globbing:
     description: Stop the shell from expanding filenames (https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
+    default: false
+  create_branch:
+    description: Create new branch with the name of `branch`-input in local and remote repository, if it doesn't exist yet.
     default: false
   create_git_tag_only:
     description: Perform a clean git tag and push, without commiting anything
@@ -66,17 +77,6 @@ inputs:
   internal_git_binary:
     description: Internal use only! Path to git binary used to check if git is available. (Don't change this!)
     default: git
-  skip_fetch:
-    description: "Deprecated: skip_fetch has been removed in v6. It does not have any effect anymore."
-    required: false
-    default: false
-  skip_checkout:
-    description: "Deprecated: skip_checkout has been removed in v6. It does not have any effect anymore."
-    required: false
-    default: false
-  create_branch:
-    description: "Deprecated: create_branch has been removed in v6. It does not have any effect anymore."
-    default: false
 
 
 outputs:
