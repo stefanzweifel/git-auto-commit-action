@@ -124,6 +124,7 @@ _switch_to_branch() {
     if "$INPUT_SKIP_FETCH"; then
         _log "debug" "git-fetch will not be executed.";
     else
+        _log "debug" "git-fetch will be executed.";
         git fetch --depth=1;
     fi
 
@@ -131,6 +132,7 @@ _switch_to_branch() {
     if "$INPUT_SKIP_CHECKOUT"; then
         _log "debug" "git-checkout will not be executed.";
     else
+        _log "debug" "git-checkout will be executed.";
         # Create new local branch if `create_branch`-input is true
         if "$INPUT_CREATE_BRANCH"; then
             # shellcheck disable=SC2086

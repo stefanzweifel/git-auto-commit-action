@@ -589,6 +589,8 @@ cat_github_output() {
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
 
+    INPUT_SKIP_CHECKOUT=true
+
     run git_auto_commit
 
     assert_success
@@ -617,6 +619,8 @@ cat_github_output() {
     refute_line --partial "origin/not-existend-branch"
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    INPUT_SKIP_CHECKOUT=true
 
     run git_auto_commit
 
@@ -647,51 +651,6 @@ cat_github_output() {
     assert_line -e "commit_hash=[0-9a-f]{40}$"
 }
 
-@test "It does not create new local branch if local branch already exists" {
-    git checkout -b not-existend-remote-branch
-    git checkout ${FAKE_DEFAULT_BRANCH}
-
-    INPUT_BRANCH="not-existend-remote-branch"
-
-    run git branch
-    assert_line --partial "not-existend-remote-branch"
-
-    run git branch -r
-    refute_line --partial "origin/not-existend-remote-branch"
-
-    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
-
-    run git_auto_commit
-
-    assert_success
-
-    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
-    assert_line "INPUT_BRANCH value: not-existend-remote-branch"
-    assert_line "INPUT_FILE_PATTERN: ."
-    assert_line "INPUT_COMMIT_OPTIONS: "
-    assert_line "::debug::Apply commit options "
-    assert_line "INPUT_TAGGING_MESSAGE: "
-    assert_line "No tagging message supplied. No tag will be added."
-    assert_line "INPUT_PUSH_OPTIONS: "
-    assert_line "::debug::Apply push options "
-    assert_line "::debug::Push commit to remote branch not-existend-remote-branch"
-
-    # Assert checked out branch is still the same.
-    run git rev-parse --abbrev-ref HEAD
-    assert_line --partial ${FAKE_DEFAULT_BRANCH}
-    refute_line --partial "not-existend-remote-branch"
-
-    run git branch
-    assert_line --partial "not-existend-remote-branch"
-
-    run git branch -r
-    assert_line --partial "origin/not-existend-remote-branch"
-
-    run cat_github_output
-    assert_line "changes_detected=true"
-    assert_line -e "commit_hash=[0-9a-f]{40}$"
-}
-
 @test "It creates new local branch and pushes branch to remote even if the remote branch already exists" {
     # Create `existing-remote-branch` on remote with changes the local repository does not yet have
     cd $FAKE_TEMP_LOCAL_REPOSITORY
@@ -709,6 +668,7 @@ cat_github_output() {
     cd $FAKE_LOCAL_REPOSITORY
 
     INPUT_BRANCH="existing-remote-branch"
+    INPUT_SKIP_CHECKOUT=true
 
     run git branch
     refute_line --partial "existing-remote-branch"
@@ -753,7 +713,7 @@ cat_github_output() {
     assert_line -e "commit_hash=[0-9a-f]{40}$"
 }
 
-@test "It fails if local branch is behind remote and when remote has newer commits" {
+@test "It fails if local branch is behind remote and when remote has newer commits and skip_checkout is set to true" {
     # Create `existing-remote-branch` on remote with changes the local repository does not yet have
     cd $FAKE_TEMP_LOCAL_REPOSITORY
     git checkout -b "existing-remote-branch"
@@ -770,6 +730,7 @@ cat_github_output() {
     cd $FAKE_LOCAL_REPOSITORY
 
     INPUT_BRANCH="existing-remote-branch"
+    INPUT_SKIP_CHECKOUT=true
 
     run git branch
     refute_line --partial "existing-remote-branch"
@@ -801,7 +762,7 @@ cat_github_output() {
     refute [assert_equal $current_sha $remote_sha]
 }
 
-@test "It fails to push commit to remote if branch already exists and local repo is behind its remote counterpart" {
+@test "It fails to push commit to remote if branch already exists and local repo is behind its remote counterpart and SKIP_CHECKOUT is used" {
     # Create `new-branch` on remote with changes the local repository does not yet have
     cd $FAKE_TEMP_LOCAL_REPOSITORY
 
@@ -820,6 +781,7 @@ cat_github_output() {
     cd $FAKE_LOCAL_REPOSITORY
 
     INPUT_BRANCH="new-branch"
+    INPUT_SKIP_CHECKOUT=true
 
     # Assert that local remote does not have a "new-branch"-branch nor does
     # know about the remote branch.
@@ -838,8 +800,7 @@ cat_github_output() {
     assert_line "INPUT_BRANCH value: new-branch"
     assert_line --partial "::debug::Push commit to remote branch new-branch"
 
-    assert_line --partial "Updates were rejected because the remote contains work that you do"
-    assert_line --partial "This is usually caused by another repository pushing"
+    assert_line --partial "Updates were rejected because a pushed branch tip is behind its remote"
 }
 
 @test "throws fatal error if file pattern includes files that do not exist" {
@@ -1197,16 +1158,270 @@ END
     assert_output ""
 }
 
-@test "it shows warning message if any deprecated options are used" {
-    INPUT_SKIP_FETCH=true
-    INPUT_SKIP_CHECKOUT=true
+@test "script fails to push commit to new branch that does not exist yet" {
+    INPUT_BRANCH="not-existend-branch"
+    INPUT_CREATE_BRANCH=false
+
+    run git branch
+    refute_line --partial "not-existend-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_failure
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "INPUT_BRANCH value: not-existend-branch"
+    assert_line "fatal: invalid reference: not-existend-branch"
+
+    run git branch
+    refute_line --partial "not-existend-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-branch"
+
+    run cat_github_output
+    assert_line "changes_detected=true"
+}
+
+@test "It creates new local branch and pushes the new branch to remote" {
+    INPUT_BRANCH="not-existend-branch"
     INPUT_CREATE_BRANCH=true
+
+    run git branch
+    refute_line --partial "not-existend-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
 
     run git_auto_commit
 
     assert_success
 
-    assert_line "::warning::git-auto-commit: skip_fetch has been removed in v6. It does not have any effect anymore."
-    assert_line "::warning::git-auto-commit: skip_checkout has been removed in v6. It does not have any effect anymore."
-    assert_line "::warning::git-auto-commit: create_branch has been removed in v6. It does not have any effect anymore."
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "INPUT_BRANCH value: not-existend-branch"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch not-existend-branch"
+
+    run git branch
+    assert_line --partial "not-existend-branch"
+
+    run git branch -r
+    assert_line --partial "origin/not-existend-branch"
+
+    run cat_github_output
+    assert_line "changes_detected=true"
+    assert_line -e "commit_hash=[0-9a-f]{40}$"
+}
+
+@test "It does not create new local branch if local branch already exists and SKIP_CHECKOUT is true" {
+    git checkout -b not-existend-remote-branch
+    git checkout ${FAKE_DEFAULT_BRANCH}
+
+    INPUT_BRANCH="not-existend-remote-branch"
+    INPUT_SKIP_CHECKOUT=true
+
+    run git branch
+    assert_line --partial "not-existend-remote-branch"
+
+    run git branch -r
+    refute_line --partial "origin/not-existend-remote-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "INPUT_BRANCH value: not-existend-remote-branch"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch not-existend-remote-branch"
+
+    # Assert checked out branch is still the same.
+    run git rev-parse --abbrev-ref HEAD
+    assert_line --partial ${FAKE_DEFAULT_BRANCH}
+    refute_line --partial "not-existend-remote-branch"
+
+    run git branch
+    assert_line --partial "not-existend-remote-branch"
+
+    run git branch -r
+    assert_line --partial "origin/not-existend-remote-branch"
+
+    run cat_github_output
+    assert_line "changes_detected=true"
+    assert_line -e "commit_hash=[0-9a-f]{40}$"
+}
+
+@test "it creates new local branch and pushes branch to remote even if the remote branch already exists" {
+
+    # Create `existing-remote-branch` on remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY
+    git checkout -b "existing-remote-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+    git commit -m "Add additional file"
+    git push origin existing-remote-branch
+
+    run git branch
+    assert_line --partial "existing-remote-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY
+
+    INPUT_BRANCH="existing-remote-branch"
+    INPUT_CREATE_BRANCH=true
+
+    run git branch
+    refute_line --partial "existing-remote-branch"
+
+    run git fetch --all
+    run git pull origin existing-remote-branch
+    run git branch -r
+    assert_line --partial "origin/existing-remote-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_REPOSITORY value: ${INPUT_REPOSITORY}"
+    assert_line "INPUT_BRANCH value: existing-remote-branch"
+    assert_line "INPUT_FILE_PATTERN: ."
+    assert_line "INPUT_COMMIT_OPTIONS: "
+    assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAGGING_MESSAGE: "
+    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "INPUT_PUSH_OPTIONS: "
+    assert_line "::debug::Apply push options "
+    assert_line "::debug::Push commit to remote branch existing-remote-branch"
+
+    run git branch
+    assert_line --partial "existing-remote-branch"
+
+    run git branch -r
+    assert_line --partial "origin/existing-remote-branch"
+
+    # Assert that branch "existing-remote-branch" was updated on remote
+    current_sha="$(git rev-parse --verify --short existing-remote-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/existing-remote-branch)"
+
+    assert_equal $current_sha $remote_sha
+
+    run cat_github_output
+    assert_line "changes_detected=true"
+    assert_line -e "commit_hash=[0-9a-f]{40}$"
+}
+
+@test "script fails if new local branch is checked out and push fails as remote has newer commits than local" {
+    # Create `existing-remote-branch` on remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY
+    git checkout -b "existing-remote-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+    git commit -m "Add additional file"
+    git push origin existing-remote-branch
+
+    run git branch
+    assert_line --partial "existing-remote-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY
+
+    INPUT_BRANCH="existing-remote-branch"
+    INPUT_CREATE_BRANCH=true
+
+    run git branch
+    refute_line --partial "existing-remote-branch"
+
+    run git fetch --all
+    run git branch -r
+    assert_line --partial "origin/existing-remote-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_failure
+
+    assert_line "hint: Updates were rejected because the tip of your current branch is behind"
+
+    # Assert that branch exists locally and on remote
+    run git branch
+    assert_line --partial "existing-remote-branch"
+
+    run git branch -r
+    assert_line --partial "origin/existing-remote-branch"
+
+    # Assert that branch "existing-remote-branch" was not updated on remote
+    current_sha="$(git rev-parse --verify --short existing-remote-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/existing-remote-branch)"
+
+    refute [assert_equal $current_sha $remote_sha]
+}
+
+@test "It pushes commit to remote if branch already exists and local repo is behind its remote counterpart" {
+    # Create `new-branch` on remote with changes the local repository does not yet have
+    cd $FAKE_TEMP_LOCAL_REPOSITORY
+
+    git checkout -b "new-branch"
+    touch new-branch-file.txt
+    git add new-branch-file.txt
+
+    git commit --quiet -m "Add additional file"
+    git push origin new-branch
+
+    run git branch -r
+    assert_line --partial "origin/new-branch"
+
+    # ---------
+    # Switch to our regular local repository and run `git-auto-commit`
+    cd $FAKE_LOCAL_REPOSITORY
+
+    INPUT_BRANCH="new-branch"
+
+    # Assert that local remote does not know have "new-branch" locally nor does
+    # know about the remote branch.
+    run git branch
+    refute_line --partial "new-branch"
+
+    run git branch -r
+    refute_line --partial "origin/new-branch"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_BRANCH value: new-branch"
+    assert_line --partial "::debug::Push commit to remote branch new-branch"
+
+    # Assert that branch "new-branch" was updated on remote
+    current_sha="$(git rev-parse --verify --short new-branch)"
+    remote_sha="$(git rev-parse --verify --short origin/new-branch)"
+
+    assert_equal $current_sha $remote_sha
 }
