@@ -88,7 +88,7 @@ outputs:
     description: Value is "true", if a git tag was created using the `create_git_tag_only`-input.
 
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'index.js'
 
 branding:
