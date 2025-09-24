@@ -32,6 +32,7 @@ setup() {
     export INPUT_COMMIT_USER_NAME="Test Suite"
     export INPUT_COMMIT_USER_EMAIL="test@github.com"
     export INPUT_COMMIT_AUTHOR="Test Suite <test@users.noreply.github.com>"
+    export INPUT_TAG=""
     export INPUT_TAGGING_MESSAGE=""
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
@@ -123,8 +124,9 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAG: "
     assert_line "INPUT_TAGGING_MESSAGE: "
-    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
     assert_line "::debug::Apply push options "
     assert_line "::debug::Push commit to remote branch ${FAKE_DEFAULT_BRANCH}"
@@ -146,8 +148,9 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAG: "
     assert_line "INPUT_TAGGING_MESSAGE: "
-    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
     assert_line "::debug::Apply push options "
     assert_line "::debug::Push commit to remote branch ${FAKE_DEFAULT_BRANCH}"
@@ -293,7 +296,8 @@ cat_github_output() {
 }
 
 @test "It creates a tag with the commit" {
-    INPUT_TAGGING_MESSAGE="v1.0.0"
+    INPUT_TAG="v1.0.0"
+    INPUT_TAGGING_MESSAGE="MyProduct v1.0.0"
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
 
@@ -301,13 +305,15 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "INPUT_TAGGING_MESSAGE: v1.0.0"
-    assert_line "::debug::Create tag v1.0.0"
+    assert_line "INPUT_TAG: v1.0.0"
+    assert_line "INPUT_TAGGING_MESSAGE: MyProduct v1.0.0"
+
+    assert_line "::debug::Create tag v1.0.0: MyProduct v1.0.0"
     assert_line "::debug::Push commit to remote branch ${FAKE_DEFAULT_BRANCH}"
 
     # Assert a tag v1.0.0 has been created
-    run git tag
-    assert_output v1.0.0
+    run git tag -n
+    assert_output 'v1.0.0          MyProduct v1.0.0'
 
     run git ls-remote --tags --refs
     assert_output --partial refs/tags/v1.0.0
@@ -388,9 +394,11 @@ cat_github_output() {
     assert_equal $current_sha $remote_sha
 }
 
-@test "It uses existing branch when INPUT_BRANCH is empty and INPUT_TAGGING_MESSAGE is set" {
+@test "It uses existing branch when INPUT_BRANCH is empty and INPUT_TAG is set" {
     INPUT_BRANCH=""
-    INPUT_TAGGING_MESSAGE="v2.0.0"
+    INPUT_TAG="v2.0.0"
+    INPUT_TAGGING_MESSAGE="MyProduct v2.0.0"
+
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
 
@@ -398,8 +406,8 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "INPUT_TAGGING_MESSAGE: v2.0.0"
-    assert_line "::debug::Create tag v2.0.0"
+    assert_line "INPUT_TAG: v2.0.0"
+    assert_line "::debug::Create tag v2.0.0: MyProduct v2.0.0"
     assert_line "::debug::git push origin --tags"
 
     # Assert a tag v2.0.0 has been created
@@ -413,7 +421,9 @@ cat_github_output() {
 
 @test "It pushes generated commit and tag to remote and actually updates the commit shas" {
     INPUT_BRANCH=""
-    INPUT_TAGGING_MESSAGE="v2.0.0"
+    INPUT_TAG="v2.0.0"
+    INPUT_TAGGING_MESSAGE="MyProduct v2.0.0"
+
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
 
@@ -421,8 +431,8 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "INPUT_TAGGING_MESSAGE: v2.0.0"
-    assert_line "::debug::Create tag v2.0.0"
+    assert_line "INPUT_TAG: v2.0.0"
+    assert_line "::debug::Create tag v2.0.0: MyProduct v2.0.0"
     assert_line "::debug::git push origin --tags"
 
     # Assert a tag v2.0.0 has been created
@@ -442,7 +452,9 @@ cat_github_output() {
 
 @test "It pushes generated commit and tag to remote branch and updates commit sha" {
     INPUT_BRANCH="a-new-branch"
-    INPUT_TAGGING_MESSAGE="v2.0.0"
+    INPUT_TAG="v2.0.0"
+    INPUT_TAGGING_MESSAGE="MyProduct v2.0.0"
+
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
 
@@ -450,8 +462,8 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "INPUT_TAGGING_MESSAGE: v2.0.0"
-    assert_line "::debug::Create tag v2.0.0"
+    assert_line "INPUT_TAG: v2.0.0"
+    assert_line "::debug::Create tag v2.0.0: MyProduct v2.0.0"
     assert_line "::debug::Push commit to remote branch a-new-branch"
 
     # Assert a tag v2.0.0 has been created
@@ -598,8 +610,9 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAG: "
     assert_line "INPUT_TAGGING_MESSAGE: "
-    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
     assert_line "::debug::Apply push options "
     assert_line "::debug::Push commit to remote branch not-existend-branch"
@@ -641,8 +654,9 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAG: "
     assert_line "INPUT_TAGGING_MESSAGE: "
-    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
     assert_line "::debug::Apply push options "
     assert_line "::debug::Push commit to remote branch not-existend-remote-branch"
@@ -700,8 +714,9 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAG: "
     assert_line "INPUT_TAGGING_MESSAGE: "
-    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
     assert_line "::debug::Apply push options "
     assert_line "::debug::Push commit to remote branch existing-remote-branch"
@@ -1031,8 +1046,9 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
+    assert_line "INPUT_TAG: "
     assert_line "INPUT_TAGGING_MESSAGE: "
-    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
     assert_line "::debug::Apply push options "
     assert_line "::debug::Push commit to remote branch ${FAKE_DEFAULT_BRANCH}"
@@ -1119,7 +1135,8 @@ END
 
 @test "it creates a tag if create_git_tag_only is set to true and a message has been supplied" {
     INPUT_CREATE_GIT_TAG_ONLY=true
-    INPUT_TAGGING_MESSAGE=v1.0.0
+    INPUT_TAG=v1.0.0
+    INPUT_TAGGING_MESSAGE="MyProduct v1.0.0"
 
     run git_auto_commit
 
@@ -1127,8 +1144,8 @@ END
 
     assert_line "::debug::Create git tag only"
 
-    assert_line "::debug::Create tag v1.0.0"
-    refute_line "No tagging message supplied. No tag will be added."
+    assert_line "::debug::Create tag v1.0.0: MyProduct v1.0.0"
+    refute_line "Neither tag nor tag message is set. No tag will be added."
 
     assert_line "::debug::Apply push options "
     assert_line "::debug::Push commit to remote branch ${FAKE_DEFAULT_BRANCH}"
@@ -1139,8 +1156,8 @@ END
     refute_line -e "commit_hash=[0-9a-f]{40}$"
 
     # Assert a tag v1.0.0 has been created
-    run git tag
-    assert_output v1.0.0
+    run git tag -n
+    assert_output 'v1.0.0          MyProduct v1.0.0'
 
     run git ls-remote --tags --refs
     assert_output --partial refs/tags/v1.0.0
@@ -1148,14 +1165,16 @@ END
 
 @test "it output no tagging message supplied if no tagging message is set but create_git_tag_only is set to true" {
     INPUT_CREATE_GIT_TAG_ONLY=true
+    INPUT_TAG=""
     INPUT_TAGGING_MESSAGE=""
 
     run git_auto_commit
 
     assert_success
 
+    assert_line "INPUT_TAG: "
     assert_line "INPUT_TAGGING_MESSAGE: "
-    assert_line "No tagging message supplied. No tag will be added."
+    assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "::debug::Create git tag only"
 
     run cat_github_output
@@ -1180,4 +1199,64 @@ END
     assert_line "::warning::git-auto-commit: skip_fetch has been removed in v6. It does not have any effect anymore."
     assert_line "::warning::git-auto-commit: skip_checkout has been removed in v6. It does not have any effect anymore."
     assert_line "::warning::git-auto-commit: create_branch has been removed in v6. It does not have any effect anymore."
+}
+
+@test "Set a tag message only" {
+    INPUT_TAGGING_MESSAGE="v1.0.0"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_TAG: "
+    assert_line "INPUT_TAGGING_MESSAGE: v1.0.0"
+
+    assert_line "::debug::Create tag v1.0.0: v1.0.0"
+    assert_line "::debug::Push commit to remote branch ${FAKE_DEFAULT_BRANCH}"
+
+    # Assert a tag v1.0.0 has been created
+    run git tag -n
+    assert_output 'v1.0.0          v1.0.0'
+
+    run git ls-remote --tags --refs
+    assert_output --partial refs/tags/v1.0.0
+
+    # Assert that the commit has been pushed with --force and
+    # sha values are equal on local and remote
+    current_sha="$(git rev-parse --verify --short ${FAKE_DEFAULT_BRANCH})"
+    remote_sha="$(git rev-parse --verify --short origin/${FAKE_DEFAULT_BRANCH})"
+
+    assert_equal $current_sha $remote_sha
+}
+
+@test "Set a tag only" {
+    INPUT_TAG="v1.0.0"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "INPUT_TAG: v1.0.0"
+    assert_line "INPUT_TAGGING_MESSAGE: "
+
+    assert_line "::debug::Create tag v1.0.0: v1.0.0"
+    assert_line "::debug::Push commit to remote branch ${FAKE_DEFAULT_BRANCH}"
+
+    # Assert a tag v1.0.0 has been created
+    run git tag -n
+    assert_output 'v1.0.0          v1.0.0'
+
+    run git ls-remote --tags --refs
+    assert_output --partial refs/tags/v1.0.0
+
+    # Assert that the commit has been pushed with --force and
+    # sha values are equal on local and remote
+    current_sha="$(git rev-parse --verify --short ${FAKE_DEFAULT_BRANCH})"
+    remote_sha="$(git rev-parse --verify --short origin/${FAKE_DEFAULT_BRANCH})"
+
+    assert_equal $current_sha $remote_sha
 }
