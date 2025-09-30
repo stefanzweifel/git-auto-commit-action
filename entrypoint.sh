@@ -33,7 +33,7 @@ _main() {
 
     _check_if_is_git_repository
 
-    # _check_if_repository_is_in_detached_state
+    _check_if_repository_is_in_detached_state
 
     if "$INPUT_CREATE_GIT_TAG_ONLY"; then
         _log "debug" "Create git tag only";
@@ -110,8 +110,7 @@ _check_if_is_git_repository() {
 _check_if_repository_is_in_detached_state() {
     if [ -z "$(git symbolic-ref HEAD)" ]
     then
-        _log "error" "Repository is in detached HEAD state. Please make sure you check out a branch. Adjust the `ref` input accordingly.";
-        exit 1;
+        _log "warning" "Repository is in a detached HEAD state. git-auto-commit will likely handle this automatically. To avoid it, check out a branch using the ref option in actions/checkout.";
     else
         _log "debug" "Repository is on a branch.";
     fi
