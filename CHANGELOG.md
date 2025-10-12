@@ -5,9 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v6.0.1...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.0.0...HEAD)
 
 > TBD
+
+## [v7.0.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v6.0.1...v7.0.0) - 2025-10-12
+
+### Added
+
+- Restore skip_fetch, skip_checkout, create_branch ([#388](https://github.com/stefanzweifel/git-auto-commit-action/pull/388)) [@stefanzweifel](https://github.com/@stefanzweifel)
+- Restore Detached State Detection ([#393](https://github.com/stefanzweifel/git-auto-commit-action/pull/393)) [@stefanzweifel](https://github.com/@stefanzweifel)
+- Add Support for Tag Messages ([#391](https://github.com/stefanzweifel/git-auto-commit-action/pull/391)) [@EliasBoulharts](https://github.com/@EliasBoulharts)
+
+### Changed
+
+- Run Action on Node 24 ([#389](https://github.com/stefanzweifel/git-auto-commit-action/pull/389)) [@stefanzweifel](https://github.com/@stefanzweifel)
+
+### Dependency Updates
+
+- Bump actions/checkout from 4 to 5 ([#386](https://github.com/stefanzweifel/git-auto-commit-action/pull/386)) [@[dependabot[bot]](https://github.com/apps/dependabot)](https://github.com/@[dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v6.0.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v6.0.0...v6.0.1) - 2025-06-11
 
