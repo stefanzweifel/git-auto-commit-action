@@ -39,7 +39,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.head_ref }}
 
@@ -155,7 +155,7 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         ref: ${{ github.head_ref }}
 
@@ -220,7 +220,7 @@ You must use `action/checkout@v2` or later versions to check out the repository.
 In non-`push` events, such as `pull_request`, make sure to specify the `ref` to check out:
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v5
   with:
     ref: ${{ github.head_ref }}
 ```
@@ -238,7 +238,7 @@ You can change this by creating a new [Personal Access Token (PAT)](https://gith
 storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action step.
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v5
   with:
     token: ${{ secrets.PAT }}
 ```
@@ -371,7 +371,7 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         # Checkout the fork/head-repository and push changes to the fork.
         # If you skip this, the base repository will be checked out and changes
@@ -463,7 +463,7 @@ If you create a personal access token (classic), apply the `repo` and `workflow`
 If you create a fine-grained personal access token, apply the `Contents`-permissions.
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v5
   with:
     # We pass the "PAT" secret to the checkout action; if no PAT secret is available to the workflow runner (eg. Dependabot) we fall back to the default "GITHUB_TOKEN".
     token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
