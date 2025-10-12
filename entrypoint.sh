@@ -176,14 +176,17 @@ _local_commit() {
 }
 
 _tag_commit() {
+    echo "INPUT_TAG: ${INPUT_TAG}"
     echo "INPUT_TAGGING_MESSAGE: ${INPUT_TAGGING_MESSAGE}"
 
-    if [ -n "$INPUT_TAGGING_MESSAGE" ]
-    then
-        _log "debug" "Create tag $INPUT_TAGGING_MESSAGE";
-        git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" tag -a "$INPUT_TAGGING_MESSAGE" -m "$INPUT_TAGGING_MESSAGE";
+    if [ -n "$INPUT_TAG" ] || [ -n "$INPUT_TAGGING_MESSAGE" ]; then
+        INTERNAL_TAG=${INPUT_TAG:-$INPUT_TAGGING_MESSAGE}
+        INTERNAL_TAGGING_MESSAGE=${INPUT_TAGGING_MESSAGE:-$INPUT_TAG}
+
+        _log "debug" "Create tag $INTERNAL_TAG: $INTERNAL_TAGGING_MESSAGE"
+        git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" tag -a "$INTERNAL_TAG" -m "$INTERNAL_TAGGING_MESSAGE"
     else
-        echo "No tagging message supplied. No tag will be added.";
+        echo "Neither tag nor tag message is set. No tag will be added.";
     fi
 }
 
@@ -199,8 +202,8 @@ _push_to_github() {
 
     if [ -z "$INPUT_BRANCH" ]
     then
-        # Only add `--tags` option, if `$INPUT_TAGGING_MESSAGE` is set
-        if [ -n "$INPUT_TAGGING_MESSAGE" ]
+        # Only add `--tags` option, if `$INPUT_TAG` or `$INPUT_TAGGING_MESSAGE` is set
+        if [ -n "$INPUT_TAG" ] || [ -n "$INPUT_TAGGING_MESSAGE" ]
         then
             _log "debug" "git push origin --tags";
             git push origin --follow-tags --atomic ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};

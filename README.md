@@ -85,10 +85,15 @@ The following is an extended example with all available options.
     commit_user_name: My GitHub Actions Bot # defaults to "github-actions[bot]"
     commit_user_email: my-github-actions-bot@example.org # defaults to "41898282+github-actions[bot]@users.noreply.github.com"
     commit_author: Author <actions@github.com> # defaults to "username <numeric_id+username@users.noreply.github.com>", where "numeric_id" and "username" belong to the author of the commit that triggered the run
+        
+    # Optional. Tag name to be created in the local repository and 
+    # pushed to the remote repository on the defined branch.
+    # If only one of `tag` or `tagging_message` is provided, the value of the provided field will be used for both tag name and message.
+    tag: 'v1.0.0'
 
-    # Optional. Tag name being created in the local repository and 
-    # pushed to remote repository and defined branch.
-    tagging_message: 'v1.0.0'
+    # Optional. Message to annotate the created tag with.
+    # If only one of `tag` or `tagging_message` is provided, the value of the provided field will be used for both tag name and message.
+    tagging_message: 'Codename "Sunshine"'
 
     # Optional. Option used by `git-status` to determine if the repository is 
     # dirty. See https://git-scm.com/docs/git-status#_options
@@ -119,7 +124,7 @@ The following is an extended example with all available options.
     create_branch: true
 
     # Optional. Creates a new tag and pushes it to remote without creating a commit. 
-    # Skips dirty check and changed files. Must be used with `tagging_message`.
+    # Skips dirty check and changed files. Must be used in combination with `tag` and `tagging_message`.
     create_git_tag_only: false
 ```
 
