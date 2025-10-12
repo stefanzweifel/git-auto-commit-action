@@ -88,11 +88,11 @@ The following is an extended example with all available options.
         
     # Optional. Tag name to be created in the local repository and 
     # pushed to the remote repository on the defined branch.
-    # If only one of `tag` or `tagging_message` is provided, the value of the provided field will be used for both tag name and message.
-    tag: 'v1.0.0'
+    # If only one of `tag_name` or `tagging_message` is provided, the value of the provided field will be used for both tag name and message.
+    tag_name: 'v1.0.0'
 
     # Optional. Message to annotate the created tag with.
-    # If only one of `tag` or `tagging_message` is provided, the value of the provided field will be used for both tag name and message.
+    # If only one of `tag_name` or `tagging_message` is provided, the value of the provided field will be used for both tag name and message.
     tagging_message: 'Codename "Sunshine"'
 
     # Optional. Option used by `git-status` to determine if the repository is 
