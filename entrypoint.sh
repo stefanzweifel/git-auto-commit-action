@@ -180,11 +180,11 @@ _tag_commit() {
     echo "INPUT_TAGGING_MESSAGE: ${INPUT_TAGGING_MESSAGE}"
 
     if [ -n "$INPUT_TAG" ] || [ -n "$INPUT_TAGGING_MESSAGE" ]; then
-        TAG=${INPUT_TAG:-$INPUT_TAGGING_MESSAGE}
-        MESSAGE=${INPUT_TAGGING_MESSAGE:-$INPUT_TAG}
+        INTERNAL_TAG=${INPUT_TAG:-$INPUT_TAGGING_MESSAGE}
+        INTERNAL_TAGGING_MESSAGE=${INPUT_TAGGING_MESSAGE:-$INPUT_TAG}
 
-        _log "debug" "Create tag $TAG: $MESSAGE"
-        git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" tag -a "$TAG" -m "$MESSAGE"
+        _log "debug" "Create tag $INTERNAL_TAG: $INTERNAL_TAGGING_MESSAGE"
+        git -c user.name="$INPUT_COMMIT_USER_NAME" -c user.email="$INPUT_COMMIT_USER_EMAIL" tag -a "$INTERNAL_TAG" -m "$INTERNAL_TAGGING_MESSAGE"
     else
         echo "Neither tag nor tag message is set. No tag will be added.";
     fi
