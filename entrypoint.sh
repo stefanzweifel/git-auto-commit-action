@@ -27,25 +27,13 @@ _log() {
 }
 
 _main() {
-    if "$INPUT_SKIP_FETCH"; then
-        _log "warning" "git-auto-commit: skip_fetch has been removed in v6. It does not have any effect anymore.";
-    fi
-
-    if "$INPUT_SKIP_CHECKOUT"; then
-        _log "warning" "git-auto-commit: skip_checkout has been removed in v6. It does not have any effect anymore.";
-    fi
-
-    if "$INPUT_CREATE_BRANCH"; then
-        _log "warning" "git-auto-commit: create_branch has been removed in v6. It does not have any effect anymore.";
-    fi
-
     _check_if_git_is_available
 
     _switch_to_repository
 
     _check_if_is_git_repository
 
-    # _check_if_repository_is_in_detached_state
+    _check_if_repository_is_in_detached_state
 
     if "$INPUT_CREATE_GIT_TAG_ONLY"; then
         _log "debug" "Create git tag only";
@@ -55,6 +43,8 @@ _main() {
     elif _git_is_dirty || "$INPUT_SKIP_DIRTY_CHECK"; then
 
         _set_github_output "changes_detected" "true"
+
+        _switch_to_branch
 
         _add_files
 
@@ -120,10 +110,37 @@ _check_if_is_git_repository() {
 _check_if_repository_is_in_detached_state() {
     if [ -z "$(git symbolic-ref HEAD)" ]
     then
-        _log "error" "Repository is in detached HEAD state. Please make sure you check out a branch. Adjust the `ref` input accordingly.";
-        exit 1;
+        _log "warning" "Repository is in a detached HEAD state. git-auto-commit will likely handle this automatically. To avoid it, check out a branch using the ref option in actions/checkout.";
     else
         _log "debug" "Repository is on a branch.";
+    fi
+}
+
+_switch_to_branch() {
+    echo "INPUT_BRANCH value: $INPUT_BRANCH";
+
+    # Fetch remote to make sure that repo can be switched to the right branch.
+    if "$INPUT_SKIP_FETCH"; then
+        _log "debug" "git-fetch will not be executed.";
+    else
+        _log "debug" "git-fetch will be executed.";
+        git fetch --depth=1;
+    fi
+
+    # If `skip_checkout`-input is true, skip the entire checkout step.
+    if "$INPUT_SKIP_CHECKOUT"; then
+        _log "debug" "git-checkout will not be executed.";
+    else
+        _log "debug" "git-checkout will be executed.";
+        # Create new local branch if `create_branch`-input is true
+        if "$INPUT_CREATE_BRANCH"; then
+            # shellcheck disable=SC2086
+            git checkout -B $INPUT_BRANCH --;
+        else
+            # Switch to branch from current Workflow run
+            # shellcheck disable=SC2086
+            git checkout $INPUT_BRANCH --;
+        fi
     fi
 }
 

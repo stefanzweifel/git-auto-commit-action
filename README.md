@@ -111,9 +111,18 @@ The following is an extended example with all available options.
     # Optional. Disable dirty check and always try to create a commit and push
     skip_dirty_check: true    
 
+    # Optional. Skip internal call to `git fetch`
+    skip_fetch: true
+
+    # Optional. Skip internal call to `git checkout`
+    skip_checkout: true
+
     # Optional. Prevents the shell from expanding filenames. 
     # Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
     disable_globbing: true
+
+    # Optional. Create given branch name in local and remote repository.
+    create_branch: true
 
     # Optional. Creates a new tag and pushes it to remote without creating a commit. 
     # Skips dirty check and changed files. Must be used with `tagging_message`.
@@ -418,6 +427,7 @@ The steps in your workflow might look like this:
     commit_message: ${{ steps.last-commit.outputs.message }}
     commit_options: '--amend --no-edit'
     push_options: '--force'
+    skip_fetch: true
 ```
 
 See discussion in [#159](https://github.com/stefanzweifel/git-auto-commit-action/issues/159#issuecomment-845347950) for details.
