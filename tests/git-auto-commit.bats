@@ -32,7 +32,7 @@ setup() {
     export INPUT_COMMIT_USER_NAME="Test Suite"
     export INPUT_COMMIT_USER_EMAIL="test@github.com"
     export INPUT_COMMIT_AUTHOR="Test Suite <test@users.noreply.github.com>"
-    export INPUT_TAG=""
+    export INPUT_TAG_NAME=""
     export INPUT_TAGGING_MESSAGE=""
     export INPUT_PUSH_OPTIONS=""
     export INPUT_SKIP_DIRTY_CHECK=false
@@ -122,7 +122,7 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
-    assert_line "INPUT_TAG: "
+    assert_line "INPUT_TAG_NAME: "
     assert_line "INPUT_TAGGING_MESSAGE: "
     assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
@@ -146,7 +146,7 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
-    assert_line "INPUT_TAG: "
+    assert_line "INPUT_TAG_NAME: "
     assert_line "INPUT_TAGGING_MESSAGE: "
     assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
@@ -294,7 +294,7 @@ cat_github_output() {
 }
 
 @test "It creates a tag with the commit" {
-    INPUT_TAG="v1.0.0"
+    INPUT_TAG_NAME="v1.0.0"
     INPUT_TAGGING_MESSAGE="MyProduct v1.0.0"
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
@@ -303,7 +303,7 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "INPUT_TAG: v1.0.0"
+    assert_line "INPUT_TAG_NAME: v1.0.0"
     assert_line "INPUT_TAGGING_MESSAGE: MyProduct v1.0.0"
 
     assert_line "::debug::Create tag v1.0.0: MyProduct v1.0.0"
@@ -394,7 +394,7 @@ cat_github_output() {
 
 @test "It uses existing branch when INPUT_BRANCH is empty and INPUT_TAG is set" {
     INPUT_BRANCH=""
-    INPUT_TAG="v2.0.0"
+    INPUT_TAG_NAME="v2.0.0"
     INPUT_TAGGING_MESSAGE="MyProduct v2.0.0"
 
 
@@ -404,7 +404,7 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "INPUT_TAG: v2.0.0"
+    assert_line "INPUT_TAG_NAME: v2.0.0"
     assert_line "::debug::Create tag v2.0.0: MyProduct v2.0.0"
     assert_line "::debug::git push origin --tags"
 
@@ -445,7 +445,7 @@ cat_github_output() {
 
 @test "It pushes generated commit and tag to remote and actually updates the commit shas" {
     INPUT_BRANCH=""
-    INPUT_TAG="v2.0.0"
+    INPUT_TAG_NAME="v2.0.0"
     INPUT_TAGGING_MESSAGE="MyProduct v2.0.0"
 
 
@@ -455,7 +455,7 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "INPUT_TAG: v2.0.0"
+    assert_line "INPUT_TAG_NAME: v2.0.0"
     assert_line "::debug::Create tag v2.0.0: MyProduct v2.0.0"
     assert_line "::debug::git push origin --tags"
 
@@ -480,7 +480,7 @@ cat_github_output() {
     git checkout ${FAKE_DEFAULT_BRANCH}
 
     INPUT_BRANCH="a-new-branch"
-    INPUT_TAG="v2.0.0"
+    INPUT_TAG_NAME="v2.0.0"
     INPUT_TAGGING_MESSAGE="MyProduct v2.0.0"
 
 
@@ -490,7 +490,7 @@ cat_github_output() {
 
     assert_success
 
-    assert_line "INPUT_TAG: v2.0.0"
+    assert_line "INPUT_TAG_NAME: v2.0.0"
     assert_line "::debug::Create tag v2.0.0: MyProduct v2.0.0"
     assert_line "::debug::Push commit to remote branch a-new-branch"
 
@@ -643,7 +643,7 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
-    assert_line "INPUT_TAG: "
+    assert_line "INPUT_TAG_NAME: "
     assert_line "INPUT_TAGGING_MESSAGE: "
     assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
@@ -702,7 +702,7 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
-    assert_line "INPUT_TAG: "
+    assert_line "INPUT_TAG_NAME: "
     assert_line "INPUT_TAGGING_MESSAGE: "
     assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
@@ -1035,7 +1035,7 @@ cat_github_output() {
     assert_line "INPUT_FILE_PATTERN: ."
     assert_line "INPUT_COMMIT_OPTIONS: "
     assert_line "::debug::Apply commit options "
-    assert_line "INPUT_TAG: "
+    assert_line "INPUT_TAG_NAME: "
     assert_line "INPUT_TAGGING_MESSAGE: "
     assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "INPUT_PUSH_OPTIONS: "
@@ -1123,7 +1123,7 @@ END
 
 @test "it creates a tag if create_git_tag_only is set to true and a message has been supplied" {
     INPUT_CREATE_GIT_TAG_ONLY=true
-    INPUT_TAG=v1.0.0
+    INPUT_TAG_NAME=v1.0.0
     INPUT_TAGGING_MESSAGE="MyProduct v1.0.0"
 
     run git_auto_commit
@@ -1153,14 +1153,14 @@ END
 
 @test "it output no tagging message supplied if no tagging message is set but create_git_tag_only is set to true" {
     INPUT_CREATE_GIT_TAG_ONLY=true
-    INPUT_TAG=""
+    INPUT_TAG_NAME=""
     INPUT_TAGGING_MESSAGE=""
 
     run git_auto_commit
 
     assert_success
 
-    assert_line "INPUT_TAG: "
+    assert_line "INPUT_TAG_NAME: "
     assert_line "INPUT_TAGGING_MESSAGE: "
     assert_line "Neither tag nor tag message is set. No tag will be added."
     assert_line "::debug::Create git tag only"
@@ -1452,7 +1452,7 @@ END
 
     assert_success
 
-    assert_line "INPUT_TAG: "
+    assert_line "INPUT_TAG_NAME: "
     assert_line "INPUT_TAGGING_MESSAGE: v1.0.0"
 
     assert_line "::debug::Create tag v1.0.0: v1.0.0"
@@ -1474,7 +1474,7 @@ END
 }
 
 @test "Set a tag only" {
-    INPUT_TAG="v1.0.0"
+    INPUT_TAG_NAME="v1.0.0"
 
     touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
 
@@ -1482,7 +1482,7 @@ END
 
     assert_success
 
-    assert_line "INPUT_TAG: v1.0.0"
+    assert_line "INPUT_TAG_NAME: v1.0.0"
     assert_line "INPUT_TAGGING_MESSAGE: "
 
     assert_line "::debug::Create tag v1.0.0: v1.0.0"

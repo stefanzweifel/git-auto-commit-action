@@ -44,7 +44,7 @@ inputs:
     description: Value used for the commit author. Defaults to the username of whoever triggered this workflow run.
     required: false
     default: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
-  tag:
+  tag_name:
     description: Tag name used for creating a new git tag with the commit. Keep this empty, if no tag should be created.
     required: false
     default: ''
