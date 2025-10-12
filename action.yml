@@ -45,11 +45,11 @@ inputs:
     required: false
     default: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
   tag:
-    description: New git tag with the commit. Keep this empty, if no tag should be created.
+    description: Tag name used for creating a new git tag with the commit. Keep this empty, if no tag should be created.
     required: false
     default: ''
   tagging_message:
-    description: Message used to create a new git tag with the commit.
+    description: Tagging message used for creating a new git tag with the commit. Keep this empty, if no tag should be created.
     required: false
     default: ''
   push_options:
