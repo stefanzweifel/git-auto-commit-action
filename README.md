@@ -216,7 +216,7 @@ If this Action doesn't work for your workflow, check out [EndBug/add-and-commit]
 
 ### Checkout the correct branch
 
-You must use `action/checkout@v2` or later versions to check out the repository.
+You must use `actions/checkout@v2` or later versions to check out the repository.
 In non-`push` events, such as `pull_request`, make sure to specify the `ref` to check out:
 
 ```yaml
