@@ -68,6 +68,10 @@ inputs:
     description: Skip the call to git-checkout.
     required: false
     default: false
+  skip_push:
+    description: Skip the call to git-push.
+    required: false
+    default: false
   disable_globbing:
     description: Stop the shell from expanding filenames (https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
     default: false
