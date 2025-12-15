@@ -115,6 +115,8 @@ The following is an extended example with all available options.
 
     # Optional. Skip internal call to `git checkout`
     skip_checkout: true
+    
+    # Optional. Skip internal call to `git push`
 
     # Optional. Prevents the shell from expanding filenames. 
     # Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
