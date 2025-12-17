@@ -38,6 +38,7 @@ setup() {
     export INPUT_SKIP_DIRTY_CHECK=false
     export INPUT_SKIP_FETCH=false
     export INPUT_SKIP_CHECKOUT=false
+    export INPUT_SKIP_PUSH=false
     export INPUT_DISABLE_GLOBBING=false
     export INPUT_CREATE_BRANCH=false
     export INPUT_INTERNAL_GIT_BINARY=git
@@ -350,6 +351,24 @@ cat_github_output() {
     remote_sha="$(git rev-parse --verify --short origin/${FAKE_DEFAULT_BRANCH})"
 
     assert_equal $current_sha $remote_sha
+}
+
+@test "If SKIP_PUSH is true git-push will not be called" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    INPUT_SKIP_PUSH=true
+
+    run git_auto_commit
+
+    assert_success
+
+    assert_line "::debug::git-push will not be executed."
+
+    # Assert that the sha values are not equal on local and remote
+    current_sha="$(git rev-parse --verify --short ${FAKE_DEFAULT_BRANCH})"
+    remote_sha="$(git rev-parse --verify --short origin/${FAKE_DEFAULT_BRANCH})"
+
+    refute [assert_equal $current_sha $remote_sha]
 }
 
 @test "It can checkout a different branch" {
