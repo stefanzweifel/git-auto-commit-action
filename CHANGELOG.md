@@ -5,9 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.0.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.1.0...HEAD)
 
 > TBD
+
+## [v7.1.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.0.0...v7.1.0) - 2025-12-17
+
+### Added
+
+- Add skip_push input option ([#401](https://github.com/stefanzweifel/git-auto-commit-action/pull/401)) [@kvanzuijlen](https://github.com/@kvanzuijlen)
+
+### Changes
+
+- docs: fix typo in README.md ([#400](https://github.com/stefanzweifel/git-auto-commit-action/pull/400)) [@GideonBear](https://github.com/@GideonBear)
+
+### Dependency Updates
+
+- Bump actions/checkout from 5 to 6 ([#399](https://github.com/stefanzweifel/git-auto-commit-action/pull/399)) [@[dependabot[bot]](https://github.com/apps/dependabot)](https://github.com/@[dependabot[bot]](https://github.com/apps/dependabot))
+- Bump bats from 1.12.0 to 1.13.0 ([#398](https://github.com/stefanzweifel/git-auto-commit-action/pull/398)) [@[dependabot[bot]](https://github.com/apps/dependabot)](https://github.com/@[dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v7.0.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v6.0.1...v7.0.0) - 2025-10-12
 
