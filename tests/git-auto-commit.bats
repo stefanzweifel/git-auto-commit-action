@@ -364,8 +364,7 @@ cat_github_output() {
 
     assert_line "::debug::git-push will not be executed."
 
-    # Assert that the commit has been pushed with --force and
-    # sha values are not equal on local and remote
+    # Assert that the sha values are not equal on local and remote
     current_sha="$(git rev-parse --verify --short ${FAKE_DEFAULT_BRANCH})"
     remote_sha="$(git rev-parse --verify --short origin/${FAKE_DEFAULT_BRANCH})"
 
