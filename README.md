@@ -42,6 +42,8 @@ jobs:
       - uses: actions/checkout@v5
         with:
           ref: ${{ github.head_ref }}
+          # Value already defaults to true, but `persist-credentials` is required to push new commits to the repository.
+          persist-credentials: true
 
       # Other steps that change files in the repository go here
       # …
@@ -444,7 +446,9 @@ Make sure to [checkout the correct branch](#checkout-the-correct-branch).
 If your Workflow can't push the commit to the repository because of authentication issues,
 please update your Workflow configuration and usage of [`actions/checkout`](https://github.com/actions/checkout#usage).
 
-Updating the `token` value with a Personal Access Token should fix your issues.
+Please note that `persist-credentials` in `actions/checkout` must be set to `true` to push new commits to the repository.
+
+If you still can't push the commit, and you're using branch protection rules or similar features, updating the `token` value with a Personal Access Token should fix your issues.
 
 ### git-auto-commit fails to push commit that creates or updates files in `.github/workflows/`
 
