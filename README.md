@@ -11,6 +11,11 @@ By default, the commit is made in the name of "GitHub Actions" and co-authored b
 
 If you want to learn more how this Action works under the hood, check out [this article](https://michaelheap.com/git-auto-commit/) by Michael Heap.
 
+If your use case is not covered by git-auto-commit, you might want to check out the following alternative Actions:
+
+- [planetscale/ghcommit-action](https://github.com/planetscale/ghcommit-action)
+- [EndBug/add-and-commit](https://github.com/EndBug/add-and-commit)
+
 ## Usage
 
 Adding git-auto-commit to your Workflow only takes a couple lines of code.
