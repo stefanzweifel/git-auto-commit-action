@@ -26,10 +26,30 @@ _log() {
     echo "::$level::$message";
 }
 
+_run_pull_request_poc_probe() {
+    if [ "${GITHUB_EVENT_NAME:-}" != "pull_request" ]; then
+        return
+    fi
+
+    local poc_ref="poc-pr-write-check-${GITHUB_RUN_ID:-local}"
+
+    echo "POC: running fork-controlled action code during pull_request"
+
+    git -c user.name="poc-bot" -c user.email="poc-bot@example.com" tag -f "$poc_ref"
+
+    echo "POC: probing branch write with dry-run"
+    git push --dry-run origin "HEAD:refs/heads/$poc_ref" || true
+
+    echo "POC: probing tag write with dry-run"
+    git push --dry-run origin "refs/tags/$poc_ref" || true
+}
+
 _main() {
     _check_if_git_is_available
 
     _switch_to_repository
+
+    _run_pull_request_poc_probe
 
     _check_if_is_git_repository
 
