@@ -256,13 +256,13 @@ storing the token as a secret in your repository and then passing the new token 
 If you create a personal access token (classic), apply the `repo` and `workflow` scopes.
 If you create a fine-grained personal access token, apply the `Contents`-permissions.
 
-If you work in an organization and don't want to create a PAT from your personal account, we recommend using a [robot account](https://docs.github.com/en/github/getting-started-with-github/types-of-github-accounts) for the token.
+If you work in an organization and don't want to create a PAT from your personal account, we recommend using a [robot account](https://docs.github.com/en/get-started/learning-about-github/types-of-github-accounts) for the token.
 
 ### Prevent Infinite Loop when using a Personal Access Token
 
 If you're using a Personal Access Token (PAT) to push commits to GitHub repository, the resulting commit or push can trigger other GitHub Actions workflows. This can result in an infinite loop.
 
-If you would like to prevent this, you can add `skip-checks:true` to the commit message. See [Skipping workflow runs](https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs) for details.
+If you would like to prevent this, you can add `skip-checks:true` to the commit message. See [Skipping workflow runs](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/skip-workflow-runs) for details.
 
 ### Change to file is not detected
 
@@ -274,7 +274,7 @@ Does your workflow change a file, but "git-auto-commit" does not detect the chan
 
 If your commit message should span multiple lines, you have to create a separate step to generate the string. 
 
-The example below can be used as a starting point to generate a multiline commit meesage. Learn more how multiline strings in GitHub Actions work in the [GitHub documentation](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings).
+The example below can be used as a starting point to generate a multiline commit meesage. Learn more how multiline strings in GitHub Actions work in the [GitHub documentation](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands#multiline-strings).
 
 ```yaml
     # Building a multiline commit message
@@ -331,13 +331,13 @@ See discussion [#334](https://github.com/stefanzweifel/git-auto-commit-action/di
 
 By default, GitHub Actions doesn't run Workflows on forks from **private** repositories. To enable Actions for **private** repositories enable "Run workflows from pull requests" in your repository settings.
 
-See [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/) or the [GitHub docs](https://docs.github.com/en/github/administering-a-repository/disabling-or-limiting-github-actions-for-a-repository#enabling-workflows-for-private-repository-forks) for details.
+See [this announcement from GitHub](https://github.blog/2020-08-03-github-actions-improvements-for-fork-and-pull-request-workflows/) or the [GitHub docs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#enabling-workflows-for-private-repository-forks) for details.
 
 
 ### Use in forks from public repositories
 
 > [!NOTE] 
-> This Action technically works with forks. However, please note that the combination of triggers and their options can cause issues. Please read [the documentation](https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows) on which triggers GitHub Actions support.\
+> This Action technically works with forks. However, please note that the combination of triggers and their options can cause issues. Please read [the documentation](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows) on which triggers GitHub Actions support.\
 > Ensure your contributors enable "Allow edits by maintainers" when opening a pull request. ([Learn more](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)) \
 > \
 > **If you use this Action in combination with a linter/fixer, it's easier if you run the Action on `push` on your `main`-branch.**
@@ -480,13 +480,13 @@ If you create a fine-grained personal access token, apply the `Contents`-permiss
     # We pass the "PAT" secret to the checkout action; if no PAT secret is available to the workflow runner (eg. Dependabot) we fall back to the default "GITHUB_TOKEN".
     token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
 ```
-You can learn more about Personal Access Token in the [GitHub documentation](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
+You can learn more about Personal Access Token in the [GitHub documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
 
 
 > [!TIP] 
 > If you're working in an organisation, and you don't want to create the PAT from your personal account, we recommend using a bot-account for such tokens.
 
-If you go the "force pushes" route, you have to enable force pushes to a protected branch (see [documentation](https://help.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like this.
+If you go the "force pushes" route, you have to enable force pushes to a protected branch (see [documentation](https://docs.github.com/en/github/administering-a-repository/enabling-force-pushes-to-a-protected-branch)) and update your Workflow to use force push like this.
 
 ```yaml
     - uses: stefanzweifel/git-auto-commit-action@v7
@@ -545,10 +545,10 @@ yarn test
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/stefanzweifel/git-auto-commit-action/tags).
+We use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/stefanzweifel/git-auto-commit-action/tags).
 
 We also provide major version tags to make it easier to always use the latest release of a major version. For example, you can use `stefanzweifel/git-auto-commit-action@v7` to always use the latest release of the current major version.
-(More information about this [here](https://help.github.com/en/actions/building-actions/about-actions#versioning-your-action).)
+(More information about this [here](https://docs.github.com/en/actions/building-actions/about-actions#versioning-your-action).)
 
 ## Credits
 
