@@ -92,7 +92,7 @@ inputs:
 
 outputs:
   changes_detected:
-    description: Value is "true" if changes were detected and committed. Value is "false" if the working tree was clean or only CRLF changes were staged. Not set in `create_git_tag_only` mode.
+    description: Value is "true" if matching changes were detected and committed. Value is "false" if no matching changes were detected or only CRLF changes were staged. Not set in `create_git_tag_only` mode.
   commit_hash:
     description: Full hash of the created commit. Only set when a commit was actually made (i.e. `changes_detected` is "true").
   create_git_tag_only:
