@@ -25,7 +25,7 @@ inputs:
     required: false
     default: ''
   file_pattern:
-    description: File pattern used for `git add`. For example `src/*.js`
+    description: File pattern used for `git add` and the dirty-check (`git status`). Supports multiple space-separated patterns. For example `src/*.js`
     required: false
     default: '.'
   repository:
@@ -74,9 +74,11 @@ inputs:
     default: false
   disable_globbing:
     description: Stop the shell from expanding filenames (https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
+    required: false
     default: false
   create_branch:
     description: Create new branch with the name of `branch`-input in local and remote repository, if it doesn't exist yet.
+    required: false
     default: false
   create_git_tag_only:
     description: Perform a clean git tag and push, without commiting anything
@@ -84,16 +86,17 @@ inputs:
     default: false
   internal_git_binary:
     description: Internal use only! Path to git binary used to check if git is available. (Don't change this!)
+    required: false
     default: git
 
 
 outputs:
   changes_detected:
-    description: Value is "true", if the repository was dirty and file changes have been detected. Value is "false", if no changes have been detected.
+    description: Value is "true" if matching changes were detected and committed. Value is "false" if no matching changes were detected or only CRLF changes were staged. Not set in `create_git_tag_only` mode.
   commit_hash:
-    description: Full hash of the created commit. Only present if the "changes_detected" output is "true".
+    description: Full hash of the created commit. Only set when a commit was actually made (i.e. `changes_detected` is "true").
   create_git_tag_only:
-    description: Value is "true", if a git tag was created using the `create_git_tag_only`-input.
+    description: Set to "true" when the action ran in `create_git_tag_only` mode. Never set to "false".
 
 runs:
   using: 'node24'
