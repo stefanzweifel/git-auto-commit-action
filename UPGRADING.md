@@ -4,7 +4,8 @@
 
 The previously removed options `create_branch`, `skip_fetch`, and `skip_checkout` have been reintroduced in git-auto-commit v7. If you had removed these options from your workflows when upgrading to v6, you can now add them back if needed.
 
-Tagging a commit has been reworked. In addition to the existing `tagging_message`-option, a new `tag_name` option has been added. If you were using `tagging_message`, you can continue to do so, but if you want to specify a custom tag name and tag message, you can now use the `tag_name` and `tagging_message` option.
+Tagging a commit has been reworked. In addition to the existing `tagging_message`-option, a new `tag_name` option has been added. If you were using `tagging_message`, you can continue to do so, but if you want to specify a custom tag name and tag message, you can now use the `tag_name` and `tagging_message` options.
+
 (Specifying a `tagging_message` without a `tag_name` will create a tag with the name and message both set to the value of `tagging_message`.)
 
 ## From v5 to v6
