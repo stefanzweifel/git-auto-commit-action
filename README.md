@@ -177,6 +177,8 @@ jobs:
         commit_message: Apply php-cs-fixer changes
 ```
 
+See [EXAMPLES.md](EXAMPLES.md) for more scenarios, including auto-formatting, dependency updates, generated docs, release tagging, drift checks, and GPG-signed commits.
+
 ## Inputs
 
 Checkout [`action.yml`](https://github.com/stefanzweifel/git-auto-commit-action/blob/master/action.yml) for a full list of supported inputs.
