@@ -136,6 +136,11 @@ The following is an extended example with all available options.
     # Optional. Creates a new tag and pushes it to remote without creating a commit.
     # Skips dirty check and changed files. Must be used in combination with `tag` and `tagging_message`.
     create_git_tag_only: false
+
+    # Optional. Suppress the security warning emitted when the action runs on a
+    # `pull_request_target` event. See the "Workflow should run in **base** repository"
+    # section below for context before disabling this warning.
+    disable_pull_request_target_trigger_warning: false
 ```
 
 Please note that the Action depends on `bash`. If you're using the Action in a job in combination with a custom Docker container, make sure that `bash` is installed.
