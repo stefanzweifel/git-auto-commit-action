@@ -26,6 +26,16 @@ _log() {
     echo "::$level::$message";
 }
 
+_run_hook() {
+    local name=${1}
+    local snippet=${2}
+
+    if [ -n "$snippet" ]; then
+        _log "debug" "Running $name hook";
+        eval "$snippet"
+    fi
+}
+
 _main() {
     _check_if_git_is_available
 

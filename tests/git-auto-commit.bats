@@ -43,6 +43,14 @@ setup() {
     export INPUT_CREATE_BRANCH=false
     export INPUT_DISABLE_PULL_REQUEST_TARGET_TRIGGER_WARNING=false
     export INPUT_INTERNAL_GIT_BINARY=git
+    export INPUT_BEFORE_ADD=""
+    export INPUT_AFTER_ADD=""
+    export INPUT_BEFORE_COMMIT=""
+    export INPUT_AFTER_COMMIT=""
+    export INPUT_BEFORE_TAG=""
+    export INPUT_AFTER_TAG=""
+    export INPUT_BEFORE_PUSH=""
+    export INPUT_AFTER_PUSH=""
 
     # Unset the GitHub event name by default so tests do not pick up
     # pull_request_target from the environment of the shell running BATS.
@@ -1571,4 +1579,13 @@ END
 
     assert_success
     refute_output --partial "::warning::git-auto-commit is running on a 'pull_request_target' event."
+}
+
+@test "It does not log a hook line when no hooks are set" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+
+    run git_auto_commit
+
+    assert_success
+    refute_output --partial "::debug::Running"
 }
