@@ -356,10 +356,13 @@ However, there are a couple of ways to use this Action in Workflows that should 
 > [!CAUTION]
 > The following section explains how you can use git-auto-commit in combination with the `pull_request_target` trigger.
 > **Using `pull_request_target` in your workflows can lead to repository compromise as [mentioned](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/) by GitHub's own security team. This means, that a bad actor could potentially leak/steal your GitHub Actions repository secrets.**
-> Please be aware of this risk when using `pull_request_target` in your workflows.
+> Please be aware of this risk when using `pull_request_target` in your workflows. See [GitHub's documentation](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target) for more information.
 >
 > If your workflow runs code-fixing tools, consider running the workflow on your default branch by listening to the `push` event or use a third-party tool like [autofix.ci](https://autofix.ci/).
 > We keep this documentation around, as many questions came in over the years, on how to use this action for public forks.
+>
+> To remind users of this risk, git-auto-commit emits a warning annotation whenever it detects it is running on a `pull_request_target` event.
+> If you have evaluated the risk and want to silence the warning, set the `disable_pull_request_target_trigger_warning` input to `true`.
 
 The workflow below runs whenever a commit is pushed to the `main`-branch or when activity on a pull request happens, by listening to the [`pull_request_target`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target) event.
 

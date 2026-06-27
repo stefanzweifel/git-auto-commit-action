@@ -35,6 +35,8 @@ _main() {
 
     _check_if_repository_is_in_detached_state
 
+    _check_for_pull_request_target_trigger
+
     if "$INPUT_CREATE_GIT_TAG_ONLY"; then
         _log "debug" "Create git tag only";
         _set_github_output "create_git_tag_only" "true"
@@ -104,6 +106,16 @@ _check_if_is_git_repository() {
     else
         _log "error" "Not a git repository. Please make sure to run this action in a git repository. Adjust the `repository` input if necessary.";
         exit 1;
+    fi
+}
+
+_check_for_pull_request_target_trigger() {
+    if "$INPUT_DISABLE_PULL_REQUEST_TARGET_TRIGGER_WARNING"; then
+        return
+    fi
+
+    if [ "${GITHUB_EVENT_NAME:-}" = "pull_request_target" ]; then
+        _log "warning" "git-auto-commit is running on a 'pull_request_target' event. This trigger can be a security risk: a malicious pull request could potentially exfiltrate your repository secrets. See https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target and the 'pull_request_target' section in the git-auto-commit README (https://github.com/stefanzweifel/git-auto-commit-action#using-the-action-in-a-pull_request_target-workflow) for safer usage. Set 'disable_pull_request_target_trigger_warning: true' to suppress this warning.";
     fi
 }
 
