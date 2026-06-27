@@ -141,6 +141,19 @@ The following is an extended example with all available options.
     # `pull_request_target` event. See the "Workflow should run in **base** repository"
     # section below for context before disabling this warning.
     disable_pull_request_target_trigger_warning: false
+
+    # Optional. Shell snippets to run around each git operation. Each hook
+    # is evaluated in the same bash process as the action — `set -eu` is
+    # in effect, the working directory is your repository, and all
+    # `INPUT_*` env vars are visible. A non-zero exit aborts the action.
+    before_add: 'git fetch --unshallow'
+    after_add: ''
+    before_commit: ''
+    after_commit: ''
+    before_tag: ''
+    after_tag: ''
+    before_push: ''
+    after_push: ''
 ```
 
 Please note that the Action depends on `bash`. If you're using the Action in a job in combination with a custom Docker container, make sure that `bash` is installed.
@@ -214,6 +227,56 @@ You can use these outputs to trigger other Actions in your Workflow run based on
     if: steps.auto-commit-action.outputs.changes_detected == 'false'
     run: echo "No Changes!"
 ```
+
+## Hooks
+
+git-auto-commit can run custom shell snippets around each git operation
+it performs. This is useful when you need to prepare or clean up the
+repository as part of the same step — for example, unshallowing a
+shallow clone right before the commit is staged.
+
+Eight optional hooks are available:
+
+| Hook | Runs |
+| ---- | ---- |
+| `before_add` / `after_add` | around `git add` |
+| `before_commit` / `after_commit` | around `git commit` |
+| `before_tag` / `after_tag` | around `git tag` (only when a tag is being created) |
+| `before_push` / `after_push` | around `git push` (skipped when `skip_push: true`) |
+
+Each hook is an inline shell snippet that runs in the same bash process
+as the action. The working directory is your repository, and all
+`INPUT_*` environment variables and standard GitHub Actions env vars are
+visible to the snippet.
+
+### Example
+
+```yaml
+- uses: stefanzweifel/git-auto-commit-action@v7
+  with:
+    before_add: |
+      git fetch --unshallow
+```
+
+Multi-line snippets work via YAML's `|` block scalar:
+
+```yaml
+- uses: stefanzweifel/git-auto-commit-action@v7
+  with:
+    before_commit: |
+      echo "About to commit at $(date)"
+      ./scripts/prepare-commit.sh
+```
+
+### Notes
+
+- A hook only runs when its underlying step actually runs. For example,
+  `before_add`/`after_add` are skipped when the working tree is clean,
+  and `before_push`/`after_push` are skipped when `skip_push: true`.
+- If a hook exits with a non-zero status, the action fails. Append
+  `|| true` to a snippet to ignore its failure.
+- Hooks share environment with the action, so they can read action
+  inputs (e.g. `$INPUT_COMMIT_MESSAGE`) and write to `$GITHUB_OUTPUT`.
 
 ## Limitations & Gotchas
 
