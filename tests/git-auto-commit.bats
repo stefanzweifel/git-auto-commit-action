@@ -1745,8 +1745,7 @@ END
     assert_failure
     assert_line "::debug::Running before_commit hook"
 
-    # Assert the action stopped before pushing — local and remote shas differ.
-    current_sha="$(git rev-parse --verify --short ${FAKE_DEFAULT_BRANCH})"
-    remote_sha="$(git rev-parse --verify --short origin/${FAKE_DEFAULT_BRANCH})"
-    refute [assert_equal $current_sha $remote_sha]
+    # Assert the action aborted before committing: no commit_hash output was written.
+    run cat_github_output
+    refute_line -e "commit_hash=[0-9a-f]{40}$"
 }
