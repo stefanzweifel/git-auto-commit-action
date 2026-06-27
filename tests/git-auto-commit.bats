@@ -1589,3 +1589,72 @@ END
     assert_success
     refute_output --partial "::debug::Running"
 }
+
+@test "It runs the before_add hook before git add" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_ADD="echo BEFORE_ADD_RAN > '${FAKE_LOCAL_REPOSITORY}/before-add-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_add hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/before-add-marker.txt" ]
+}
+
+@test "It runs the after_add hook after git add" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_AFTER_ADD="echo AFTER_ADD_RAN > '${FAKE_LOCAL_REPOSITORY}/after-add-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running after_add hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/after-add-marker.txt" ]
+}
+
+@test "It runs the before_commit hook before creating the commit" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_COMMIT="echo BEFORE_COMMIT_RAN > '${FAKE_LOCAL_REPOSITORY}/before-commit-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_commit hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/before-commit-marker.txt" ]
+
+    # The marker was created after `git add` ran, so it is NOT in the commit.
+    run git show --name-only HEAD
+    refute_output --partial "before-commit-marker.txt"
+}
+
+@test "It runs the after_commit hook after creating the commit" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_AFTER_COMMIT="git rev-parse HEAD > '${FAKE_LOCAL_REPOSITORY}/after-commit-sha.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running after_commit hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/after-commit-sha.txt" ]
+
+    # Sanity check: the SHA written is a valid commit hash
+    run cat "${FAKE_LOCAL_REPOSITORY}/after-commit-sha.txt"
+    assert_output --regexp '^[0-9a-f]{40}$'
+}
+
+@test "It does not run add or commit hooks when the working tree is clean" {
+    export INPUT_BEFORE_ADD="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/before-add-marker.txt'"
+    export INPUT_AFTER_ADD="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/after-add-marker.txt'"
+    export INPUT_BEFORE_COMMIT="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/before-commit-marker.txt'"
+    export INPUT_AFTER_COMMIT="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/after-commit-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "Working tree clean. Nothing to commit."
+    refute_output --partial "::debug::Running"
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-add-marker.txt" ]
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-add-marker.txt" ]
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-commit-marker.txt" ]
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-commit-marker.txt" ]
+}

@@ -58,14 +58,18 @@ _main() {
 
         _switch_to_branch
 
+        _run_hook "before_add" "$INPUT_BEFORE_ADD"
         _add_files
+        _run_hook "after_add" "$INPUT_AFTER_ADD"
 
         # Check dirty state of repo again using git-diff.
         # (git-diff detects better if CRLF of files changes and does NOT
         # proceed, if only CRLF changes are detected. See #241 and #265
         # for more details.)
         if [ -n "$(git diff --staged)" ] || "$INPUT_SKIP_DIRTY_CHECK"; then
+            _run_hook "before_commit" "$INPUT_BEFORE_COMMIT"
             _local_commit
+            _run_hook "after_commit" "$INPUT_AFTER_COMMIT"
 
             _tag_commit
 
