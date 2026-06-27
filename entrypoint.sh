@@ -50,8 +50,22 @@ _main() {
     if "$INPUT_CREATE_GIT_TAG_ONLY"; then
         _log "debug" "Create git tag only";
         _set_github_output "create_git_tag_only" "true"
-        _tag_commit
+
+        if [ -n "$INPUT_TAG_NAME" ] || [ -n "$INPUT_TAGGING_MESSAGE" ]; then
+            _run_hook "before_tag" "$INPUT_BEFORE_TAG"
+            _tag_commit
+            _run_hook "after_tag" "$INPUT_AFTER_TAG"
+        else
+            _tag_commit
+        fi
+
+        if ! "$INPUT_SKIP_PUSH"; then
+            _run_hook "before_push" "$INPUT_BEFORE_PUSH"
+        fi
         _push_to_github
+        if ! "$INPUT_SKIP_PUSH"; then
+            _run_hook "after_push" "$INPUT_AFTER_PUSH"
+        fi
     elif _git_is_dirty || "$INPUT_SKIP_DIRTY_CHECK"; then
 
         _set_github_output "changes_detected" "true"
@@ -71,9 +85,21 @@ _main() {
             _local_commit
             _run_hook "after_commit" "$INPUT_AFTER_COMMIT"
 
-            _tag_commit
+            if [ -n "$INPUT_TAG_NAME" ] || [ -n "$INPUT_TAGGING_MESSAGE" ]; then
+                _run_hook "before_tag" "$INPUT_BEFORE_TAG"
+                _tag_commit
+                _run_hook "after_tag" "$INPUT_AFTER_TAG"
+            else
+                _tag_commit
+            fi
 
+            if ! "$INPUT_SKIP_PUSH"; then
+                _run_hook "before_push" "$INPUT_BEFORE_PUSH"
+            fi
             _push_to_github
+            if ! "$INPUT_SKIP_PUSH"; then
+                _run_hook "after_push" "$INPUT_AFTER_PUSH"
+            fi
         else
             _set_github_output "changes_detected" "false"
 

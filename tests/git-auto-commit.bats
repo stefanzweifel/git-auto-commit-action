@@ -1658,3 +1658,80 @@ END
     [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-commit-marker.txt" ]
     [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-commit-marker.txt" ]
 }
+
+@test "It runs before_tag and after_tag hooks when creating a tag" {
+    INPUT_TAG_NAME="v1.0.0"
+    INPUT_TAGGING_MESSAGE="Release v1.0.0"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_TAG="echo BEFORE_TAG_RAN > '${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt'"
+    export INPUT_AFTER_TAG="echo AFTER_TAG_RAN > '${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_tag hook"
+    assert_line "::debug::Running after_tag hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt" ]
+    [ -f "${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt" ]
+}
+
+@test "It does not run tag hooks when no tag name or tagging message is set" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_TAG="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt'"
+    export INPUT_AFTER_TAG="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    refute_line "::debug::Running before_tag hook"
+    refute_line "::debug::Running after_tag hook"
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt" ]
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt" ]
+}
+
+@test "It runs tag hooks under create_git_tag_only mode" {
+    INPUT_CREATE_GIT_TAG_ONLY=true
+    INPUT_TAG_NAME="v1.0.0"
+    INPUT_TAGGING_MESSAGE="Release v1.0.0"
+
+    export INPUT_BEFORE_TAG="echo BEFORE_TAG_RAN > '${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt'"
+    export INPUT_AFTER_TAG="echo AFTER_TAG_RAN > '${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_tag hook"
+    assert_line "::debug::Running after_tag hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt" ]
+    [ -f "${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt" ]
+}
+
+@test "It runs before_push and after_push hooks around git push" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_PUSH="echo BEFORE_PUSH_RAN > '${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt'"
+    export INPUT_AFTER_PUSH="echo AFTER_PUSH_RAN > '${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_push hook"
+    assert_line "::debug::Running after_push hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt" ]
+    [ -f "${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt" ]
+}
+
+@test "It does not run push hooks when skip_push is true" {
+    INPUT_SKIP_PUSH=true
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_PUSH="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt'"
+    export INPUT_AFTER_PUSH="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    refute_line "::debug::Running before_push hook"
+    refute_line "::debug::Running after_push hook"
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt" ]
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt" ]
+}
