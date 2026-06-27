@@ -28,7 +28,7 @@ _log() {
 
 _run_hook() {
     local name=${1}
-    local snippet=${2}
+    local snippet=${2:-}
 
     if [ -n "$snippet" ]; then
         _log "debug" "Running $name hook";
