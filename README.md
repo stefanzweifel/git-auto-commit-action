@@ -277,6 +277,8 @@ Multi-line snippets work via YAML's `|` block scalar:
   `|| true` to a snippet to ignore its failure.
 - Hooks share environment with the action, so they can read action
   inputs (e.g. `$INPUT_COMMIT_MESSAGE`) and write to `$GITHUB_OUTPUT`.
+- Snippets run under `set -eu`. Referencing an unset variable aborts the
+  action; use `${VAR:-}` to default an optional variable to empty.
 
 ## Limitations & Gotchas
 
