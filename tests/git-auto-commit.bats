@@ -41,7 +41,12 @@ setup() {
     export INPUT_SKIP_PUSH=false
     export INPUT_DISABLE_GLOBBING=false
     export INPUT_CREATE_BRANCH=false
+    export INPUT_DISABLE_PULL_REQUEST_TARGET_TRIGGER_WARNING=false
     export INPUT_INTERNAL_GIT_BINARY=git
+
+    # Unset the GitHub event name by default so tests do not pick up
+    # pull_request_target from the environment of the shell running BATS.
+    unset GITHUB_EVENT_NAME
 
     # Set GitHub environment variables used by the GitHub Action
     temp_github_output_file=$(mktemp -t github_output_test.XXXXX)
@@ -1520,4 +1525,50 @@ END
     remote_sha="$(git rev-parse --verify --short origin/${FAKE_DEFAULT_BRANCH})"
 
     assert_equal $current_sha $remote_sha
+}
+
+@test "It emits a warning when running on a pull_request_target event" {
+    export GITHUB_EVENT_NAME="pull_request_target"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+
+    run git_auto_commit
+
+    assert_success
+    assert_output --partial "::warning::git-auto-commit is running on a 'pull_request_target' event."
+    assert_output --partial "disable_pull_request_target_trigger_warning"
+}
+
+@test "It does not emit the pull_request_target warning when the event is pull_request" {
+    export GITHUB_EVENT_NAME="pull_request"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+
+    run git_auto_commit
+
+    assert_success
+    refute_output --partial "::warning::git-auto-commit is running on a 'pull_request_target' event."
+}
+
+@test "It does not emit the pull_request_target warning when GITHUB_EVENT_NAME is unset" {
+    unset GITHUB_EVENT_NAME
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+
+    run git_auto_commit
+
+    assert_success
+    refute_output --partial "::warning::git-auto-commit is running on a 'pull_request_target' event."
+}
+
+@test "It does not emit the pull_request_target warning when disable_pull_request_target_trigger_warning is true" {
+    export GITHUB_EVENT_NAME="pull_request_target"
+    export INPUT_DISABLE_PULL_REQUEST_TARGET_TRIGGER_WARNING=true
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+
+    run git_auto_commit
+
+    assert_success
+    refute_output --partial "::warning::git-auto-commit is running on a 'pull_request_target' event."
 }

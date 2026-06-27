@@ -84,6 +84,10 @@ inputs:
     description: Perform a clean git tag and push, without commiting anything
     required: false
     default: false
+  disable_pull_request_target_trigger_warning:
+    description: Suppress the security warning emitted when the action runs on a `pull_request_target` event.
+    required: false
+    default: false
   internal_git_binary:
     description: Internal use only! Path to git binary used to check if git is available. (Don't change this!)
     required: false
