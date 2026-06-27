@@ -1735,3 +1735,18 @@ END
     [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt" ]
     [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt" ]
 }
+
+@test "A hook that exits non-zero aborts the action" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_COMMIT="exit 1"
+
+    run git_auto_commit
+
+    assert_failure
+    assert_line "::debug::Running before_commit hook"
+
+    # Assert the action stopped before pushing — local and remote shas differ.
+    current_sha="$(git rev-parse --verify --short ${FAKE_DEFAULT_BRANCH})"
+    remote_sha="$(git rev-parse --verify --short origin/${FAKE_DEFAULT_BRANCH})"
+    refute [assert_equal $current_sha $remote_sha]
+}
