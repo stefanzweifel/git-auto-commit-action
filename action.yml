@@ -84,35 +84,35 @@ inputs:
     description: Perform a clean git tag and push, without commiting anything
     required: false
     default: false
-  before_add:
+  before_add_hook:
     description: Shell snippet to run before `git add`.
     required: false
     default: ''
-  after_add:
+  after_add_hook:
     description: Shell snippet to run after `git add`.
     required: false
     default: ''
-  before_commit:
+  before_commit_hook:
     description: Shell snippet to run before `git commit`.
     required: false
     default: ''
-  after_commit:
+  after_commit_hook:
     description: Shell snippet to run after `git commit`.
     required: false
     default: ''
-  before_tag:
+  before_tag_hook:
     description: Shell snippet to run before `git tag` is created.
     required: false
     default: ''
-  after_tag:
+  after_tag_hook:
     description: Shell snippet to run after `git tag` is created.
     required: false
     default: ''
-  before_push:
+  before_push_hook:
     description: Shell snippet to run before `git push`.
     required: false
     default: ''
-  after_push:
+  after_push_hook:
     description: Shell snippet to run after `git push`.
     required: false
     default: ''

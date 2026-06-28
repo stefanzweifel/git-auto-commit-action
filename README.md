@@ -146,14 +146,14 @@ The following is an extended example with all available options.
     # is evaluated in the same bash process as the action — `set -eu` is
     # in effect, the working directory is your repository, and all
     # `INPUT_*` env vars are visible. A non-zero exit aborts the action.
-    before_add: 'git fetch --unshallow'
-    after_add: ''
-    before_commit: ''
-    after_commit: ''
-    before_tag: ''
-    after_tag: ''
-    before_push: ''
-    after_push: ''
+    before_add_hook: 'git fetch --unshallow'
+    after_add_hook: ''
+    before_commit_hook: ''
+    after_commit_hook: ''
+    before_tag_hook: ''
+    after_tag_hook: ''
+    before_push_hook: ''
+    after_push_hook: ''
 ```
 
 Please note that the Action depends on `bash`. If you're using the Action in a job in combination with a custom Docker container, make sure that `bash` is installed.
@@ -239,10 +239,10 @@ Eight optional hooks are available:
 
 | Hook | Runs |
 | ---- | ---- |
-| `before_add` / `after_add` | around `git add` |
-| `before_commit` / `after_commit` | around `git commit` |
-| `before_tag` / `after_tag` | around `git tag` (only when a tag is being created) |
-| `before_push` / `after_push` | around `git push` (skipped when `skip_push: true`) |
+| `before_add_hook` / `after_add_hook` | around `git add` |
+| `before_commit_hook` / `after_commit_hook` | around `git commit` |
+| `before_tag_hook` / `after_tag_hook` | around `git tag` (only when a tag is being created) |
+| `before_push_hook` / `after_push_hook` | around `git push` (skipped when `skip_push: true`) |
 
 Each hook is an inline shell snippet that runs in the same bash process
 as the action. The working directory is your repository, and all
@@ -254,7 +254,7 @@ visible to the snippet.
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v7
   with:
-    before_add: |
+    before_add_hook: |
       git fetch --unshallow
 ```
 
@@ -263,7 +263,7 @@ Multi-line snippets work via YAML's `|` block scalar:
 ```yaml
 - uses: stefanzweifel/git-auto-commit-action@v7
   with:
-    before_commit: |
+    before_commit_hook: |
       echo "About to commit at $(date)"
       ./scripts/prepare-commit.sh
 ```
@@ -271,8 +271,8 @@ Multi-line snippets work via YAML's `|` block scalar:
 ### Notes
 
 - A hook only runs when its underlying step actually runs. For example,
-  `before_add`/`after_add` are skipped when the working tree is clean,
-  and `before_push`/`after_push` are skipped when `skip_push: true`.
+  `before_add_hook`/`after_add_hook` are skipped when the working tree is clean,
+  and `before_push_hook`/`after_push_hook` are skipped when `skip_push: true`.
 - If a hook exits with a non-zero status, the action fails. Append
   `|| true` to a snippet to ignore its failure.
 - Hooks share environment with the action, so they can read action
