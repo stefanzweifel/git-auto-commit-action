@@ -5,9 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.1.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.2.0...HEAD)
 
 > TBD
+
+## [v7.2.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.1.0...v7.2.0) - 2026-06-28
+
+### Added
+
+- Add hooks to run shell snippets around git operations ([#411](https://github.com/stefanzweifel/git-auto-commit-action/pull/411)) [@stefanzweifel](https://github.com/@stefanzweifel)
+- Emit warning for pull_request_target trigger usage ([#410](https://github.com/stefanzweifel/git-auto-commit-action/pull/410)) [@stefanzweifel](https://github.com/@stefanzweifel)
+
+### Fixed
+
+- docs(action): fix input and output descriptions in action.yml ([#406](https://github.com/stefanzweifel/git-auto-commit-action/pull/406)) [@kranthipoturaju](https://github.com/@kranthipoturaju)
+- docs: fix typos, grammar, and formatting across markdown files ([#408](https://github.com/stefanzweifel/git-auto-commit-action/pull/408)) [@kranthipoturaju](https://github.com/@kranthipoturaju)
+- docs: fix broken and redirecting URLs in README.md ([#407](https://github.com/stefanzweifel/git-auto-commit-action/pull/407)) [@kranthipoturaju](https://github.com/@kranthipoturaju)
+- README: clearify meaning of the repository field ([#404](https://github.com/stefanzweifel/git-auto-commit-action/pull/404)) [@gucio321](https://github.com/@gucio321)
+
+### Dependency Updates
+
+- Bump actions/checkout from 6 to 7 ([#409](https://github.com/stefanzweifel/git-auto-commit-action/pull/409)) [@[dependabot[bot]](https://github.com/apps/dependabot)](https://github.com/@[dependabot[bot]](https://github.com/apps/dependabot))
+- Bump release-drafter/release-drafter from 6 to 7 ([#403](https://github.com/stefanzweifel/git-auto-commit-action/pull/403)) [@[dependabot[bot]](https://github.com/apps/dependabot)](https://github.com/@[dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v7.1.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.0.0...v7.1.0) - 2025-12-17
 
