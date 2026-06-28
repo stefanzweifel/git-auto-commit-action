@@ -1597,7 +1597,7 @@ END
     run git_auto_commit
 
     assert_success
-    assert_line "::debug::Running before_add hook"
+    assert_line "::debug::Running before_add_hook"
     [ -f "${FAKE_LOCAL_REPOSITORY}/before-add-marker.txt" ]
 }
 
@@ -1608,7 +1608,7 @@ END
     run git_auto_commit
 
     assert_success
-    assert_line "::debug::Running after_add hook"
+    assert_line "::debug::Running after_add_hook"
     [ -f "${FAKE_LOCAL_REPOSITORY}/after-add-marker.txt" ]
 }
 
@@ -1619,7 +1619,7 @@ END
     run git_auto_commit
 
     assert_success
-    assert_line "::debug::Running before_commit hook"
+    assert_line "::debug::Running before_commit_hook"
     [ -f "${FAKE_LOCAL_REPOSITORY}/before-commit-marker.txt" ]
 
     # The marker was created after `git add` ran, so it is NOT in the commit.
@@ -1634,7 +1634,7 @@ END
     run git_auto_commit
 
     assert_success
-    assert_line "::debug::Running after_commit hook"
+    assert_line "::debug::Running after_commit_hook"
     [ -f "${FAKE_LOCAL_REPOSITORY}/after-commit-sha.txt" ]
 
     # Sanity check: the SHA written is a valid commit hash
@@ -1670,8 +1670,8 @@ END
     run git_auto_commit
 
     assert_success
-    assert_line "::debug::Running before_tag hook"
-    assert_line "::debug::Running after_tag hook"
+    assert_line "::debug::Running before_tag_hook"
+    assert_line "::debug::Running after_tag_hook"
     [ -f "${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt" ]
     [ -f "${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt" ]
 }
@@ -1684,8 +1684,8 @@ END
     run git_auto_commit
 
     assert_success
-    refute_line "::debug::Running before_tag hook"
-    refute_line "::debug::Running after_tag hook"
+    refute_line "::debug::Running before_tag_hook"
+    refute_line "::debug::Running after_tag_hook"
     [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt" ]
     [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt" ]
 }
@@ -1701,8 +1701,8 @@ END
     run git_auto_commit
 
     assert_success
-    assert_line "::debug::Running before_tag hook"
-    assert_line "::debug::Running after_tag hook"
+    assert_line "::debug::Running before_tag_hook"
+    assert_line "::debug::Running after_tag_hook"
     [ -f "${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt" ]
     [ -f "${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt" ]
 }
@@ -1715,8 +1715,8 @@ END
     run git_auto_commit
 
     assert_success
-    assert_line "::debug::Running before_push hook"
-    assert_line "::debug::Running after_push hook"
+    assert_line "::debug::Running before_push_hook"
+    assert_line "::debug::Running after_push_hook"
     [ -f "${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt" ]
     [ -f "${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt" ]
 }
@@ -1730,8 +1730,8 @@ END
     run git_auto_commit
 
     assert_success
-    refute_line "::debug::Running before_push hook"
-    refute_line "::debug::Running after_push hook"
+    refute_line "::debug::Running before_push_hook"
+    refute_line "::debug::Running after_push_hook"
     [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt" ]
     [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt" ]
 }
@@ -1743,7 +1743,7 @@ END
     run git_auto_commit
 
     assert_failure
-    assert_line "::debug::Running before_commit hook"
+    assert_line "::debug::Running before_commit_hook"
 
     # Assert the action aborted before committing: no commit_hash output was written.
     run cat_github_output
