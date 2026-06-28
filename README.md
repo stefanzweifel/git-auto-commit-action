@@ -146,7 +146,7 @@ The following is an extended example with all available options.
     # is evaluated in the same bash process as the action — `set -eu` is
     # in effect, the working directory is your repository, and all
     # `INPUT_*` env vars are visible. A non-zero exit aborts the action.
-    before_add_hook: 'git fetch --unshallow'
+    before_add_hook: ''
     after_add_hook: ''
     before_commit_hook: ''
     after_commit_hook: ''
