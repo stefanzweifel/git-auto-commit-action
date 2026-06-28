@@ -43,6 +43,14 @@ setup() {
     export INPUT_CREATE_BRANCH=false
     export INPUT_DISABLE_PULL_REQUEST_TARGET_TRIGGER_WARNING=false
     export INPUT_INTERNAL_GIT_BINARY=git
+    export INPUT_BEFORE_ADD_HOOK=""
+    export INPUT_AFTER_ADD_HOOK=""
+    export INPUT_BEFORE_COMMIT_HOOK=""
+    export INPUT_AFTER_COMMIT_HOOK=""
+    export INPUT_BEFORE_TAG_HOOK=""
+    export INPUT_AFTER_TAG_HOOK=""
+    export INPUT_BEFORE_PUSH_HOOK=""
+    export INPUT_AFTER_PUSH_HOOK=""
 
     # Unset the GitHub event name by default so tests do not pick up
     # pull_request_target from the environment of the shell running BATS.
@@ -1571,4 +1579,186 @@ END
 
     assert_success
     refute_output --partial "::warning::git-auto-commit is running on a 'pull_request_target' event."
+}
+
+@test "It does not log a hook line when no hooks are set" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+
+    run git_auto_commit
+
+    assert_success
+    refute_output --partial "::debug::Running"
+}
+
+@test "It runs the before_add hook before git add" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_ADD_HOOK="echo BEFORE_ADD_RAN > '${FAKE_LOCAL_REPOSITORY}/before-add-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_add_hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/before-add-marker.txt" ]
+}
+
+@test "It runs the after_add hook after git add" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_AFTER_ADD_HOOK="echo AFTER_ADD_RAN > '${FAKE_LOCAL_REPOSITORY}/after-add-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running after_add_hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/after-add-marker.txt" ]
+}
+
+@test "It runs the before_commit hook before creating the commit" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_COMMIT_HOOK="echo BEFORE_COMMIT_RAN > '${FAKE_LOCAL_REPOSITORY}/before-commit-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_commit_hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/before-commit-marker.txt" ]
+
+    # The marker was created after `git add` ran, so it is NOT in the commit.
+    run git show --name-only HEAD
+    refute_output --partial "before-commit-marker.txt"
+}
+
+@test "It runs the after_commit hook after creating the commit" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_AFTER_COMMIT_HOOK="git rev-parse HEAD > '${FAKE_LOCAL_REPOSITORY}/after-commit-sha.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running after_commit_hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/after-commit-sha.txt" ]
+
+    # Sanity check: the SHA written is a valid commit hash
+    run cat "${FAKE_LOCAL_REPOSITORY}/after-commit-sha.txt"
+    assert_output --regexp '^[0-9a-f]{40}$'
+}
+
+@test "It does not run add or commit hooks when the working tree is clean" {
+    export INPUT_BEFORE_ADD_HOOK="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/before-add-marker.txt'"
+    export INPUT_AFTER_ADD_HOOK="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/after-add-marker.txt'"
+    export INPUT_BEFORE_COMMIT_HOOK="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/before-commit-marker.txt'"
+    export INPUT_AFTER_COMMIT_HOOK="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/after-commit-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "Working tree clean. Nothing to commit."
+    refute_output --partial "::debug::Running"
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-add-marker.txt" ]
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-add-marker.txt" ]
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-commit-marker.txt" ]
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-commit-marker.txt" ]
+}
+
+@test "It runs before_tag and after_tag hooks when creating a tag" {
+    INPUT_TAG_NAME="v1.0.0"
+    INPUT_TAGGING_MESSAGE="Release v1.0.0"
+
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_TAG_HOOK="echo BEFORE_TAG_RAN > '${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt'"
+    export INPUT_AFTER_TAG_HOOK="echo AFTER_TAG_RAN > '${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_tag_hook"
+    assert_line "::debug::Running after_tag_hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt" ]
+    [ -f "${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt" ]
+}
+
+@test "It does not run tag hooks when no tag name or tagging message is set" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_TAG_HOOK="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt'"
+    export INPUT_AFTER_TAG_HOOK="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    refute_line "::debug::Running before_tag_hook"
+    refute_line "::debug::Running after_tag_hook"
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt" ]
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt" ]
+}
+
+@test "It runs tag hooks under create_git_tag_only mode" {
+    INPUT_CREATE_GIT_TAG_ONLY=true
+    INPUT_TAG_NAME="v1.0.0"
+    INPUT_TAGGING_MESSAGE="Release v1.0.0"
+
+    export INPUT_BEFORE_TAG_HOOK="echo BEFORE_TAG_RAN > '${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt'"
+    export INPUT_AFTER_TAG_HOOK="echo AFTER_TAG_RAN > '${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_tag_hook"
+    assert_line "::debug::Running after_tag_hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/before-tag-marker.txt" ]
+    [ -f "${FAKE_LOCAL_REPOSITORY}/after-tag-marker.txt" ]
+}
+
+@test "It runs before_push and after_push hooks around git push" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_PUSH_HOOK="echo BEFORE_PUSH_RAN > '${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt'"
+    export INPUT_AFTER_PUSH_HOOK="echo AFTER_PUSH_RAN > '${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_push_hook"
+    assert_line "::debug::Running after_push_hook"
+    [ -f "${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt" ]
+    [ -f "${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt" ]
+}
+
+@test "It does not run push hooks when skip_push is true" {
+    INPUT_SKIP_PUSH=true
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_PUSH_HOOK="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt'"
+    export INPUT_AFTER_PUSH_HOOK="echo SHOULD_NOT_RUN > '${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt'"
+
+    run git_auto_commit
+
+    assert_success
+    refute_line "::debug::Running before_push_hook"
+    refute_line "::debug::Running after_push_hook"
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/before-push-marker.txt" ]
+    [ ! -f "${FAKE_LOCAL_REPOSITORY}/after-push-marker.txt" ]
+}
+
+@test "A hook that exits non-zero aborts the action" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_COMMIT_HOOK="exit 1"
+
+    run git_auto_commit
+
+    assert_failure
+    assert_line "::debug::Running before_commit_hook"
+
+    # Assert the action aborted before committing: no commit_hash output was written.
+    run cat_github_output
+    refute_line -e "commit_hash=[0-9a-f]{40}$"
+}
+
+@test "A before_commit hook can mutate INPUT_COMMIT_MESSAGE and the change is reflected in the commit" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_COMMIT_HOOK="INPUT_COMMIT_MESSAGE='message rewritten by hook'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_commit_hook"
+
+    run git -C "${FAKE_LOCAL_REPOSITORY}" log -1 --pretty=%B
+    assert_line "message rewritten by hook"
 }

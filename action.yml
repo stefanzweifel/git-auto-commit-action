@@ -84,6 +84,38 @@ inputs:
     description: Perform a clean git tag and push, without commiting anything
     required: false
     default: false
+  before_add_hook:
+    description: Shell snippet to run before `git add`.
+    required: false
+    default: ''
+  after_add_hook:
+    description: Shell snippet to run after `git add`.
+    required: false
+    default: ''
+  before_commit_hook:
+    description: Shell snippet to run before `git commit`.
+    required: false
+    default: ''
+  after_commit_hook:
+    description: Shell snippet to run after `git commit`.
+    required: false
+    default: ''
+  before_tag_hook:
+    description: Shell snippet to run before `git tag` is created.
+    required: false
+    default: ''
+  after_tag_hook:
+    description: Shell snippet to run after `git tag` is created.
+    required: false
+    default: ''
+  before_push_hook:
+    description: Shell snippet to run before `git push`.
+    required: false
+    default: ''
+  after_push_hook:
+    description: Shell snippet to run after `git push`.
+    required: false
+    default: ''
   disable_pull_request_target_trigger_warning:
     description: Suppress the security warning emitted when the action runs on a `pull_request_target` event.
     required: false

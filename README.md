@@ -141,6 +141,19 @@ The following is an extended example with all available options.
     # `pull_request_target` event. See the "Workflow should run in **base** repository"
     # section below for context before disabling this warning.
     disable_pull_request_target_trigger_warning: false
+
+    # Optional. Shell snippets to run around each git operation. Each hook
+    # is evaluated in the same bash process as the action — `set -eu` is
+    # in effect, the working directory is your repository, and all
+    # `INPUT_*` env vars are visible. A non-zero exit aborts the action.
+    before_add_hook: 'git fetch --unshallow'
+    after_add_hook: ''
+    before_commit_hook: ''
+    after_commit_hook: ''
+    before_tag_hook: ''
+    after_tag_hook: ''
+    before_push_hook: ''
+    after_push_hook: ''
 ```
 
 Please note that the Action depends on `bash`. If you're using the Action in a job in combination with a custom Docker container, make sure that `bash` is installed.
@@ -213,6 +226,87 @@ You can use these outputs to trigger other Actions in your Workflow run based on
   - name: "Run if no changes have been detected"
     if: steps.auto-commit-action.outputs.changes_detected == 'false'
     run: echo "No Changes!"
+```
+
+## Hooks
+
+git-auto-commit can run custom shell snippets around each git operation
+it performs. This is useful when you need to prepare or clean up the
+repository as part of the same step — for example, unshallowing a
+shallow clone right before the commit is staged.
+
+Eight optional hooks are available:
+
+| Hook | Runs |
+| ---- | ---- |
+| `before_add_hook` / `after_add_hook` | around `git add` |
+| `before_commit_hook` / `after_commit_hook` | around `git commit` |
+| `before_tag_hook` / `after_tag_hook` | around `git tag` (only when a tag is being created) |
+| `before_push_hook` / `after_push_hook` | around `git push` (skipped when `skip_push: true`) |
+
+Each hook is an inline shell snippet that runs in the same bash process
+as the action. The working directory is your repository, and all
+`INPUT_*` environment variables and standard GitHub Actions env vars are
+visible to the snippet.
+
+### Example
+
+```yaml
+- uses: stefanzweifel/git-auto-commit-action@v7
+  with:
+    before_add_hook: |
+      git fetch --unshallow
+```
+
+Multi-line snippets work via YAML's `|` block scalar:
+
+```yaml
+- uses: stefanzweifel/git-auto-commit-action@v7
+  with:
+    before_commit_hook: |
+      echo "About to commit at $(date)"
+      ./scripts/prepare-commit.sh
+```
+
+### Notes
+
+- A hook only runs when its underlying step actually runs. For example,
+  `before_add_hook`/`after_add_hook` are skipped when the working tree is clean,
+  and `before_push_hook`/`after_push_hook` are skipped when `skip_push: true`.
+- If a hook exits with a non-zero status, the action fails. Append
+  `|| true` to a snippet to ignore its failure.
+- Hooks share environment with the action, so they can read action
+  inputs (e.g. `$INPUT_COMMIT_MESSAGE`) and write to `$GITHUB_OUTPUT`.
+- Snippets run under `set -eu`. Referencing an unset variable aborts the
+  action; use `${VAR:-}` to default an optional variable to empty.
+
+### Security
+
+Hook snippets are evaluated as shell code in the same process as the
+action. Treat them as you would any `run:` step.
+
+> [!CAUTION]
+> **Do not combine hooks with the `pull_request_target` event when the
+> snippet references attacker-controlled GitHub context.** Fields like
+> `${{ github.event.pull_request.title }}`, `${{ github.event.pull_request.body }}`,
+> `${{ github.head_ref }}`, and commit messages from a fork are
+> interpolated into the snippet **before** bash sees it. A malicious PR
+> can inject shell commands that run on your runner with access to your
+> repository secrets. See the [`pull_request_target` section](#workflow-should-run-in-base-repository)
+> for the broader risk and [GitHub's script-injection guidance](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#understanding-the-risk-of-script-injections).
+
+If you need values from PR-controlled context inside a hook, pass them
+via an intermediate env var rather than interpolating them directly into
+the snippet:
+
+```yaml
+- uses: stefanzweifel/git-auto-commit-action@v7
+  env:
+    PR_TITLE: ${{ github.event.pull_request.title }}
+  with:
+    before_commit_hook: |
+      # $PR_TITLE is read as data, not evaluated as code
+      echo "PR: $PR_TITLE"
 ```
 
 ## Limitations & Gotchas
@@ -368,6 +462,8 @@ However, there are a couple of ways to use this Action in Workflows that should 
 >
 > To remind users of this risk, git-auto-commit emits a warning annotation whenever it detects it is running on a `pull_request_target` event.
 > If you have evaluated the risk and want to silence the warning, set the `disable_pull_request_target_trigger_warning` input to `true`.
+>
+> **Extra caution if you also use [hooks](#hooks):** hook snippets are evaluated as shell code. Interpolating attacker-controlled fields (PR title/body, branch name, fork commit messages, etc.) directly into a hook input on a `pull_request_target` workflow lets a malicious PR run arbitrary commands on your runner with access to your secrets. Pass such values through an `env:` block and reference them as `$VARS` inside the snippet — see the [Security note in the Hooks section](#security) for an example.
 
 The workflow below runs whenever a commit is pushed to the `main`-branch or when activity on a pull request happens, by listening to the [`pull_request_target`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target) event.
 
