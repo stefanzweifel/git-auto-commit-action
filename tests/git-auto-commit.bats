@@ -1749,3 +1749,16 @@ END
     run cat_github_output
     refute_line -e "commit_hash=[0-9a-f]{40}$"
 }
+
+@test "A before_commit hook can mutate INPUT_COMMIT_MESSAGE and the change is reflected in the commit" {
+    touch "${FAKE_LOCAL_REPOSITORY}"/new-file-1.txt
+    export INPUT_BEFORE_COMMIT_HOOK="INPUT_COMMIT_MESSAGE='message rewritten by hook'"
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Running before_commit_hook"
+
+    run git -C "${FAKE_LOCAL_REPOSITORY}" log -1 --pretty=%B
+    assert_line "message rewritten by hook"
+}

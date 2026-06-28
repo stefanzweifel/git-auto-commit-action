@@ -280,6 +280,35 @@ Multi-line snippets work via YAML's `|` block scalar:
 - Snippets run under `set -eu`. Referencing an unset variable aborts the
   action; use `${VAR:-}` to default an optional variable to empty.
 
+### Security
+
+Hook snippets are evaluated as shell code in the same process as the
+action. Treat them as you would any `run:` step.
+
+> [!CAUTION]
+> **Do not combine hooks with the `pull_request_target` event when the
+> snippet references attacker-controlled GitHub context.** Fields like
+> `${{ github.event.pull_request.title }}`, `${{ github.event.pull_request.body }}`,
+> `${{ github.head_ref }}`, and commit messages from a fork are
+> interpolated into the snippet **before** bash sees it. A malicious PR
+> can inject shell commands that run on your runner with access to your
+> repository secrets. See the [`pull_request_target` section](#workflow-should-run-in-base-repository)
+> for the broader risk and [GitHub's script-injection guidance](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#understanding-the-risk-of-script-injections).
+
+If you need values from PR-controlled context inside a hook, pass them
+via an intermediate env var rather than interpolating them directly into
+the snippet:
+
+```yaml
+- uses: stefanzweifel/git-auto-commit-action@v7
+  env:
+    PR_TITLE: ${{ github.event.pull_request.title }}
+  with:
+    before_commit_hook: |
+      # $PR_TITLE is read as data, not evaluated as code
+      echo "PR: $PR_TITLE"
+```
+
 ## Limitations & Gotchas
 
 The goal of this Action is to be "the Action for committing files for the 80% use case". Therefore, you might run into issues if your Workflow falls into the not supported 20% portion.
@@ -433,6 +462,8 @@ However, there are a couple of ways to use this Action in Workflows that should 
 >
 > To remind users of this risk, git-auto-commit emits a warning annotation whenever it detects it is running on a `pull_request_target` event.
 > If you have evaluated the risk and want to silence the warning, set the `disable_pull_request_target_trigger_warning` input to `true`.
+>
+> **Extra caution if you also use [hooks](#hooks):** hook snippets are evaluated as shell code. Interpolating attacker-controlled fields (PR title/body, branch name, fork commit messages, etc.) directly into a hook input on a `pull_request_target` workflow lets a malicious PR run arbitrary commands on your runner with access to your secrets. Pass such values through an `env:` block and reference them as `$VARS` inside the snippet — see the [Security note in the Hooks section](#security) for an example.
 
 The workflow below runs whenever a commit is pushed to the `main`-branch or when activity on a pull request happens, by listening to the [`pull_request_target`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target) event.
 
