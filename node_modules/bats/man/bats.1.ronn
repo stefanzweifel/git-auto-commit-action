@@ -1,0 +1,192 @@
+bats(1) -- Bash Automated Testing System
+========================================
+
+
+SYNOPSIS
+--------
+
+Usage: bats [OPTIONS] <tests>
+       bats [-h | -v]
+
+  <tests> is the path to a Bats test file, or the path to a directory
+  containing Bats test files (ending with ".bats")
+
+
+DESCRIPTION
+-----------
+
+Bats is a TAP-compliant testing framework for Bash. It provides a simple
+way to verify that the UNIX programs you write behave as expected.
+
+A Bats test file is a Bash script with special syntax for defining
+test cases. Under the hood, each test case is just a function with a
+description.
+
+Test cases consist of standard shell commands. Bats makes use of
+Bash's `errexit` (`set -e`) option when running test cases. If every
+command in the test case exits with a `0` status code (success), the
+test passes. In this way, each line is an assertion of truth.
+
+See `bats`(7) for more information on writing Bats tests.
+
+
+RUNNING TESTS
+-------------
+
+To run your tests, invoke the `bats` interpreter with a path to a test
+file. The file's test cases are run sequentially and in isolation. If
+all the test cases pass, `bats` exits with a `0` status code. If there
+are any failures, `bats` exits with a `1` status code.
+
+You can invoke the `bats` interpreter with multiple test file arguments,
+or with a path to a directory containing multiple `.bats` files. Bats
+will run each test file individually and aggregate the results. If any
+test case fails, `bats` exits with a `1` status code.
+
+FILTERING TESTS
+---------------
+
+There are multiple mechanisms to filter which tests to execute:
+
+* `--filter <regex>` to filter by test name
+* `--filter-status <status>` to filter by the test's status in the last run
+* `--filter-tags <tag-list>` to filter by the tags of a test
+
+--FILTER-TAGS <TAG-LIST>
+------------------------
+
+Tags can be used for finegrained filtering of which tests to run via `--filter-tags`.
+This accepts a comma separated list of tags. Only tests that match all of these
+tags will be executed. For example, `bats --filter-tags a,b,c` will pick up tests
+with tags `a,b,c`, but not tests that miss one or more of those tags.
+
+Additionally, you can specify negative tags via `bats --filter-tags a,!b,c`,
+which now won't match tests with tags `a,b,c`, due to the `b`, but will select `a,c`.
+To put it more formally, `--filter-tags` is a boolean conjunction.
+
+To allow for more complex queries, you can specify multiple `--filter-tags`.
+A test will be executed, if it matches at least one of them.
+This means multiple `--filter-tags` form a boolean disjunction.
+
+A query of `--filter-tags a,!b --filter-tags b,c` can be translated to:
+Execute only tests that (have tag a, but not tag b) or (have tag b and c).
+
+An empty tag list matches tests without tags.
+
+OPTIONS
+-------
+
+  * `-c`, `--count`:
+    Count the number of test cases without running any tests
+  * `--code-quote-style <style>`:
+    A two character string of code quote delimiters or `custom`
+    which requires setting `$BATS_BEGIN_CODE_QUOTE` and 
+    `$BATS_END_CODE_QUOTE`. 
+    Can also be set via `$BATS_CODE_QUOTE_STYLE`.
+  * `--line-reference-format`
+    Controls how file/line references e.g. in stack traces are printed:
+      - comma_line (default): a.bats, line 1
+      - colon:  a.bats:1
+      - uri: file:///tests/a.bats:1
+      - custom: provide your own via defining bats_format_file_line_reference_custom
+                with parameters <filename> <line>, store via `printf -v "$output"`
+  * `-f`, `--filter <regex>`:
+    Filter test cases by names matching the regular expression
+  * `-F`, `--formatter <type>`:
+    Switch between formatters: pretty (default), tap (default w/o term), tap13, junit,
+    `/<absolute path to formatter>`
+  * `--filter-status <status>`:
+    Only run tests with the given status in the last completed (no CTRL+C/SIGINT) run.
+    Valid <status> values are:
+      failed - runs tests that failed or were not present in the last run
+      missed - runs tests that were not present in the last run
+  * `--filter-tags <comma-separated-tag-list>`:
+    Only run tests that match all the tags in the list (`&&`). You can negate a 
+    tag via prepending `!`.
+    Specifying this flag multiple times allows for logical or (`||`):
+    `--filter-tags A,B --filter-tags A,!C` matches tags `(A && B) || (A && !C)`
+  * `--gather-test-outputs-in <directory>`:
+    Gather the output of failing *and* passing tests as files in directory
+  * `-h`, `--help`:
+    Display this help message
+  * `-j`, `--jobs <jobs>`:
+    Number of parallel jobs (requires GNU parallel)
+  * `--no-tempdir-cleanup`:
+    Preserve test output temporary directory
+  * `--no-parallelize-across-files`:
+    Serialize test file execution instead of running them in parallel (requires --jobs >1)
+  * `--no-parallelize-within-files`:
+    Serialize test execution within files instead of running them in parallel (requires --jobs >1)
+  * `--report-formatter <type>`:
+    Switch between reporters (same options as --formatter)
+  * `-o`, `--output <dir>`:
+    Directory to write report files
+  * `-p`, `--pretty`:
+    Shorthand for "--formatter pretty"
+  * `--print-output-on-failure`:
+    Automatically print the value of `$output` on failed tests
+  * `-r`, `--recursive`:
+    Include tests in subdirectories
+  * `--show-output-of-passing-tests`:
+    Print output of passing tests
+  * `-t`, `--tap`:
+    Shorthand for "--formatter tap"
+  * `-T`, `--timing`:
+    Add timing information to tests
+  * `-x`, `--trace`:
+    Print test commands as they are executed (like `set -x`)
+  * `--verbose-run`:
+    Make `run` print `$output` by default
+  * `-v`, `--version`:
+    Display the version number
+
+OUTPUT
+------
+
+When you run Bats from a terminal, you'll see output as each test is
+performed, with a check-mark next to the test's name if it passes or
+an "X" if it fails.
+
+    $ bats addition.bats
+     ✓ addition using bc
+     ✓ addition using dc
+
+    2 tests, 0 failures
+
+If Bats is not connected to a terminal--in other words, if you run it
+from a continuous integration system or redirect its output to a
+file--the results are displayed in human-readable, machine-parsable
+TAP format. You can force TAP output from a terminal by invoking Bats
+with the `--tap` option.
+
+    $ bats --tap addition.bats
+    1..2
+    ok 1 addition using bc
+    ok 2 addition using dc
+
+
+EXIT STATUS
+-----------
+
+The `bats` interpreter exits with a value of `0` if all test cases pass,
+or `1` if one or more test cases fail.
+
+
+SEE ALSO
+--------
+
+Bats wiki: _https://github.com/bats\-core/bats\-core/wiki/_
+
+`bash`(1), `bats`(7)
+
+
+COPYRIGHT
+---------
+
+(c) 2017-2022 bats-core organization<br/>
+(c) 2011-2016 Sam Stephenson
+
+Bats is released under the terms of an MIT-style license.
+
+
+
