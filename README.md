@@ -44,7 +44,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref }}
           # Value already defaults to true, but `persist-credentials` is required to push new commits to the repository.
@@ -183,7 +183,7 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
       with:
         ref: ${{ github.head_ref }}
 
@@ -331,7 +331,7 @@ You must use `actions/checkout@v2` or later versions to check out the repository
 In non-`push` events, such as `pull_request`, make sure to specify the `ref` to check out:
 
 ```yaml
-- uses: actions/checkout@v5
+- uses: actions/checkout@v7
   with:
     ref: ${{ github.head_ref }}
 ```
@@ -349,7 +349,7 @@ You can change this by creating a new [Personal Access Token (PAT)](https://gith
 storing the token as a secret in your repository and then passing the new token to the [`actions/checkout`](https://github.com/actions/checkout#usage) Action step.
 
 ```yaml
-- uses: actions/checkout@v5
+- uses: actions/checkout@v7
   with:
     token: ${{ secrets.PAT }}
 ```
@@ -411,7 +411,7 @@ As git-auto-commit by default does not use **your** username and email when crea
 ```yml
 - name: "Import GPG key"
   id: import-gpg
-  uses: crazy-max/ghaction-import-gpg@v6
+  uses: crazy-max/ghaction-import-gpg@v7
   with:
     gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
     passphrase: ${{ secrets.GPG_PASSPHRASE }}
@@ -488,7 +488,7 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
       with:
         # Checkout the fork/head-repository and push changes to the fork.
         # If you skip this, the base repository will be checked out and changes
@@ -524,7 +524,7 @@ Finally, you have to use `push_options: '--force'` to overwrite the git history 
 The steps in your workflow might look like this:
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v7
   with:
     # Fetch the last 2 commits instead of just 1. (Fetching just 1 commit would overwrite the whole history)
     fetch-depth: 2
