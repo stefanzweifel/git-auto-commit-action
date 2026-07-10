@@ -464,6 +464,8 @@ However, there are a couple of ways to use this Action in Workflows that should 
 > If you have evaluated the risk and want to silence the warning, set the `disable_pull_request_target_trigger_warning` input to `true`.
 >
 > **Extra caution if you also use [hooks](#hooks):** hook snippets are evaluated as shell code. Interpolating attacker-controlled fields (PR title/body, branch name, fork commit messages, etc.) directly into a hook input on a `pull_request_target` workflow lets a malicious PR run arbitrary commands on your runner with access to your secrets. Pass such values through an `env:` block and reference them as `$VARS` inside the snippet — see the [Security note in the Hooks section](#security) for an example.
+>
+> **`actions/checkout` now blocks pull_request_target by default.** As of [v7](https://github.blog/changelog/2026-06-18-safer-pull_request_target-defaults-for-github-actions-checkout/), checkout refuses to fetch fork pull request code under `pull_request_target` when `repository:` or `ref:` resolves to the fork PR's repo, head, or merge commit. GitHub is backporting the enforcement to all supported major versions on July 16, 2026. To keep this example working, you may add `allow-unsafe-pr-checkout: true` to the checkout step, only after weighing the risks described above.
 
 The workflow below runs whenever a commit is pushed to the `main`-branch or when activity on a pull request happens, by listening to the [`pull_request_target`](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target) event.
 
