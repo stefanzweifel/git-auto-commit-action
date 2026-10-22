@@ -139,10 +139,11 @@ _git_is_dirty() {
 }
 
 _check_if_is_git_repository() {
-    if [ -d ".git" ]; then
+    # `.git` is a file (not a directory) in submodules and linked worktrees.
+    if [ -e ".git" ]; then
         _log "debug" "Repository found.";
     else
-        _log "error" "Not a git repository. Please make sure to run this action in a git repository. Adjust the `repository` input if necessary.";
+        _log "error" "Not a git repository. Please make sure to run this action in a git repository. Adjust the \`repository\` input if necessary.";
         exit 1;
     fi
 }
