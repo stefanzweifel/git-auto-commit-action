@@ -1131,7 +1131,142 @@ END
     run git_auto_commit
 
     assert_failure;
-    assert_line "::error::Not a git repository. Please make sure to run this action in a git repository. Adjust the `repository` input if necessary."
+    assert_line "::error::Not a git repository. Please make sure to run this action in a git repository. Adjust the \`repository\` input if necessary."
+}
+
+@test "It does not treat the error message for a missing git repository as a shell command" {
+    INPUT_REPOSITORY="${FAKE_FOLDER_WITHOUT_GIT_REPO}"
+
+    mkdir "${INPUT_REPOSITORY}"
+
+    run git_auto_commit
+
+    assert_failure;
+    refute_output --partial "command not found"
+}
+
+@test "It exits with error message if the repository input points to a non-existing directory" {
+    INPUT_REPOSITORY="${FAKE_FOLDER_WITHOUT_GIT_REPO}/does-not-exist"
+
+    run git_auto_commit
+
+    assert_failure;
+}
+
+@test "It commits and pushes changes in a git submodule" {
+    FAKE_SUPERPROJECT="${BATS_TEST_DIRNAME}/tests_superproject"
+    rm -rf "${FAKE_SUPERPROJECT}"
+    git init --quiet "${FAKE_SUPERPROJECT}"
+    cd "${FAKE_SUPERPROJECT}"
+    git -c protocol.file.allow=always submodule add --quiet "${FAKE_REMOTE}" posts
+    git commit --quiet -m "Add submodule"
+
+    # In a submodule `.git` is a file pointing to the superproject's `.git/modules` directory
+    assert [ -f "${FAKE_SUPERPROJECT}/posts/.git" ]
+    assert [ ! -d "${FAKE_SUPERPROJECT}/posts/.git" ]
+
+    cd "${FAKE_SUPERPROJECT}/posts"
+    git checkout --quiet "${FAKE_DEFAULT_BRANCH}"
+    cd "${FAKE_SUPERPROJECT}"
+
+    INPUT_REPOSITORY="${FAKE_SUPERPROJECT}/posts"
+    touch "${INPUT_REPOSITORY}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+    refute_output --partial "Not a git repository"
+    assert_line "::debug::Repository found."
+
+    run cat_github_output
+    assert_line "changes_detected=true"
+    assert_line -e "commit_hash=[0-9a-f]{40}$"
+
+    # The commit has been pushed to the submodule's remote
+    run git --git-dir="${FAKE_REMOTE}" log -n 1 --pretty=%s
+    assert_output "Commit Message"
+
+    run git --git-dir="${FAKE_REMOTE}" ls-tree --name-only -r "${FAKE_DEFAULT_BRANCH}"
+    assert_line "new-file-1.txt"
+
+    rm -rf "${FAKE_SUPERPROJECT}"
+}
+
+@test "It uses a relative path to a git submodule as repository" {
+    FAKE_SUPERPROJECT="${BATS_TEST_DIRNAME}/tests_superproject"
+    rm -rf "${FAKE_SUPERPROJECT}"
+    git init --quiet "${FAKE_SUPERPROJECT}"
+    cd "${FAKE_SUPERPROJECT}"
+    git -c protocol.file.allow=always submodule add --quiet "${FAKE_REMOTE}" posts
+    git commit --quiet -m "Add submodule"
+    git -C posts checkout --quiet "${FAKE_DEFAULT_BRANCH}"
+
+    INPUT_REPOSITORY="posts"
+    touch "${FAKE_SUPERPROJECT}"/posts/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Repository found."
+
+    run git --git-dir="${FAKE_REMOTE}" ls-tree --name-only -r "${FAKE_DEFAULT_BRANCH}"
+    assert_line "new-file-1.txt"
+
+    rm -rf "${FAKE_SUPERPROJECT}"
+    INPUT_REPOSITORY="${FAKE_LOCAL_REPOSITORY}"
+}
+
+@test "It accepts a repository whose .git is a file pointing to a separate git directory" {
+    SEPARATE_GIT_DIR="${BATS_TEST_DIRNAME}/tests_separate_git_dir"
+    WORK_TREE="${BATS_TEST_DIRNAME}/tests_separate_work_tree"
+    rm -rf "${SEPARATE_GIT_DIR}" "${WORK_TREE}"
+
+    git clone --quiet --separate-git-dir="${SEPARATE_GIT_DIR}" "${FAKE_REMOTE}" "${WORK_TREE}"
+
+    assert [ -f "${WORK_TREE}/.git" ]
+
+    INPUT_REPOSITORY="${WORK_TREE}"
+    touch "${WORK_TREE}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Repository found."
+
+    run cat_github_output
+    assert_line "changes_detected=true"
+
+    run git --git-dir="${FAKE_REMOTE}" ls-tree --name-only -r "${FAKE_DEFAULT_BRANCH}"
+    assert_line "new-file-1.txt"
+
+    rm -rf "${SEPARATE_GIT_DIR}" "${WORK_TREE}"
+    INPUT_REPOSITORY="${FAKE_LOCAL_REPOSITORY}"
+}
+
+@test "It accepts a linked git worktree as repository" {
+    WORKTREE="${BATS_TEST_DIRNAME}/tests_linked_worktree"
+    rm -rf "${WORKTREE}"
+
+    cd "${FAKE_LOCAL_REPOSITORY}"
+    git worktree add --quiet -b worktree-branch "${WORKTREE}"
+
+    assert [ -f "${WORKTREE}/.git" ]
+
+    INPUT_REPOSITORY="${WORKTREE}"
+    INPUT_BRANCH="worktree-branch"
+    touch "${WORKTREE}"/new-file-{1,2,3}.txt
+
+    run git_auto_commit
+
+    assert_success
+    assert_line "::debug::Repository found."
+
+    run git --git-dir="${FAKE_REMOTE}" ls-tree --name-only -r worktree-branch
+    assert_line "new-file-1.txt"
+
+    cd "${FAKE_LOCAL_REPOSITORY}"
+    git worktree remove --force "${WORKTREE}"
+    INPUT_REPOSITORY="${FAKE_LOCAL_REPOSITORY}"
 }
 
 @test "It detects if the repository is in a detached state and logs a warning" {
