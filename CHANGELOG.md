@@ -5,9 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.2.0...HEAD)
+## [Unreleased](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.2.1...HEAD)
 
 > TBD
+
+## [v7.2.1](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.2.0...v7.2.1) - 2026-10-22
+
+### Fixed
+
+- Accept repositories where .git is a file ([#417](https://github.com/stefanzweifel/git-auto-commit-action/pull/417)) [@stefanzweifel](https://github.com/@stefanzweifel)
+- README: Update actions ([#413](https://github.com/stefanzweifel/git-auto-commit-action/pull/413)) [@jackbayliss](https://github.com/@jackbayliss)
+- Remove unused gitStatusMessage variable in the entrypoint ([#415](https://github.com/stefanzweifel/git-auto-commit-action/pull/415)) [@ChihweiLHBird](https://github.com/@ChihweiLHBird)
 
 ## [v7.2.0](https://github.com/stefanzweifel/git-auto-commit-action/compare/v7.1.0...v7.2.0) - 2026-06-28
 
